@@ -1,0 +1,4 @@
+SetEnv no-gzip dont-vary
+# In standalone mode, all URL are interpreted by index.php
+RewriteEngine on
+RewriteRule ^(.+)$ index.php
