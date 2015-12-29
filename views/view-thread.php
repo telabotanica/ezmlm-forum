@@ -1,7 +1,12 @@
-<h1>view-thread !! :)</h1>
+<h1>view-thread : <?= $threadHash ?></h1>
 
 <div id="davos-thread-container">
 </div>
+
+<?php
+	// {{mustache}} templates
+	include $templatesPath . '/thread-message.tpl';
+?>
 
 <script type="text/javascript">
 	var viewThread = new ViewThread();

@@ -53,14 +53,7 @@ ViewThread.prototype.displayMessages = function(messages) {
 };
 
 ViewThread.prototype.buildThreadMessageBlock = function(message) {
-	var html = '';
-	html += '<div class="davos-thread-message-block">';
-	html += '<span class="from">';
-	html += 'le ' + message.message_date + ' par ' + message.author_name + ' (' + message.author_email + ')';
-	html += '</span>';
-	html += '<br/>';
-	html += message.message_contents.text;
-	html += '<br/><br/>';
-	html += '</div>';
-	return html;
+	var template = $('#mt-thread-message').html();
+	var output = Mustache.render(template, message);
+	return output;
 };

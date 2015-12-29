@@ -57,9 +57,8 @@ class BaseController {
 	 * will make $stuff available in the template, with a value of 3
 	 */
 	protected function buildPageData() {
-		$this->data = array(
-			"config" => $this->fc->config
-		);
+		$this->data ['config'] = $this->fc->config;
+		$this->data['templatesPath'] = 'views/tpl';
 	}
 
 	/**
