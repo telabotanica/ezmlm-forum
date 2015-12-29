@@ -9,6 +9,9 @@ class BaseController {
 	/** Controller name, used to find associated view file */
 	protected $name;
 
+	/** Data array to be injected into view template */
+	protected $data = array();
+
 	public function __construct($frontController) {
 		$this->fc = $frontController;
 		$this->init();
@@ -28,8 +31,8 @@ class BaseController {
 			throw new Exception("view file [$viewFile] is missing");
 		}
 		// inject data and render template
-		$data = $this->buildPageData();
-		extract($data);
+		$this->buildPageData();
+		extract($this->data);
 		ob_start();
 		if ((bool) ini_get('short_open_tag') === true) {
 			include $viewFile;
@@ -54,7 +57,9 @@ class BaseController {
 	 * will make $stuff available in the template, with a value of 3
 	 */
 	protected function buildPageData() {
-		return array();
+		$this->data = array(
+			"config" => $this->fc->config
+		);
 	}
 
 	/**

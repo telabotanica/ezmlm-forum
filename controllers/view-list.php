@@ -13,4 +13,8 @@ class ViewList extends BaseController {
 	protected function init() {
 		$this->name = "view-list";
 	}
+
+	protected function buildPageData() {
+		parent::buildPageData();
+	}
 }

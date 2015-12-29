@@ -1,0 +1,6 @@
+/* rules overloading bootstrap 3 */
+
+/* non-bootstrap-related rules */
+h1 {
+	color: red;
+}

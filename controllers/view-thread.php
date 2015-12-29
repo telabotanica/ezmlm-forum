@@ -1,8 +1,19 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+require_once "BaseController.php";
 
+/**
+ * "view-thread" controller
+ * 
+ * Shows a thread in the form of a bulletin-board discussion
+ */
+class ViewThread extends BaseController {
+
+	protected function init() {
+		$this->name = "view-thread";
+	}
+
+	protected function buildPageData() {
+		parent::buildPageData();
+	}
+}

@@ -60,6 +60,13 @@ class EzmlmForum {
 	protected function init() {}
 
 	/**
+	 * Returns the base URI after the which JS, CSS etc. files may be invoked
+	 */
+	public function getRootUri() {
+		return $this->domainRoot . $this->baseURI;
+	}
+
+	/**
 	 * Reads the desired href-links build mode (REST-like URIs or GET parameters)
 	 * from the config, or defaults to HREF_BUILD_MODE_REST)
 	 */
@@ -137,9 +144,9 @@ class EzmlmForum {
 	}
 
 	/**
-	 * Renders a page
+	 * Renders the requested page (specified through URI fragment or GET parameter)
 	 */
-	public function renderPage($page=null) {
+	public function renderPage() {
 		// instanciate page controller
 		$pageControllerFile = 'controllers/' . strtolower($this->page) . '.php';
 		$pageControllerClass = $this->camelize($this->page);
@@ -173,7 +180,7 @@ class EzmlmForum {
 		return $camelizedString;
 	}
 
-	public function bluildHrefLink($page, $params=array()) {
-		
+	public function buildHrefLink($page, $params=array()) {
+		throw new Exception('not implemented');
 	}
 }
