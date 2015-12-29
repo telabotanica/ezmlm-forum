@@ -9,11 +9,26 @@ require_once "BaseController.php";
  */
 class ViewThread extends BaseController {
 
+	/** ezmlm hash of current thread */
+	protected $threadHash;
+
 	protected function init() {
 		$this->name = "view-thread";
+		$this->getThreadHash();
+	}
+
+	protected function getThreadHash() {
+		if (! empty($this->fc->resources[1])) {
+			$this->threadHash = $this->fc->resources[1];
+		} elseif ($this->fc->getParam('thread') != null) {
+			$this->threadHash = $this->fc->getParam('thread');
+		} else {
+			throw new Exception('no thread specified');
+		}
 	}
 
 	protected function buildPageData() {
 		parent::buildPageData();
+		$this->data['threadHash'] = $this->threadHash;
 	}
 }

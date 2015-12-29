@@ -13,10 +13,10 @@ class EzmlmForum {
 	public static $CONFIG_PATH = "config/config.json";
 
 	/** Resources (URI elements) */
-	protected $resources = array();
+	public $resources = array();
 
 	/** Request parameters (GET or POST) */
-	protected $params = array();
+	public $params = array();
 
 	/** Domain root (to build URIs) */
 	protected $domainRoot;
@@ -118,7 +118,7 @@ class EzmlmForum {
 	 * Searches for parameter $name in $this->params; if defined (even if
 	 * empty), returns its value; if undefined, returns $default
 	 */
-	protected function getParam($name, $default=null) {
+	public function getParam($name, $default=null) {
 		if (isset($this->params[$name])) {
 			return $this->params[$name];
 		} else {
