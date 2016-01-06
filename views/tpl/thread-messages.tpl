@@ -1,8 +1,18 @@
 <script type="text/html" id="tpl-thread-messages" >
 	{{#messages}}
-		<h2>#{{message_id}} : {{subject}}</h2>
-		<h3>by {{author_name}} on {{message_date}}</h3>
-		{{{message_contents.text}}}
-		<br/><br/>
+		<div class="thread-message">
+			<div class="message-date">
+				{{message_date}}
+			</div>
+			<div class="message-author-box">
+				<div class="author-image">
+					
+				</div>
+				<span class="author-name">{{author_name}}</span>
+			</div>
+			<div class="message-contents">
+				{{{message_contents.text}}}
+			</div>
+		</div>
 	{{/messages}}
 </script>

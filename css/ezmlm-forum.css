@@ -1,9 +1,83 @@
 /* rules overloading bootstrap 3 */
 
 /* non-bootstrap-related rules */
+body {
+	padding: 40px;
+}
+
 h1 {
 	color: red;
 }
+
+#thread-info-box {
+	/*border: solid #808080 1px;*/
+}
+#thread-info-box h2 {
+	margin: 0;
+	font-weight: bold;
+	font-size: 2em;
+}
+/*#thread-info-box h2 .thread-nb-messages {
+	font-size: 0.8em;
+	color: #a0a0a0;
+}*/
+
+#thread-tools {
+	/*border: solid #808080 1px;*/
+	margin-bottom: 20px;
+}
+#thread-tools-bottombar {
+	border-bottom: solid 1px #d0d0d0;
+	height: 20px;
+}
+
+#thread-messages {
+	/*border: solid #808080 1px;*/
+}
+
+.thread-message {
+	border-bottom: solid 1px #d0d0d0;
+	margin-bottom: 20px;
+}
+.message-date {
+	float: right;
+}
+.message-author-box {
+	margin-bottom: 18px;
+	height: 50px;
+}
+.message-contents {
+	
+}
+
+.author-image {
+	float: left;
+	display: inline-block;
+	border: solid red 1px;
+	border-radius: 4px;
+	height: 50px;
+	width: 50px;
+	margin-right: 10px;
+}
+.author-name {
+	font-weight: bold;
+	color: #606060;
+}
+
+.right {
+	float: right;
+}
+
+.tools-command {
+	color: #a0a0a0;
+	font-weight: bold;
+}
+
+a.tool, a.tool:hover, a.tool:active, a.tool:visited {
+	text-decoration: none;
+	color: #a0a0a0;
+}
+
 
 /* give them more width if screen is wide @TODO media query */
 .native-media-img, .native-media-video {

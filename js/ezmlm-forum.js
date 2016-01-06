@@ -10,9 +10,9 @@ function EzmlmForum() {
 	this.listRoot = '';
 	// text enriching options
 	this.enrich = {
-		media: true,
+		media: false,
 		links: true,
-		binettes: true
+		binettes: false
 	}
 }
 
@@ -30,9 +30,31 @@ EzmlmForum.prototype.init = function() {
 /**
  * Takes a raw message text and tries to remove the quotations / original
  * message(s) part(s) to return only the message substance
- * @TODO do it !
+ * @TODO test and improve
  */
 EzmlmForum.prototype.cleanText = function(text) {
+	// (.|[\r\n]) simulates the DOTALL; [\s\S] doesn't work here, no idea why
+	var patterns = [
+		"(^(.|[\r\n])+?)----- Original Message -----(.|[\r\n])*$", // ?
+		"(^(.|[\r\n])+?)Date: [a-zA-Z]{3}, [0-9]{2} [a-zA-Z]{3} [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}( +[0-9]{4})?(.|[\r\n])*$", // ?
+		"(^(.|[\r\n])+?)________________________________(.|[\r\n])*$" // outlook
+	];
+
+	for (var i=0; i < patterns.length; ++i) {
+		var re = new RegExp(patterns[i], "gim");
+		text = text.replace(re, "$1");
+	}
+
+	// trim whitespaces and line breaks @TODO make this work !
+	/*if (text.match(new RegExp("^[ \t\r\n]*((.|[\r\n])+)[ \t\r\n]*$"))) {
+		console.log("ça matche");
+	} else {
+		console.log("ça matche pas");
+	}
+	console.log("AVANT: " + text);
+	text = text.replace(/((.|[\r\n])+)[ \t\r\n]*$/ig, "$1");
+	console.log("APRES: " + text);*/
+
 	return text;
 };
 
@@ -57,7 +79,11 @@ EzmlmForum.prototype.enrichText = function(text) {
 	return text;
 };
 EzmlmForum.prototype.lf2br = function(text) {
-	return text.replace(/\n/g, "<br>");
+	// 2 or more linebreaks => 2 <br>
+	text = text.replace(/[\r\n]{2,}/g, "<br><br>");
+	// remaining (single) line breaks => 1 <br>
+	text = text.replace(/[\r\n]/g, "<br>");
+	return text;
 };
 EzmlmForum.prototype.addQuotations = function(text) {
 	return text;
@@ -76,7 +102,6 @@ EzmlmForum.prototype.addMedia = function(text) {
  * Replaces links pointing to native media
  */
 EzmlmForum.prototype.addNativeMedia = function(text) {
-	// http://techslides.com/demos/sample-videos/small.mp4
 	// image
 	text = text.replace(
 		/(https?:\/\/[^ ,\n]+\.(jpg|jpeg|png|gif|tif|tiff|bmp))/gi,
@@ -98,7 +123,6 @@ EzmlmForum.prototype.addNativeMedia = function(text) {
 /**
  * Detects popular online video players URLs and replaces them with a video
  * embedding
- * @TODO implement
  */
 EzmlmForum.prototype.addOnlineMediaEmbedding = function(text) {
 	// Youtube
@@ -124,6 +148,9 @@ ViewThread.prototype.init = function() {
 	this.readThread();
 };
 
+/**
+ * Reads all messages in a thread and displays them adequately
+ */
 ViewThread.prototype.readThread = function() {
 	var lthis = this;
 	// thread info
@@ -136,6 +163,7 @@ ViewThread.prototype.readThread = function() {
 		console.log(data);
 		var messages = data.results;
 		for (var i=0; i < messages.length; ++i) {
+			messages[i].message_contents.text = lthis.cleanText(messages[i].message_contents.text);
 			messages[i].message_contents.text = lthis.enrichText(messages[i].message_contents.text);
 		}
 		lthis.renderTemplate('thread-messages', {messages: messages});
