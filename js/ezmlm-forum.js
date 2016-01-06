@@ -3,52 +3,17 @@
 });*/
 
 /**
- * "static-class-like" utility to replace emoticon-prone character sequences
- * (ie. ":)" or ":-(") in a text by corresponding unicode characters (emoji)
- */
-function Binette() {
-}
-// add your binette here !
-Binette.binettes = {
-	"<3": "\u2764\uFE0F",
-	"</3": "\uD83D\uDC94",
-	":D": "\uD83D\uDE00",
-	":-D": "\uD83D\uDE00",
-	":)": "\uD83D\uDE03",
-	":-)": "\uD83D\uDE03",
-	";)": "\uD83D\uDE09",
-	";-)": "\uD83D\uDE09",
-	":(": "\uD83D\uDE12",
-	":-(": "\uD83D\uDE12",
-	":p": "\uD83D\uDE1B",
-	":-p": "\uD83D\uDE1B",
-	";p": "\uD83D\uDE1C",
-	";-p": "\uD83D\uDE1C",
-	":'(": "\uD83D\uDE22"
-};
-Binette.escapeSpecialChars = function(regex) {
-	return regex.replace(/([()[{*+.$^\\|?])/g, '\\$1');
-};
-/**
- * Given a text, replaces every occurrence of any emoticon-prone characters
- * sequence with the corresponding unicode character (emoji), and returns the
- * modified text
- */
-Binette.binettize = function(text) {
-	for (var i in Binette.binettes) {
-		var regex = new RegExp(Binette.escapeSpecialChars(i), 'gim');
-		text = text.replace(regex, Binette.binettes[i]);
-	}
-	return text;
-};
-
-/**
  * Convenience parent class gathering config params and utility methods
  */
 function EzmlmForum() {
 	this.config = {};
 	this.listRoot = '';
-	this.binettes = true;
+	// text enriching options
+	this.enrich = {
+		media: true,
+		links: true,
+		binettes: true
+	}
 }
 
 // loads the stringified JSON configuration given by PHP through the HTML view template
@@ -77,14 +42,18 @@ EzmlmForum.prototype.cleanText = function(text) {
  * contents, and presents forum quotations nicely
  */
 EzmlmForum.prototype.enrichText = function(text) {
-	text = this.lf2br(text);
 	text = this.addQuotations(text);
-	text = this.addMedia(text);
-	//text = this.addLinks(text);
-	if (this.binettes) {
+	if (this.enrich.media) {
+		text = this.addMedia(text);
+	}
+	if (this.enrich.links) {
+		text = this.addLinks(text);
+	}
+	if (this.enrich.binettes) {
 		// unicode smileys
 		text = Binette.binettize(text);
 	}
+	text = this.lf2br(text); // previous regex are conditioned by \n
 	return text;
 };
 EzmlmForum.prototype.lf2br = function(text) {
@@ -94,7 +63,8 @@ EzmlmForum.prototype.addQuotations = function(text) {
 	return text;
 };
 EzmlmForum.prototype.addLinks = function(text) {
-	text = text.replace(/(https?:\/\/[^ ,\n]+)/gi, '<a href="$1">$1</a>');
+	// [^"] excludes links in markup attributes
+	text = text.replace(/([^"])(https?:\/\/[^ ,\n]+)([^"])/gi, '$1<a href="$2">$2</a>$3');
 	return text;
 };
 EzmlmForum.prototype.addMedia = function(text) {
@@ -102,6 +72,9 @@ EzmlmForum.prototype.addMedia = function(text) {
 	text = this.addOnlineMediaEmbedding(text);
 	return text;
 };
+/**
+ * Replaces links pointing to native media
+ */
 EzmlmForum.prototype.addNativeMedia = function(text) {
 	// http://techslides.com/demos/sample-videos/small.mp4
 	// image
@@ -115,9 +88,24 @@ EzmlmForum.prototype.addNativeMedia = function(text) {
 		'<video controls src="$1" class="native-media-video" />'
 	);
 	// audio
+	text = text.replace(
+		/(https?:\/\/[^ ,\n]+\.(mp3|oga|wav))/gi,
+		'<audio controls src="$1" class="native-media-audio" />'
+	);
+
 	return text;
 };
+/**
+ * Detects popular online video players URLs and replaces them with a video
+ * embedding
+ * @TODO implement
+ */
 EzmlmForum.prototype.addOnlineMediaEmbedding = function(text) {
+	// Youtube
+	text = text.replace(
+		/https?:\/\/www\.youtube\.com\/watch\?v=([^ ,\n]+)/gi,
+		'<iframe class="embedded-media-video embedded-media-youtube" src="https://www.youtube.com/embed/$1" allowfullscreen></iframe>'
+	);
 	return text;
 };
 

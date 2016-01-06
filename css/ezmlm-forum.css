@@ -4,3 +4,15 @@
 h1 {
 	color: red;
 }
+
+/* give them more width if screen is wide @TODO media query */
+.native-media-img, .native-media-video {
+	display: block;
+	max-width: 200px;
+}
+
+.embedded-media-video {
+	display: block;
+	border: 0;
+	width: 200px;
+}
