@@ -12,8 +12,8 @@
 	</div>
 	{{#messages}}
 		<div class="thread-message">
-			<div class="message-date">
-				{{message_date}}
+			<div class="message-date right" title="{{message_date}}">
+				{{message_date_moment}}
 			</div>
 			<div class="message-author-box">
 				<div class="author-image">

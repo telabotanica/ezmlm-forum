@@ -28,6 +28,12 @@ h1 {
 .thread-info-box-details {
 	display: none;
 }
+.thread-info-box-details > .details-row::before {
+	content: '- ';
+}
+.thread-tool-info-details {
+	font-size: 0.9em;
+}
 
 #thread-tools {
 	/*border: solid #808080 1px;*/
@@ -37,7 +43,7 @@ h1 {
 }
 
 #thread-messages {
-	/*border: solid #808080 1px;*/
+	/*margin-top: -10px;*/
 }
 
 .thread-message {
@@ -45,11 +51,11 @@ h1 {
 	margin-bottom: 20px;
 }
 .message-date {
-	float: right;
+	color: #808080;
 }
 .message-author-box {
 	margin-bottom: 18px;
-	height: 50px;
+	height: 45px;
 }
 .message-contents {
 	
@@ -58,7 +64,7 @@ h1 {
 .author-image {
 	float: left;
 	display: inline-block;
-	border: solid red 1px;
+	border: solid #d0d0d0 1px;
 	border-radius: 4px;
 	height: 50px;
 	width: 50px;

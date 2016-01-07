@@ -1,0 +1,9 @@
+{
+	"name": "ezmlm-forum",
+		"dependencies": {
+			"mustache.js": "latest",
+			"moment": "latest",
+			"bootstrap": "3.2.0",
+			"jquery": "1.11.1"
+		}
+}

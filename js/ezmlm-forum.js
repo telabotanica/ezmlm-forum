@@ -13,7 +13,13 @@ function EzmlmForum() {
 		media: false,
 		links: true,
 		binettes: false
-	}
+	};
+	this.calendarOptions = {
+		sameDay: 'HH:mm',
+		lastDay: '[hier à] HH:mm',
+		lastWeek: 'dddd [à] HH:mm',
+		sameElse: 'DD-MM-YYYY'
+	};
 }
 
 // loads the stringified JSON configuration given by PHP through the HTML view template
@@ -144,6 +150,22 @@ EzmlmForum.prototype.addOnlineMediaEmbedding = function(text) {
 };
 
 /**
+ * Uses moment.js to format dates : if time difference from now is lower than
+ * 45 minutes, uses moment().fromNow(); otherwise uses moment().calendar() with
+ * this.calendarOptions
+ */
+EzmlmForum.prototype.momentize = function(date) {
+	var dateMoment = null,
+		age = moment().diff(moment(date), 'minutes');
+	if (age > 45) {
+		dateMoment = moment(date).calendar(null, this.calendarOptions);
+	} else {
+		dateMoment = moment(date).fromNow();
+	}
+	return dateMoment;
+};
+
+/**
  * Thread view management ------------------------------------------------------
  */
 function ViewThread() {
@@ -170,17 +192,23 @@ ViewThread.prototype.readThread = function() {
 
 	// thread info
 	$.get(this.listRoot + '/threads/' + this.threadHash + '?details', function(data) {
-		console.log(data);
+		//console.log(data);
+		data.thread.first_message.message_date_moment = lthis.momentize(data.thread.first_message.message_date);
+		data.thread.last_message.message_date_moment = lthis.momentize(data.thread.last_message.message_date);
 		lthis.renderTemplate('thread-info-box', data);
 	});
+
 	// thread messages
 	var url = this.listRoot + '/threads/' + this.threadHash + '/messages?contents=true&sort=' + this.sortDirection;
 	$.get(url, function(data) {
 		console.log(data);
 		var messages = data.results;
 		for (var i=0; i < messages.length; ++i) {
+			// format text
 			messages[i].message_contents.text = lthis.cleanText(messages[i].message_contents.text);
 			messages[i].message_contents.text = lthis.enrichText(messages[i].message_contents.text);
+			// format dates
+			messages[i].message_date_moment = lthis.momentize(messages[i].message_date);
 		}
 		lthis.renderTemplate('thread-messages', {
 			messages: messages,
@@ -199,9 +227,14 @@ ViewThread.prototype.reloadEventListeners = function() {
 	var lthis = this;
 	console.log('reload event listeners !');
 
-	// sort by date
+	// sort messages by date
 	$('#thread-tool-sort-date').click(function() {
 		lthis.sortByDate();
+	});
+
+	// show thread details
+	$('.thread-tool-info-details').click(function() {
+		$('.thread-info-box-details').toggle();
 	});
 };
 
