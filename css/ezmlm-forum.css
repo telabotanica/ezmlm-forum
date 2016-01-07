@@ -1,6 +1,8 @@
-/* rules overloading bootstrap 3 */
+/* A. rules overloading bootstrap 3 */
 
-/* non-bootstrap-related rules */
+/* B. non-bootstrap-related rules */
+
+/* B.1 generic rules */
 body {
 	padding: 40px;
 }
@@ -8,6 +10,12 @@ body {
 h1 {
 	color: red;
 }
+
+.right {
+	float: right;
+}
+
+/* B.2 template-related rules */
 
 #thread-info-box {
 	/*border: solid #808080 1px;*/
@@ -17,18 +25,15 @@ h1 {
 	font-weight: bold;
 	font-size: 2em;
 }
-/*#thread-info-box h2 .thread-nb-messages {
-	font-size: 0.8em;
-	color: #a0a0a0;
-}*/
+.thread-info-box-details {
+	display: none;
+}
 
 #thread-tools {
 	/*border: solid #808080 1px;*/
-	margin-bottom: 20px;
-}
-#thread-tools-bottombar {
 	border-bottom: solid 1px #d0d0d0;
 	height: 20px;
+	margin-bottom: 20px;
 }
 
 #thread-messages {
@@ -64,18 +69,14 @@ h1 {
 	color: #606060;
 }
 
-.right {
-	float: right;
-}
-
 .tools-command {
-	color: #a0a0a0;
+	color: #707070;
 	font-weight: bold;
 }
 
 a.tool, a.tool:hover, a.tool:active, a.tool:visited {
 	text-decoration: none;
-	color: #a0a0a0;
+	color: #707070;
 }
 
 

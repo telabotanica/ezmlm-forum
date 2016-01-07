@@ -5,13 +5,6 @@
 		<div id="thread-info-box">
 			<!-- thread-info-box.tpl -->
 		</div>
-		<div id="thread-tools">
-			<div id="thread-tools-bottombar">
-				<div class="right tools-command">
-					<img src="img/icons/sort-asc.png" /> <a href="#" class="tool" id="thread-tool-sort-date">Date</a>
-				</div>
-			</div>
-		</div>
 		<div id="thread-messages">
 			<!-- thread-messages.tpl -->
 		</div>
