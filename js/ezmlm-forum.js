@@ -51,13 +51,14 @@ EzmlmForum.prototype.renderTemplate = function(id, data) {
 EzmlmForum.prototype.cleanText = function(text) {
 	// (.|[\r\n]) simulates the DOTALL; [\s\S] doesn't work here, no idea why
 	var patterns = [
-		"(^(.|[\r\n])+?)----- Original Message -----(.|[\r\n])*$", // ?
-		"(^(.|[\r\n])+?)Date: [a-zA-Z]{3}, [0-9]{2} [a-zA-Z]{3} [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}( +[0-9]{4})?(.|[\r\n])*$", // ?
-		"(^(.|[\r\n])+?)________________________________(.|[\r\n])*$" // outlook
+		"----- Original Message -----", // ?
+		"Date: [a-zA-Z]{3}, [0-9]{2} [a-zA-Z]{3} [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}( +[0-9]{4})?", // ?
+		"________________________________", // outlook
+		"&gt; Message du" // ?
 	];
 
 	for (var i=0; i < patterns.length; ++i) {
-		var re = new RegExp(patterns[i], "gim");
+		var re = new RegExp("(^(.|[\r\n])+?)" + patterns[i] + "(.|[\r\n])*$", "gim");
 		text = text.replace(re, "$1");
 	}
 
@@ -106,7 +107,7 @@ EzmlmForum.prototype.addQuotations = function(text) {
 };
 EzmlmForum.prototype.addLinks = function(text) {
 	// [^"] excludes links in markup attributes
-	text = text.replace(/([^"])(https?:\/\/[^ ,\n]+)([^"])/gi, '$1<a href="$2">$2</a>$3');
+	text = text.replace(/([^"])(https?:\/\/[^ ,\n]+)([^"])/gi, '$1<a href="$2" target="_blank">$2</a>$3');
 	return text;
 };
 EzmlmForum.prototype.addMedia = function(text) {
@@ -171,6 +172,9 @@ EzmlmForum.prototype.momentize = function(date) {
 function ViewThread() {
 	this.threadHash = null;
 	this.sortDirection = 'desc';
+	this.detailsData = null;
+	this.messagesData = null;
+	this.limit = 10;
 }
 // inheritance
 ViewThread.prototype = new EzmlmForum();
@@ -187,35 +191,60 @@ ViewThread.prototype.init = function() {
  * Reads all messages in a thread and displays them adequately
  */
 ViewThread.prototype.readThread = function() {
-	var lthis = this;
+	var lthis = this,
+		cpt = 2; // callbacks to wait for
 	// @TODO wait indicator
+
+	// post-callbacks work
+	function next() {
+		cpt--;
+		if (cpt == 0) {
+			console.log('go!');
+			// details
+			this.detailsData.thread.first_message.message_date_moment = lthis.momentize(this.detailsData.thread.first_message.message_date);
+			this.detailsData.thread.last_message.message_date_moment = lthis.momentize(this.detailsData.thread.last_message.message_date);
+			lthis.renderTemplate('thread-info-box', this.detailsData);
+
+			// messages
+			var messages = this.messagesData.results;
+			for (var i=0; i < messages.length; ++i) {
+				// format text
+				messages[i].message_contents.text = lthis.cleanText(messages[i].message_contents.text);
+				messages[i].message_contents.text = lthis.enrichText(messages[i].message_contents.text);
+				// format dates
+				messages[i].message_date_moment = lthis.momentize(messages[i].message_date);
+				// @TODO detect attachments mimetype family and use appropriate
+				// glyphicon from Boostrap (video, picture, audio...)
+			}
+			lthis.renderTemplate('thread-messages', {
+				messages: messages,
+				sortAsc: (lthis.sortDirection == 'asc'),
+				sortTitle: (lthis.sortDirection == 'asc' ? "Les plus anciens d'abord" : "Les plus récents d'abord"),
+				displayedMessages: this.messagesData.count,
+				totalMessages: this.detailsData.thread.nb_messages,
+				moreMessages: (this.detailsData.thread.nb_messages - this.messagesData.count > 0)
+			});
+
+			// other
+			lthis.reloadEventListeners();
+		}
+	}
 
 	// thread info
 	$.get(this.listRoot + '/threads/' + this.threadHash + '?details', function(data) {
-		//console.log(data);
-		data.thread.first_message.message_date_moment = lthis.momentize(data.thread.first_message.message_date);
-		data.thread.last_message.message_date_moment = lthis.momentize(data.thread.last_message.message_date);
-		lthis.renderTemplate('thread-info-box', data);
+		detailsData = data;
+		console.log(detailsData);
+		next();
 	});
 
 	// thread messages
-	var url = this.listRoot + '/threads/' + this.threadHash + '/messages?contents=true&sort=' + this.sortDirection;
+	var url = this.listRoot + '/threads/' + this.threadHash + '/messages?contents=true'
+		+ '&sort=' + this.sortDirection
+		+ (this.limit ? '&limit=' + this.limit : '');
 	$.get(url, function(data) {
-		console.log(data);
-		var messages = data.results;
-		for (var i=0; i < messages.length; ++i) {
-			// format text
-			messages[i].message_contents.text = lthis.cleanText(messages[i].message_contents.text);
-			messages[i].message_contents.text = lthis.enrichText(messages[i].message_contents.text);
-			// format dates
-			messages[i].message_date_moment = lthis.momentize(messages[i].message_date);
-		}
-		lthis.renderTemplate('thread-messages', {
-			messages: messages,
-			sortAsc: (lthis.sortDirection == 'asc'),
-			sortTitle: (lthis.sortDirection == 'asc' ? 'Oldest first' : 'Most recent first')
-		});
-		lthis.reloadEventListeners();
+		messagesData = data;
+		console.log(messagesData);
+		next();
 	});
 };
 
@@ -234,13 +263,26 @@ ViewThread.prototype.reloadEventListeners = function() {
 
 	// show thread details
 	$('.thread-tool-info-details').click(function() {
+		// @TODO use closest() to genericize for multiple instances ?
 		$('.thread-info-box-details').toggle();
+	});
+
+	// load more messages
+	$('.load-more-messages').click(function() {
+		lthis.loadMoreMessages();
 	});
 };
 
 ViewThread.prototype.sortByDate = function() {
 	console.log('sort by date');
 	this.sortDirection = (this.sortDirection == 'desc' ? 'asc' : 'desc');
+	// refresh messages + tools template
+	this.readThread();
+};
+
+ViewThread.prototype.loadMoreMessages = function() {
+	console.log('loadMoreMessages');
+	this.limit = null;
 	// refresh messages + tools template
 	this.readThread();
 };

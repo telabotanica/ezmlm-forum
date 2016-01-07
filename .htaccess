@@ -1,5 +1,5 @@
 SetEnv no-gzip dont-vary
 # In standalone mode, all URL are interpreted by index.php
 RewriteEngine on
-RewriteCond %{REQUEST_URI} !\.(?:css|js|jpe?g|gif|png|tpl)$ [NC]
+RewriteCond %{REQUEST_URI} !\.(?:css|js|jpe?g|gif|png|tpl|woff|ttf)$ [NC]
 RewriteRule ^(.+)$ index.php

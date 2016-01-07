@@ -49,6 +49,7 @@ h1 {
 .thread-message {
 	border-bottom: solid 1px #d0d0d0;
 	margin-bottom: 20px;
+	padding-bottom: 5px;
 }
 .message-date {
 	color: #808080;
@@ -57,8 +58,42 @@ h1 {
 	margin-bottom: 18px;
 	height: 45px;
 }
+
 .message-contents {
 	
+}
+
+.message-bottom-container {
+	position: relative;
+	/*border: solid red 1px;*/
+	min-height: 10px;
+}
+
+.message-reply-tools {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+.message-attachments {
+}
+
+.message-attachments-title {
+	font-size: 0.9em;
+	color: #909090;
+	border-bottom: solid #e0e0e0 1px;
+	width: 180px;
+	margin-bottom: 5px;
+}
+
+.message-attachments ul {
+	font-size: 0.9em;
+	padding: 0;
+	margin: 0;
+}
+.message-attachments ul li {
+	list-style-type: none;
+	margin: 0;
 }
 
 .author-image {
