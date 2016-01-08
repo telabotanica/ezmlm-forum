@@ -89,11 +89,20 @@ h1 {
 .message-attachments ul {
 	font-size: 0.9em;
 	padding: 0;
+	padding-right: 100px;
 	margin: 0;
 }
 .message-attachments ul li {
 	list-style-type: none;
 	margin: 0;
+}
+
+.message-attachment-link {
+	display: inline-block;
+    width: 85%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .author-image {
