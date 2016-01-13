@@ -14,6 +14,7 @@
 		<script src="<?= $fc->getRootUri() ?>/bower_components/moment/min/moment.min.js"></script>
 		<script src="<?= $fc->getRootUri() ?>/bower_components/moment/locale/fr.js"></script>
 		<script src="<?= $fc->getRootUri() ?>/bower_components/mustache.js/mustache.min.js"></script>
+		<script src="<?= $fc->getRootUri() ?>/bower_components/binette.js/binette.js"></script>
 		<link rel="stylesheet" type="text/css" href="<?= $fc->getRootUri() ?>/bower_components/bootstrap/dist/css/bootstrap.min.css" />
 
 		<!-- local resources -->

@@ -51,6 +51,9 @@ h1 {
 	margin-bottom: 20px;
 	padding-bottom: 5px;
 }
+.first-message {
+	/*background-color: #f4f4ff;*/
+}
 .message-date {
 	color: #808080;
 }
@@ -118,7 +121,10 @@ h1 {
 	font-weight: bold;
 	color: #606060;
 }
-
+.original-author {
+	color: #FF7A12;
+}
+	
 .tools-command {
 	color: #707070;
 	font-weight: bold;

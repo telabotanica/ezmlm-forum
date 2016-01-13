@@ -215,6 +215,10 @@ ViewThread.prototype.readThread = function() {
 				messages[i].message_date_moment = lthis.momentize(messages[i].message_date);
 				// @TODO detect attachments mimetype family and use appropriate
 				// glyphicon from Boostrap (video, picture, audio...)
+				// detect original author
+				messages[i].from_original_author = (this.detailsData.thread.first_message.author_hash == messages[i].author_hash);
+				// detect first message
+				messages[i].is_first_message = (this.detailsData.thread.first_message_id == messages[i].message_id);
 			}
 			lthis.renderTemplate('thread-messages', {
 				messages: messages,

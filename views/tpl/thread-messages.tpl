@@ -11,7 +11,12 @@
 		</div>
 	</div>
 	{{#messages}}
-		<div class="thread-message">
+		{{#is_first_message}}
+			<div class="thread-message first-message">
+		{{/is_first_message}}
+		{{^is_first_message}}
+			<div class="thread-message">
+		{{/is_first_message}}
 			<div class="message-date right" title="{{message_date}}">
 				{{message_date_moment}}
 			</div>
@@ -19,7 +24,22 @@
 				<div class="author-image">
 					
 				</div>
-				<span class="author-name">{{author_name}}</span>
+				<!-- author name -->
+				{{#from_original_author}}
+					<span class="author-name original-author" title="Cet auteur a initié la discussion">
+				{{/from_original_author}}
+				{{^from_original_author}}
+					<span class="author-name">
+				{{/from_original_author}}
+					{{author_name}}
+				</span>
+				
+				<!-- author / message badges -->
+				<div class="message-badges">
+					{{#is_first_message}}
+						<span title="Premier message de la discussion">°1</span>
+					{{/is_first_message}}
+				</div>
 			</div>
 			<div class="message-contents">
 				{{{message_contents.text}}}
