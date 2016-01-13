@@ -22,22 +22,23 @@
 			</div>
 			<div class="message-author-box">
 				<div class="author-image">
-					
+					<img src="../img/avatar_2.png" />
 				</div>
 				<!-- author name -->
 				{{#from_original_author}}
-					<span class="author-name original-author" title="Cet auteur a initié la discussion">
+					<div class="author-name original-author" title="Auteur à l'origine de la discussion">
 				{{/from_original_author}}
 				{{^from_original_author}}
-					<span class="author-name">
+					<div class="author-name">
 				{{/from_original_author}}
 					{{author_name}}
-				</span>
+				</div>
 				
 				<!-- author / message badges -->
 				<div class="message-badges">
 					{{#is_first_message}}
-						<span title="Premier message de la discussion">°1</span>
+						<!--<span title="Premier message de la discussion">°1</span>-->
+						<span title="Premier message de la discussion" class="badge-first-message glyphicon glyphicon-flag"></span>
 					{{/is_first_message}}
 				</div>
 			</div>

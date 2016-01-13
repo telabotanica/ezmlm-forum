@@ -27,10 +27,11 @@ h1 {
 }
 .thread-info-box-details {
 	display: none;
+	font-size: 0.9em;
 }
-.thread-info-box-details > .details-row::before {
+/*.thread-info-box-details > .details-row::before {
 	content: '- ';
-}
+}*/
 .thread-tool-info-details {
 	font-size: 0.9em;
 }
@@ -39,7 +40,7 @@ h1 {
 	/*border: solid #808080 1px;*/
 	border-bottom: solid 1px #d0d0d0;
 	height: 20px;
-	margin-bottom: 20px;
+	margin-bottom: 15px;
 }
 
 #thread-messages {
@@ -48,7 +49,7 @@ h1 {
 
 .thread-message {
 	border-bottom: solid 1px #d0d0d0;
-	margin-bottom: 20px;
+	margin-bottom: 15px;
 	padding-bottom: 5px;
 }
 .first-message {
@@ -56,6 +57,7 @@ h1 {
 }
 .message-date {
 	color: #808080;
+	padding-top: 3px;
 }
 .message-author-box {
 	margin-bottom: 18px;
@@ -110,19 +112,30 @@ h1 {
 
 .author-image {
 	float: left;
-	display: inline-block;
-	border: solid #d0d0d0 1px;
-	border-radius: 4px;
+	/*display: inline-block;*/
+	/*border: solid #d0d0d0 1px;*/
+	border-radius: 25px;
 	height: 50px;
 	width: 50px;
 	margin-right: 10px;
+	overflow: hidden;
 }
+/*.author-image > img {
+	width: 50px;
+}*/
 .author-name {
 	font-weight: bold;
 	color: #606060;
+	padding-top: 4px;
 }
 .original-author {
 	color: #FF7A12;
+}
+
+.message-badges {
+}
+.badge-first-message {
+	color: green;
 }
 	
 .tools-command {
