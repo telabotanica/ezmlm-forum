@@ -58,6 +58,9 @@ EzmlmForum.prototype.cleanText = function(text) {
 		text = text.replace(re, "$1");
 	}
 
+	// remove quotations
+	text = this.removeQuotations(text);
+
 	// trim whitespaces and line breaks @TODO make this work !
 	/*if (text.match(new RegExp("^[ \t\r\n]*((.|[\r\n])+)[ \t\r\n]*$"))) {
 		console.log("ça matche");
@@ -70,14 +73,19 @@ EzmlmForum.prototype.cleanText = function(text) {
 
 	return text;
 };
+EzmlmForum.prototype.removeQuotations = function(text) {
+	var pattern = /\+\+\+\+\+\+([0-9]+)\+\+\+\+\+\+/;
+	// ^ and $ don't work here => wtf ?
+	text = text.replace(pattern, '');
+	return text;
+};
 
 /**
  * Takes a raw message text and enriches it : replaces common charater sequences
  * with emoji, \n with <br>s, URL with links, images / video URLs with media
- * contents, and presents forum quotations nicely
+ * contents
  */
 EzmlmForum.prototype.enrichText = function(text) {
-	text = this.addQuotations(text);
 	if (this.enrich.media) {
 		text = this.addMedia(text);
 	}
@@ -88,6 +96,7 @@ EzmlmForum.prototype.enrichText = function(text) {
 		// unicode smileys
 		text = Binette.binettize(text);
 	}
+	// @TODO detect plant scientific names
 	text = this.lf2br(text); // previous regex are conditioned by \n
 	return text;
 };
@@ -96,9 +105,6 @@ EzmlmForum.prototype.lf2br = function(text) {
 	text = text.replace(/[\r\n]{2,}/g, "<br><br>");
 	// remaining (single) line breaks => 1 <br>
 	text = text.replace(/[\r\n]/g, "<br>");
-	return text;
-};
-EzmlmForum.prototype.addQuotations = function(text) {
 	return text;
 };
 EzmlmForum.prototype.addLinks = function(text) {

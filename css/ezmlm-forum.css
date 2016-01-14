@@ -80,21 +80,42 @@ h1 {
 	right: 0;
 }
 
-.message-attachments {
+.reply-to-message {
+	font-size: 1.8em;
+	transform: scale(-1, 1);
+	border-radius: 2px;
+	color: #2a6496;
+}
+.cancel-reply {
+	display: none;
+	font-size: 1.8em;
+	border-radius: 2px;
+	color: #EF4B2C;
+}
+.send-reply {
+	display: none;
+	font-size: 1.8em;
+	border-radius: 2px;
+	color: #51B13D;
 }
 
-.message-attachments-title {
-	font-size: 0.9em;
-	color: #909090;
-	border-bottom: solid #e0e0e0 1px;
-	width: 180px;
-	margin-bottom: 5px;
+.reply-area {
+	display: none;
+	border: solid #d0d0d0 1px;
+	height: 200px;
+	/*margin-top: 5px;*/
+	width: 100%;
+	padding: 10px;
+	color: #555;
+}
+
+.message-attachments {
 }
 
 .message-attachments ul {
 	font-size: 0.9em;
 	padding: 0;
-	padding-right: 100px;
+	padding-right: 120px;
 	margin: 0;
 }
 .message-attachments ul li {
@@ -108,6 +129,7 @@ h1 {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+	line-height: 14px;
 }
 
 .author-image {
@@ -134,8 +156,14 @@ h1 {
 
 .message-badges {
 }
+.message-badges a {
+	text-decoration: none;
+}
 .badge-first-message {
 	color: green;
+}
+.badge-show-quoted-message {
+	color: #999;
 }
 	
 .tools-command {
