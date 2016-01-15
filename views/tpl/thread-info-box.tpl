@@ -1,4 +1,8 @@
 <script type="text/html" id="tpl-thread-info-box" >
+	{{^thread}}
+		erreur: le thread [{{hash}}] n'existe pas dans cette liste
+	{{/thread}}
+	{{#thread}}
 	<h2>{{thread.subject}}</h2>
 	<a href="#" class="tool thread-tool-info-details">détails</a>
 	<div class="thread-info-box-details">
@@ -11,4 +15,5 @@
 			par <span class="author-name">{{thread.last_message.author_name}}</span>
 		</div>
 	</div>
+	{{/thread}}
 </script>
