@@ -10,7 +10,7 @@
 
 		<!-- bower stuff -->
 		<script src="<?= $fc->getRootUri() ?>/bower_components/jquery/dist/jquery.min.js"></script>
-		<!--<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
+		<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 		<script src="<?= $fc->getRootUri() ?>/bower_components/moment/min/moment.min.js"></script>
 		<script src="<?= $fc->getRootUri() ?>/bower_components/moment/locale/fr.js"></script>
 		<script src="<?= $fc->getRootUri() ?>/bower_components/mustache.js/mustache.min.js"></script>

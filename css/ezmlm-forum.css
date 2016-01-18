@@ -1,5 +1,19 @@
 /* A. rules overloading bootstrap 3 ----------------------------------------- */
 
+/*.table.borderless > thead > tr > th,
+.table.borderless > tbody > tr > th,
+.table.borderless > tfoot > tr > th,
+.table.borderless > thead > tr > td,
+.table.borderless > tbody > tr > td,
+.table.borderless > tfoot > tr > td {
+	border: none;
+}*/
+
+.table.list-threads-table > thead > tr > th {
+	border-bottom: solid 1px #d0d0d0;
+	padding-bottom: 4px;
+}
+
 /* B. non-bootstrap-related rules ------------------------------------------- */
 
 /* B.1 generic rules -------------------------------------------------------- */
@@ -13,6 +27,10 @@ h1 {
 
 .right {
 	float: right;
+}
+
+table.borderless th, table.borderless td {
+	border: none;
 }
 
 /* B.2 template-related rules ----------------------------------------------- */
@@ -196,3 +214,19 @@ a.tool, a.tool:hover, a.tool:active, a.tool:visited {
 
 
 
+#list-tools-box {
+	/*border: solid red 1px;*/
+	margin-top: 10px;
+}
+
+.list-tool {
+	top: 0;
+}
+
+#list-threads {
+	/*border: solid red 1px;*/
+	margin-top: 10px;
+}
+.list-threads-table {
+	width: 100%;
+}

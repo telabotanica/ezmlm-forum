@@ -5,6 +5,9 @@
 		<div id="list-info-box">
 			<!-- list-info-box.tpl -->
 		</div>
+		<div id="list-tools-box">
+			<!-- list-tools-box.tpl -->
+		</div>
 		<div id="list-threads">
 			<!-- list-threads.tpl -->
 		</div>
@@ -17,6 +20,7 @@
 <?php
 	// {{mustache}} templates
 	include $templatesPath . '/list-info-box.tpl';
+	include $templatesPath . '/list-tools-box.tpl';
 	include $templatesPath . '/list-threads.tpl';
 	include $templatesPath . '/list-messages.tpl';
 ?>

@@ -14,100 +14,108 @@ function ViewThread() {
 ViewThread.prototype = new EzmlmForum();
 
 ViewThread.prototype.init = function() {
+	var lthis = this;
 	console.log('ViewThread.init()');
 	//console.log(this.config);
 	//console.log('Thread: ' + this.threadHash);
 	this.limit = this.initialLimit;
-	this.readThread();
+	this.readDetails(function() {
+		lthis.readThread();
+	});
 	this.reloadEventListeners();
 };
 
 /**
- * Reads all messages in a thread and displays them adequately
+ * Reads the thread's details, displays them, and calls cb() or err() at the end
+ * respectively if everything went ok or if an error occurred
  */
-ViewThread.prototype.readThread = function() {
-	var lthis = this,
-		cpt = 2; // callbacks to wait for
-	// @TODO wait indicator
-
-	// post-callbacks work
-	function next() {
-		cpt--;
-		if (cpt == 0) {
-			console.log('go!');
-			var infoBoxData = {
-				hash: lthis.threadHash
-			};
-			// details
-			if (lthis.detailsData) {
-				lthis.detailsData.thread.first_message.message_date_moment = lthis.momentize(lthis.detailsData.thread.first_message.message_date);
-				lthis.detailsData.thread.last_message.message_date_moment = lthis.momentize(lthis.detailsData.thread.last_message.message_date);
-				infoBoxData = lthis.detailsData;
-				// page title
-				document.title = lthis.detailsData.thread.subject + ' (' + lthis.config['ezmlm-php'].list + ') - ' + lthis.config.title;
-
-				// messages
-				var messages = lthis.messagesData.results;
-				for (var i=0; i < messages.length; ++i) {
-					// format text
-					messages[i].quoted_message_id = lthis.detectQuotedMessageId(messages[i].message_contents.text); // do this before cleaning
-					messages[i].message_contents.text = lthis.cleanText(messages[i].message_contents.text);
-					messages[i].message_contents.text = lthis.enrichText(messages[i].message_contents.text);
-					// format dates
-					messages[i].message_date_moment = lthis.momentize(messages[i].message_date);
-					// @TODO detect attachments mimetype family and use appropriate
-					// glyphicon from Boostrap (video, picture, audio...)
-					// detect original author
-					messages[i].from_original_author = (lthis.detailsData.thread.first_message.author_hash == messages[i].author_hash);
-					// detect first message
-					messages[i].is_first_message = (lthis.detailsData.thread.first_message_id == messages[i].message_id);
-					// need to explicitely show quote (distance > 1) ?
-					messages[i].needs_quotation = (messages[i].quoted_message_id != null) && (messages[i].message_id - messages[i].quoted_message_id > 1);
-				}
-
-				var templateData = {
-					messages: messages,
-					sortAsc: (lthis.sortDirection == 'asc'),
-					sortTitle: (lthis.sortDirection == 'asc' ? "Les plus anciens d'abord" : "Les plus récents d'abord"),
-					displayedMessages: lthis.messagesData.count,
-					totalMessages: lthis.detailsData.thread.nb_messages,
-					moreMessages: (lthis.detailsData.thread.nb_messages - lthis.messagesData.count > 0)
-				}
-				lthis.renderTemplate('thread-messages', templateData);
-			} // else thread not found
-
-			lthis.renderTemplate('thread-info-box', infoBoxData);
-
-			// other
-			lthis.reloadEventListeners();
-		}
-	}
+ViewThread.prototype.readDetails = function(cb, err) {
+	//console.log('read details');
+	var lthis = this;
+	var infoBoxData = {
+		hash: lthis.threadHash
+	};
 
 	// thread info
 	$.get(this.listRoot + '/threads/' + this.threadHash + '?details')
 	.done(function(data) {
 		lthis.detailsData = data;
-		console.log(lthis.detailsData);
+		//console.log(lthis.detailsData);
+		// display
+		lthis.detailsData.thread.first_message.message_date_moment = lthis.momentize(lthis.detailsData.thread.first_message.message_date);
+		lthis.detailsData.thread.last_message.message_date_moment = lthis.momentize(lthis.detailsData.thread.last_message.message_date);
+		infoBoxData = lthis.detailsData;
+		// page title
+		document.title = lthis.detailsData.thread.subject + ' (' + lthis.config['ezmlm-php'].list + ') - ' + lthis.config.title;
+
+		lthis.renderTemplate('thread-info-box', infoBoxData);
+		// bye
+		cb();
 	})
 	.fail(function() {
 		console.log('details foirax');
-	})
-	.always(next);
+		err();
+	});
+};
+
+/**
+ * Reads all messages in a thread and displays them adequately; be sure to have
+ * read thread details data before (at least once)
+ */
+ViewThread.prototype.readThread = function() {
+	//console.log('read thread');
+	var lthis = this;
+
+	// post-callbacks work
+	function displayThread() {
+		// messages
+		var messages = lthis.messagesData.results;
+		for (var i=0; i < messages.length; ++i) {
+			// format text
+			messages[i].quoted_message_id = lthis.detectQuotedMessageId(messages[i].message_contents.text); // do this before cleaning
+			messages[i].message_contents.text = lthis.cleanText(messages[i].message_contents.text);
+			messages[i].message_contents.text = lthis.enrichText(messages[i].message_contents.text);
+			// format dates
+			messages[i].message_date_moment = lthis.momentize(messages[i].message_date);
+			// @TODO detect attachments mimetype family and use appropriate
+			// glyphicon from Boostrap (video, picture, audio...)
+			// detect original author
+			messages[i].from_original_author = (lthis.detailsData.thread.first_message.author_hash == messages[i].author_hash);
+			// detect first message
+			messages[i].is_first_message = (lthis.detailsData.thread.first_message_id == messages[i].message_id);
+			// need to explicitely show quote (distance > 1) ?
+			messages[i].needs_quotation = (messages[i].quoted_message_id != null) && (messages[i].message_id - messages[i].quoted_message_id > 1);
+		}
+
+		var templateData = {
+			messages: messages,
+			sortAsc: (lthis.sortDirection == 'asc'),
+			sortTitle: (lthis.sortDirection == 'asc' ? "Les plus anciens d'abord" : "Les plus récents d'abord"),
+			displayedMessages: lthis.messagesData.count,
+			totalMessages: lthis.detailsData.thread.nb_messages,
+			moreMessages: (lthis.detailsData.thread.nb_messages - lthis.messagesData.count > 0)
+		}
+		lthis.renderTemplate('thread-messages', templateData);
+
+		// other
+		lthis.reloadEventListeners();
+	}
 
 	// thread messages
 	var url = this.listRoot + '/threads/' + this.threadHash + '/messages?contents=true'
 		+ '&sort=' + this.sortDirection
 		+ (this.offset ? '&offset=' + this.offset : '')
 		+ (this.limit ? '&limit=' + this.limit : '');
+
 	$.get(url)
 	.done(function(data) {
 		lthis.messagesData = data;
-		console.log(lthis.messagesData);
+		//console.log(lthis.messagesData);
 	})
 	.fail(function() {
 		console.log('messages foirax');
 	})
-	.always(next);
+	.always(displayThread);
 };
 
 /**
