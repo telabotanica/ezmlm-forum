@@ -16,5 +16,6 @@ class ViewList extends BaseController {
 
 	protected function buildPageData() {
 		parent::buildPageData();
+		//$this->data['listName'] = $this->fc->
 	}
 }

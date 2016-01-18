@@ -7,7 +7,7 @@ function ViewThread() {
 	this.detailsData = null;
 	this.messagesData = null;
 	this.offset = 0;
-	this.initialLimit = 0;
+	this.initialLimit = 10;
 	this.limit = null;
 }
 // inheritance
@@ -43,6 +43,8 @@ ViewThread.prototype.readThread = function() {
 				lthis.detailsData.thread.first_message.message_date_moment = lthis.momentize(lthis.detailsData.thread.first_message.message_date);
 				lthis.detailsData.thread.last_message.message_date_moment = lthis.momentize(lthis.detailsData.thread.last_message.message_date);
 				infoBoxData = lthis.detailsData;
+				// page title
+				document.title = lthis.detailsData.thread.subject + ' (' + lthis.config['ezmlm-php'].list + ') - ' + lthis.config.title;
 
 				// messages
 				var messages = lthis.messagesData.results;
@@ -114,7 +116,7 @@ ViewThread.prototype.readThread = function() {
  */
 ViewThread.prototype.reloadEventListeners = function() {
 	var lthis = this;
-	console.log('reload event listeners !');
+	console.log('reload thread event listeners !');
 
 	// sort messages by date
 	$('#thread-tool-sort-date').click(function() {

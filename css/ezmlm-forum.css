@@ -1,8 +1,8 @@
-/* A. rules overloading bootstrap 3 */
+/* A. rules overloading bootstrap 3 ----------------------------------------- */
 
-/* B. non-bootstrap-related rules */
+/* B. non-bootstrap-related rules ------------------------------------------- */
 
-/* B.1 generic rules */
+/* B.1 generic rules -------------------------------------------------------- */
 body {
 	padding: 40px;
 }
@@ -15,24 +15,36 @@ h1 {
 	float: right;
 }
 
-/* B.2 template-related rules */
+/* B.2 template-related rules ----------------------------------------------- */
 
-#thread-info-box {
+/* B.2.a multi-template-related rules --------------------------------------- */
+
+.first-message {
+	/*background-color: #f4f4ff;*/
+}
+.message-date {
+	color: #808080;
+	padding-top: 3px;
+}
+
+/* B.2.b specific-template-related rules ------------------------------------ */
+
+#thread-info-box, #list-info-box {
 	/*border: solid #808080 1px;*/
 }
-#thread-info-box h2 {
+#thread-info-box h2, #list-info-box h2 {
 	margin: 0;
 	font-weight: bold;
 	font-size: 2em;
 }
-.thread-info-box-details {
+.thread-info-box-details, .list-info-box-details {
 	display: none;
 	font-size: 0.9em;
 }
 /*.thread-info-box-details > .details-row::before {
 	content: '- ';
 }*/
-.thread-tool-info-details {
+.thread-tool-info-details, .list-tool-info-details {
 	font-size: 0.9em;
 }
 
@@ -51,13 +63,6 @@ h1 {
 	border-bottom: solid 1px #d0d0d0;
 	margin-bottom: 15px;
 	padding-bottom: 5px;
-}
-.first-message {
-	/*background-color: #f4f4ff;*/
-}
-.message-date {
-	color: #808080;
-	padding-top: 3px;
 }
 .message-author-box {
 	margin-bottom: 18px;
@@ -176,7 +181,6 @@ a.tool, a.tool:hover, a.tool:active, a.tool:visited {
 	color: #707070;
 }
 
-
 /* give them more width if screen is wide @TODO media query */
 .native-media-img, .native-media-video {
 	display: block;
@@ -188,3 +192,7 @@ a.tool, a.tool:hover, a.tool:active, a.tool:visited {
 	border: 0;
 	width: 200px;
 }
+
+
+
+

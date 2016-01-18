@@ -50,7 +50,8 @@ EzmlmForum.prototype.cleanText = function(text) {
 		"----- Original Message -----", // ?
 		"Date: [a-zA-Z]{3}, [0-9]{2} [a-zA-Z]{3} [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}( +[0-9]{4})?", // ?
 		"________________________________", // outlook
-		"&gt; Message du" // ?
+		"&gt; Message du", // ?
+		"------------------------------------------------------------------------" // AVAST
 	];
 
 	for (var i=0; i < patterns.length; ++i) {
@@ -101,10 +102,13 @@ EzmlmForum.prototype.enrichText = function(text) {
 	return text;
 };
 EzmlmForum.prototype.lf2br = function(text) {
-	// 2 or more linebreaks => 2 <br>
+	// 2 or more linebreaks => 2 <br> // @TODO doesn't work so well - fix it
+	//console.log('TEXTE AVANT: ' + text);
 	text = text.replace(/[\r\n]{2,}/g, "<br><br>");
 	// remaining (single) line breaks => 1 <br>
+	//text = text.replace(/[\n]{4}/g, "<br>");
 	text = text.replace(/[\r\n]/g, "<br>");
+	//console.log('TEXTE APRES: ' + text);
 	return text;
 };
 EzmlmForum.prototype.addLinks = function(text) {
