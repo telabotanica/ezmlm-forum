@@ -5,7 +5,15 @@
 			<th>Sujet</th>
 			<th>Auteur</th>
 			<th>Messages</th>
-			<th>Activité</th>
+			<th>
+				{{#sortAsc}}
+					<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+				{{/sortAsc}}
+				{{^sortAsc}}
+					<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+				{{/sortAsc}}
+				<a href="#" title="{{sortTitle}}" class="tool" id="list-tool-sort-date">Activité</a>
+			</th>
 		</tr>
 	</thead>
 	<tbody>

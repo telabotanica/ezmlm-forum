@@ -7,7 +7,7 @@ function ViewThread() {
 	this.detailsData = null;
 	this.messagesData = null;
 	this.offset = 0;
-	this.initialLimit = 10;
+	this.initialLimit = 4;
 	this.limit = null;
 }
 // inheritance
@@ -127,23 +127,23 @@ ViewThread.prototype.reloadEventListeners = function() {
 	console.log('reload thread event listeners !');
 
 	// sort messages by date
-	$('#thread-tool-sort-date').click(function() {
+	$('#thread-tool-sort-date').unbind().click(function() {
 		lthis.sortByDate();
 	});
 
 	// show thread details
-	$('.thread-tool-info-details').click(function() {
+	$('.thread-tool-info-details').unbind().click(function() {
 		// @TODO use closest() to genericize for multiple instances ?
 		$('.thread-info-box-details').toggle();
 	});
 
 	// load more messages
-	$('.load-more-messages').click(function() {
+	$('.load-more-messages').unbind().click(function() {
 		lthis.loadMoreMessages();
 	});
 
 	// show reply area
-	$('.reply-to-message').click(function() {
+	$('.reply-to-message').unbind().click(function() {
 		var messageId = $(this).parent().parent().data("id");
 		//console.log('reply to message #' + messageId);
 		var replyArea = $('#reply-to-message-' + messageId),
@@ -160,7 +160,7 @@ ViewThread.prototype.reloadEventListeners = function() {
 	});
 
 	// cancel a reply
-	$('.cancel-reply').click(function() {
+	$('.cancel-reply').unbind().click(function() {
 		var messageId = $(this).parent().parent().data("id");
 		//console.log('cancel reply to message #' + messageId);
 		var replyArea = $('#reply-to-message-' + messageId),
@@ -185,7 +185,7 @@ ViewThread.prototype.reloadEventListeners = function() {
 	});
 
 	// send a reply
-	$('.send-reply').click(function() {
+	$('.send-reply').unbind().click(function() {
 		var messageId = $(this).parent().parent().data("id");
 		//console.log('send reply to message #' + messageId);
 		var replyArea = $('#reply-to-message-' + messageId),

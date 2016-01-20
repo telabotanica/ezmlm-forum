@@ -10,6 +10,7 @@ function ViewList() {
 	this.sortDirection = 'desc';
 	this.offset = 0;
 	this.limit = 10;
+	this.searchTerm = null;
 }
 // inheritance
 ViewList.prototype = new EzmlmForum();
@@ -17,7 +18,7 @@ ViewList.prototype = new EzmlmForum();
 ViewList.prototype.init = function() {
 	var lthis = this;
 	console.log('ViewList.init()');
-	console.log(this.config);
+	//console.log(this.config);
 	this.mode = this.defaultMode;
 	this.readDetails(function() {
 		lthis.showTools();
@@ -40,7 +41,7 @@ ViewList.prototype.readDetails = function(cb, err) {
 	$.get(this.listRoot)
 	.done(function(data) {
 		lthis.detailsData = data;
-		console.log(lthis.detailsData);
+		//console.log(lthis.detailsData);
 		// display
 		lthis.detailsData.first_message.message_date_moment = lthis.momentize(lthis.detailsData.first_message.message_date);
 		lthis.detailsData.last_message.message_date_moment = lthis.momentize(lthis.detailsData.last_message.message_date);
@@ -66,16 +67,16 @@ ViewList.prototype.showTools = function() {
 
 ViewList.prototype.showThreadsOrMessages = function() {
 	if (this.mode == 'messages') {
-		this.showMessages();
+		this.readMessages();
 	} else {
-		this.showThreads();
+		this.readThreads();
 	}
 };
 
 /**
  * Reads, searches, filters latest threads and displays them adequately
  */
-ViewList.prototype.showThreads = function() {
+ViewList.prototype.readThreads = function() {
 	var lthis = this;
 	// @TODO wait indicator
 
@@ -95,21 +96,22 @@ ViewList.prototype.showThreads = function() {
 			displayedThreads: lthis.threadsData.count,
 			totalThreads: lthis.detailsData.nb_threads,
 			moreThreads: (lthis.detailsData.nb_threads - lthis.threadsData.count > 0)
-		}
+		};
 		lthis.renderTemplate('list-threads', templateData);
 		lthis.reloadEventListeners();
 	}
 
 	// list threads
-	var url = this.listRoot + '/threads/?'
-		+ 'sort=' + this.sortDirection
+	var url = this.listRoot + '/threads/'
+		+ (this.searchTerm ? 'search/*' + this.searchTerm + '*/' : '')
+		+ '?sort=' + this.sortDirection
 		+ (this.offset ? '&offset=' + this.offset : '')
 		+ (this.limit ? '&limit=' + this.limit : '')
 		+ '&details=true';
 	$.get(url)
 	.done(function(data) {
 		lthis.threadsData = data;
-		console.log(lthis.threadsData);
+		//console.log(lthis.threadsData);
 	})
 	.fail(function() {
 		console.log('threads foirax');
@@ -117,7 +119,7 @@ ViewList.prototype.showThreads = function() {
 	.always(displayThreads);
 };
 
-ViewList.prototype.showMessages = function() {
+ViewList.prototype.readMessages = function() {
 	var lthis = this;
 	// @TODO wait indicator
 
@@ -149,7 +151,7 @@ ViewList.prototype.showMessages = function() {
 			displayedMessages: lthis.messagesData.count,
 			totalMessages: lthis.detailsData.thread.nb_messages,
 			moreMessages: (lthis.detailsData.thread.nb_messages - lthis.messagesData.count > 0)
-		}
+		};
 		lthis.renderTemplate('list-messages', templateData);
 		lthis.reloadEventListeners();
 	}
@@ -180,8 +182,38 @@ ViewList.prototype.reloadEventListeners = function() {
 	console.log('reload list event listeners !');
 
 	// show thread details
-	$('.list-tool-info-details').click(function() {
+	$('.list-tool-info-details').unbind().click(function() {
 		// @TODO use closest() to genericize for multiple instances ?
 		$('.list-info-box-details').toggle();
 	});
+
+	// sort messages / threads by date
+	$('#list-tool-sort-date').unbind().click(function() {
+		lthis.sortByDate();
+	});
+
+	// search messages / threads
+	$('#list-tool-search').unbind().click(function() {
+		lthis.search();
+	});
+	// press Return to search
+	$('#list-tool-search-input').unbind().keypress(function(e) {
+		if (e.which == 13) { // "return" key
+			lthis.search();
+		}
+	});
+};
+
+ViewList.prototype.sortByDate = function() {
+	console.log('sort by date');
+	this.sortDirection = (this.sortDirection == 'desc' ? 'asc' : 'desc');
+	this.offset = 0;
+	// refresh messages + tools template
+	this.showThreadsOrMessages();
+};
+
+ViewList.prototype.search = function() {
+	var term = $('#list-tool-search-input').val();
+	this.searchTerm = term;
+	this.showThreadsOrMessages();
 };

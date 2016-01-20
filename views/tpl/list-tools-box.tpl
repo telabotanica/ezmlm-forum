@@ -21,10 +21,11 @@
 
 	<div class="col-md-6 col-sm-6 col-xs-6">
 		<div class="input-group">
-		<input type="text" class="form-control" placeholder="Rechercher...">
-		<span class="input-group-btn">
-		<button id="list-tool-search" class="list-tool btn btn-default glyphicon glyphicon-search"></button>
-		</span>
+			<input id="list-tool-search-input" type="text" class="form-control" placeholder="Rechercher...">
+			<!--<span id="searchclear" class="glyphicon glyphicon-remove-circle"></span>-->
+			<span class="input-group-btn">
+				<button id="list-tool-search" class="list-tool btn btn-default glyphicon glyphicon-search"></button>
+			</span>
 		</div>
 	</div>
 
