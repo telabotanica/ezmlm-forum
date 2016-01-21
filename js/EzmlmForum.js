@@ -16,6 +16,7 @@ function EzmlmForum() {
 		lastWeek: 'dddd [à] HH:mm',
 		sameElse: 'DD/MM YYYY'
 	};
+	this.runningQuery = null;
 }
 
 // loads the stringified JSON configuration given by PHP through the HTML view template
@@ -177,7 +178,7 @@ EzmlmForum.prototype.momentize = function(date) {
 
 /**
  * Toggles work indicator panel (#work-indicator) if it exists : shows it if
- * "work" is true, hides it "work" is false
+ * "work" is true, hides it if "work" is false
  */
 EzmlmForum.prototype.working = function(work) {
 	if (work == undefined) {
@@ -192,9 +193,29 @@ EzmlmForum.prototype.working = function(work) {
 		}
 	}
 };
+/**
+ * shows work indicator panel
+ */
 EzmlmForum.prototype.startWorking = function() {
 	this.working(true);
 };
+/**
+ * hides work indicator panel
+ */
 EzmlmForum.prototype.stopWorking = function() {
 	this.working(false);
+};
+
+/**
+ * aborts any running XHR query stored in this.runningQuery
+ */
+EzmlmForum.prototype.abortQuery = function() {
+	if (this.runningQuery != null) { // didn't manage to detect if instanceof jqXHR => wtf ?
+		try {
+			//console.log('aborting query');
+			this.runningQuery.abort();
+		} catch(e) {
+			//console.log('this.runningQuery was not an XHR');
+		}
+	}
 };

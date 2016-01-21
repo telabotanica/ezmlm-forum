@@ -7,7 +7,8 @@ function ViewList() {
 	this.messagesData = null;
 	this.mode = null; // "threads" or "messages"
 	this.defaultMode = 'threads';
-	this.sortDirection = 'desc';
+	this.sortDirection = null;
+	this.defaultSortDirection = 'desc';
 	this.offset = 0;
 	this.limit = 10;
 	this.searchTerm = null;
@@ -20,6 +21,7 @@ ViewList.prototype.init = function() {
 	console.log('ViewList.init()');
 	//console.log(this.config);
 	this.mode = this.defaultMode;
+	this.sortDirection = this.defaultSortDirection;
 	this.readDetails(function() {
 		lthis.showTools();
 		lthis.showThreadsOrMessages();
@@ -60,8 +62,11 @@ ViewList.prototype.readDetails = function(cb, err) {
 }
 
 ViewList.prototype.showTools = function() {
+	console.log('render tools !');
 	this.renderTemplate('list-tools-box', {
-		mode: this.mode
+		messagesMode: (this.mode == 'messages'),
+		threadsMode: (this.mode == 'threads'),
+		searchTerm: this.searchTerm
 	});
 };
 
@@ -87,6 +92,7 @@ ViewList.prototype.showThreadsOrMessages = function() {
  */
 ViewList.prototype.readThreads = function(cb) {
 	var lthis = this;
+	this.abortQuery(); // if messages are being read, stop it
 
 	// post-callbacks work
 	function displayThreads() {
@@ -117,7 +123,7 @@ ViewList.prototype.readThreads = function(cb) {
 		+ (this.offset ? '&offset=' + this.offset : '')
 		+ (this.limit ? '&limit=' + this.limit : '')
 		+ '&details=true';
-	$.get(url)
+	this.runningQuery = $.get(url)
 	.done(function(data) {
 		lthis.threadsData = data;
 		//console.log(lthis.threadsData);
@@ -126,6 +132,9 @@ ViewList.prototype.readThreads = function(cb) {
 		console.log('threads foirax');
 	})
 	.always(displayThreads);
+	
+		console.log('A classe: ' + this.runningQuery.constructor.name);
+		console.log('A type: ' + $.type(this.runningQuery));
 };
 
 
@@ -135,6 +144,7 @@ ViewList.prototype.readThreads = function(cb) {
  */
 ViewList.prototype.readMessages = function(cb) {
 	var lthis = this;
+	this.abortQuery(); // if threads are being read, stop it
 
 	// post-callbacks work
 	function displayMessages() {
@@ -168,7 +178,7 @@ ViewList.prototype.readMessages = function(cb) {
 		+ (this.offset ? '&offset=' + this.offset : '')
 		+ (this.limit ? '&limit=' + this.limit : '')
 	;
-	$.get(url)
+	this.runningQuery = $.get(url)
 	.done(function(data) {
 		lthis.messagesData = data;
 		//console.log(lthis.messagesData);
@@ -211,10 +221,12 @@ ViewList.prototype.reloadEventListeners = function() {
 
 	// switch threads / messages
 	$('.list-tool-mode-entry').unbind().click(function() {
-		var mode = $(this).data('mode'),
-			selectedMode = $('#list-tool-mode-selected');
+		var mode = $(this).data('mode');
 		lthis.mode = mode;
-		selectedMode.html($(this).html());
+		lthis.searchTerm = '';
+		lthis.sortDirection = lthis.defaultSortDirection;
+		lthis.offset = 0;
+		lthis.showTools();
 		lthis.showThreadsOrMessages();
 	});
 };
