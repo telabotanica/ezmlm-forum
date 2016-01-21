@@ -66,19 +66,27 @@ ViewList.prototype.showTools = function() {
 };
 
 ViewList.prototype.showThreadsOrMessages = function() {
+	var lthis = this;
+	$('#list-threads').html('');
+	$('#list-messages').html('');
+	this.startWorking();
 	if (this.mode == 'messages') {
-		this.readMessages();
+		this.readMessages(function() {
+			lthis.stopWorking();
+		});
 	} else {
-		this.readThreads();
+		this.readThreads(function() {
+			lthis.stopWorking();
+		});
 	}
 };
 
 /**
- * Reads, searches, filters latest threads and displays them adequately
+ * Reads, searches, filters latest threads and displays them adequately; calls
+ * cb() at the end
  */
-ViewList.prototype.readThreads = function() {
+ViewList.prototype.readThreads = function(cb) {
 	var lthis = this;
-	// @TODO wait indicator
 
 	// post-callbacks work
 	function displayThreads() {
@@ -99,6 +107,7 @@ ViewList.prototype.readThreads = function() {
 		};
 		lthis.renderTemplate('list-threads', templateData);
 		lthis.reloadEventListeners();
+		cb();
 	}
 
 	// list threads
@@ -119,9 +128,13 @@ ViewList.prototype.readThreads = function() {
 	.always(displayThreads);
 };
 
-ViewList.prototype.readMessages = function() {
+
+/**
+ * Reads, searches, filters latest messages and displays them adequately; calls
+ * cb() at the end
+ */
+ViewList.prototype.readMessages = function(cb) {
 	var lthis = this;
-	// @TODO wait indicator
 
 	// post-callbacks work
 	function displayMessages() {
@@ -129,19 +142,9 @@ ViewList.prototype.readMessages = function() {
 		var messages = lthis.messagesData.results;
 		for (var i=0; i < messages.length; ++i) {
 			// format text
-			messages[i].quoted_message_id = lthis.detectQuotedMessageId(messages[i].message_contents.text); // do this before cleaning
 			messages[i].message_contents.text = lthis.cleanText(messages[i].message_contents.text);
-			messages[i].message_contents.text = lthis.enrichText(messages[i].message_contents.text);
 			// format dates
 			messages[i].message_date_moment = lthis.momentize(messages[i].message_date);
-			// @TODO detect attachments mimetype family and use appropriate
-			// glyphicon from Boostrap (video, picture, audio...)
-			// detect original author
-			messages[i].from_original_author = (lthis.detailsData.thread.first_message.author_hash == messages[i].author_hash);
-			// detect first message
-			messages[i].is_first_message = (lthis.detailsData.thread.first_message_id == messages[i].message_id);
-			// need to explicitely show quote (distance > 1) ?
-			messages[i].needs_quotation = (messages[i].quoted_message_id != null) && (messages[i].message_id - messages[i].quoted_message_id > 1);
 		}
 
 		var templateData = {
@@ -149,15 +152,18 @@ ViewList.prototype.readMessages = function() {
 			sortAsc: (lthis.sortDirection == 'asc'),
 			sortTitle: (lthis.sortDirection == 'asc' ? "Les plus anciens d'abord" : "Les plus récents d'abord"),
 			displayedMessages: lthis.messagesData.count,
-			totalMessages: lthis.detailsData.thread.nb_messages,
-			moreMessages: (lthis.detailsData.thread.nb_messages - lthis.messagesData.count > 0)
+			totalMessages: lthis.detailsData.nb_messages,
+			moreMessages: (lthis.detailsData.nb_messages - lthis.messagesData.count > 0)
 		};
 		lthis.renderTemplate('list-messages', templateData);
 		lthis.reloadEventListeners();
+		cb();
 	}
 
 	// list messages
 	var url = this.listRoot + '/messages/'
+		+ (this.searchTerm ? 'search/*' + this.searchTerm + '*/' : '')
+		+ '?contents=abstract'
 		+ '&sort=' + this.sortDirection
 		+ (this.offset ? '&offset=' + this.offset : '')
 		+ (this.limit ? '&limit=' + this.limit : '')
@@ -165,7 +171,7 @@ ViewList.prototype.readMessages = function() {
 	$.get(url)
 	.done(function(data) {
 		lthis.messagesData = data;
-		console.log(lthis.messagesData);
+		//console.log(lthis.messagesData);
 	})
 	.fail(function() {
 		console.log('messages foirax');
@@ -201,6 +207,15 @@ ViewList.prototype.reloadEventListeners = function() {
 		if (e.which == 13) { // "return" key
 			lthis.search();
 		}
+	});
+
+	// switch threads / messages
+	$('.list-tool-mode-entry').unbind().click(function() {
+		var mode = $(this).data('mode'),
+			selectedMode = $('#list-tool-mode-selected');
+		lthis.mode = mode;
+		selectedMode.html($(this).html());
+		lthis.showThreadsOrMessages();
 	});
 };
 

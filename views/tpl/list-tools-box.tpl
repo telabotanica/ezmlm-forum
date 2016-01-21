@@ -1,20 +1,15 @@
 <script type="text/html" id="tpl-list-tools-box" >
-<!--<div class="btn-group" role="group" aria-label="...">
-	<button type="button" class="btn btn-default">Left</button>
-	<button type="button" class="btn btn-default">Middle</button>
-	<button type="button" class="btn btn-default">Right</button>
-</div>-->
 
 <div class="row">
 	<div class="col-md-4 col-sm-4 col-xs-4">
 		<div class="btn-group" role="group">
 			<button class="list-tool btn btn-default dropdown-toggle" data-toggle="dropdown">
-				Tous les sujets
+				<span id="list-tool-mode-selected">Tous les sujets
 				<span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu">
-				<li><a href="#">Tous les sujets</a></li>
-				<li><a href="#">Tous les messages</a></li>
+				<li><a class="list-tool-mode-entry" data-mode="threads" href="#">Tous les sujets</a></li>
+				<li><a class="list-tool-mode-entry" data-mode="messages" href="#">Tous les messages</a></li>
 			</ul>
 		</div>
 	</div>

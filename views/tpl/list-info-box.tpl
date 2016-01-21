@@ -4,6 +4,7 @@
 	{{/list}}
 	{{#list}}
 	<h2>{{list.list_name}}</h2>
+	<span class="list-address" title="Vous pouvez écrire directement à cette adresse">{{list.list_address}}</span> -
 	<a href="#" class="tool list-tool-info-details">détails</a>
 	<div class="list-info-box-details">
 		<div class="details-row">

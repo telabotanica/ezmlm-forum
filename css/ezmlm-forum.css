@@ -12,6 +12,8 @@
 .table.list-threads-table > thead > tr > th {
 	border-bottom: solid 1px #d0d0d0;
 	padding-bottom: 4px;
+	color: #707070;
+	white-space: nowrap;
 }
 
 /* B. non-bootstrap-related rules ------------------------------------------- */
@@ -43,6 +45,15 @@ table.borderless th, table.borderless td {
 .message-date {
 	color: #808080;
 	padding-top: 3px;
+}
+
+#work-indicator {
+	display: none;
+	margin-top: 10px;
+	padding: 10px;
+}
+#work-indicator img {
+	width: 48px;
 }
 
 /* B.2.b specific-template-related rules ------------------------------------ */
@@ -95,6 +106,7 @@ table.borderless th, table.borderless td {
 	position: relative;
 	/*border: solid red 1px;*/
 	min-height: 10px;
+	margin-top: 10px;
 }
 
 .message-reply-tools {

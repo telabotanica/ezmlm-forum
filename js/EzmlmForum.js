@@ -51,7 +51,10 @@ EzmlmForum.prototype.cleanText = function(text) {
 		"Date: [a-zA-Z]{3}, [0-9]{2} [a-zA-Z]{3} [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}( +[0-9]{4})?", // ?
 		"________________________________", // outlook
 		"&gt; Message du", // ?
-		"------------------------------------------------------------------------" // AVAST
+		"------------------------------------------------------------------------", // AVAST
+		"(le|on) ([0-9]{2}(/|-)[0-9]{2}(/|-)[0-9]{4}|[0-9]{4}(/|-)[0-9]{2}(/|-)[0-9]{2}) [0-9]{2}:[0-9]{2}", // ?
+		//"-------- (Message transféré|Forwarded message) --------", // ? @WARNING forwarded message might be considered as "contents"
+		"From: .+[\n\r]Sent: .+" // ?
 	];
 
 	for (var i=0; i < patterns.length; ++i) {
@@ -170,4 +173,28 @@ EzmlmForum.prototype.momentize = function(date) {
 		dateMoment = moment(date).fromNow();
 	}
 	return dateMoment;
+};
+
+/**
+ * Toggles work indicator panel (#work-indicator) if it exists : shows it if
+ * "work" is true, hides it "work" is false
+ */
+EzmlmForum.prototype.working = function(work) {
+	if (work == undefined) {
+		work = true;
+	}
+	var workIndicator = $('#work-indicator');
+	if (workIndicator != null) {
+		if (work) {
+			workIndicator.show();
+		} else {
+			workIndicator.hide();
+		}
+	}
+};
+EzmlmForum.prototype.startWorking = function() {
+	this.working(true);
+};
+EzmlmForum.prototype.stopWorking = function() {
+	this.working(false);
 };

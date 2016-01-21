@@ -5,6 +5,9 @@
 		<div id="thread-info-box">
 			<!-- thread-info-box.tpl -->
 		</div>
+		<div id="work-indicator">
+			
+		</div>
 		<div id="thread-messages">
 			<!-- thread-messages.tpl -->
 		</div>
