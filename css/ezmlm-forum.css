@@ -30,6 +30,9 @@ h1 {
 .right {
 	float: right;
 }
+.left {
+	float: left;
+}
 
 table.borderless th, table.borderless td {
 	border: none;
@@ -90,6 +93,10 @@ table.borderless th, table.borderless td {
 }*/
 .thread-tool-info-details, .list-tool-info-details {
 	font-size: 0.9em;
+}
+
+.list-tool-mode-entry:first-letter, #list-tool-mode-selected:first-letter {
+	text-transform: uppercase;
 }
 
 #thread-tools {
