@@ -5,6 +5,7 @@ function ViewList() {
 	this.detailsData = null;
 	this.threadsData = null;
 	this.messagesData = null;
+	this.appLoadedOnce = false;
 	this.mode = null; // "threads" or "messages"
 	this.defaultMode = 'threads';
 	this.sortDirection = null;
@@ -17,24 +18,26 @@ function ViewList() {
 ViewList.prototype = new EzmlmForum();
 
 ViewList.prototype.init = function() {
-	var lthis = this;
 	console.log('ViewList.init()');
-	//console.log(this.config);
+	var lthis = this;
 	this.mode = this.defaultMode;
 	this.sortDirection = this.defaultSortDirection;
-	this.readDetails(function() {
-		lthis.showTools();
-		lthis.showThreadsOrMessages();
+	// bind URL (fragment) to app state
+	$(window).on('hashchange', function() {
+		console.log('hash changed : [' + window.location.hash + ']');
+		lthis.loadAppStateFromUrl();
 	});
-	this.reloadEventListeners();
+	// first time load
+	// @WARNING it's said that Safari triggers hashchange on first time load !
+	this.loadAppStateFromUrl();
+	this.appLoadedOnce = true; // allows to read details only once
 };
-
 
 /**
  * Reads the list's details, displays them, and calls cb() or err() at the end
  * respectively if everything went ok or if an error occurred
  */
-ViewList.prototype.readDetails = function(cb, err) {
+ViewList.prototype.readDetails = function() {
 	var lthis = this;
 	var infoBoxData = {
 		list_name: lthis.config['ezmlm-php'].list
@@ -53,11 +56,9 @@ ViewList.prototype.readDetails = function(cb, err) {
 
 		lthis.renderTemplate('list-info-box', infoBoxData);
 		// bye
-		cb();
 	})
 	.fail(function() {
 		console.log('details foirax');
-		err();
 	});
 }
 
@@ -72,17 +73,17 @@ ViewList.prototype.showTools = function() {
 
 ViewList.prototype.showThreadsOrMessages = function() {
 	var lthis = this;
+	function done() {
+		lthis.stopWorking();
+		lthis.pushAppState();
+	}
 	$('#list-threads').html('');
 	$('#list-messages').html('');
 	this.startWorking();
 	if (this.mode == 'messages') {
-		this.readMessages(function() {
-			lthis.stopWorking();
-		});
+		this.readMessages(done);
 	} else {
-		this.readThreads(function() {
-			lthis.stopWorking();
-		});
+		this.readThreads(done);
 	}
 };
 
@@ -113,6 +114,8 @@ ViewList.prototype.readThreads = function(cb) {
 		}
 		var templateData = {
 			threads: threads,
+			searchTerm: (lthis.searchTerm || '*'),
+			sortDirection: lthis.sortDirection,
 			sortAsc: (lthis.sortDirection == 'asc'),
 			sortTitle: (lthis.sortDirection == 'asc' ? "Les plus anciens d'abord" : "Les plus récents d'abord"),
 			displayedThreads: lthis.threadsData.count,
@@ -123,6 +126,8 @@ ViewList.prototype.readThreads = function(cb) {
 				totalPages: totalPages,
 				hasNextPages: (currentPage < totalPages),
 				hasPreviousPages: (currentPage > 1),
+				previousOffset: Math.max(0, lthis.offset - lthis.limit),
+				nextOffset: lthis.offset + lthis.limit,
 				totalResults: lthis.threadsData.total
 			}
 		};
@@ -179,6 +184,8 @@ ViewList.prototype.readMessages = function(cb) {
 		}
 		var templateData = {
 			messages: messages,
+			searchTerm: (lthis.searchTerm || '*'),
+			sortDirection: lthis.sortDirection,
 			sortAsc: (lthis.sortDirection == 'asc'),
 			sortTitle: (lthis.sortDirection == 'asc' ? "Les plus anciens d'abord" : "Les plus récents d'abord"),
 			displayedMessages: lthis.messagesData.count,
@@ -189,6 +196,8 @@ ViewList.prototype.readMessages = function(cb) {
 				totalPages: totalPages,
 				hasNextPages: (currentPage < totalPages),
 				hasPreviousPages: (currentPage > 1),
+				previousOffset: Math.max(0, lthis.offset - lthis.limit),
+				nextOffset: lthis.offset + lthis.limit,
 				totalResults: lthis.messagesData.total
 			}
 		};
@@ -230,11 +239,6 @@ ViewList.prototype.reloadEventListeners = function() {
 		$('.list-info-box-details').toggle();
 	});
 
-	// sort messages / threads by date
-	$('#list-tool-sort-date').unbind().click(function() {
-		lthis.sortByDate();
-	});
-
 	// search messages / threads
 	$('#list-tool-search').unbind().click(function() {
 		lthis.search();
@@ -245,48 +249,73 @@ ViewList.prototype.reloadEventListeners = function() {
 			lthis.search();
 		}
 	});
-
-	// switch threads / messages
-	$('.list-tool-mode-entry').unbind().click(function() {
-		var mode = $(this).data('mode');
-		lthis.mode = mode;
-		lthis.searchTerm = '';
-		lthis.sortDirection = lthis.defaultSortDirection;
-		lthis.offset = 0;
-		lthis.showTools();
-		lthis.showThreadsOrMessages();
-	});
-
-	// pager
-	$('#list-pager-previous-page').unbind().click(function() {
-		console.log('previous page');
-		lthis.offset = Math.max(0, lthis.offset - lthis.limit);
-		lthis.showThreadsOrMessages();
-	});
-	$('#list-pager-next-page').unbind().click(function() {
-		console.log('next page');
-		var maxElements = 0;
-		if (lthis.mode == "messages") {
-			maxElements = lthis.detailsData.nb_messages - 1;
-		} else {
-			maxElements = lthis.detailsData.nb_threads - 1;
-		}
-		lthis.offset = Math.min(maxElements, lthis.offset + lthis.limit);
-		lthis.showThreadsOrMessages();
-	});
-};
-
-ViewList.prototype.sortByDate = function() {
-	console.log('sort by date');
-	this.sortDirection = (this.sortDirection == 'desc' ? 'asc' : 'desc');
-	this.offset = 0;
-	// refresh messages + tools template
-	this.showThreadsOrMessages();
 };
 
 ViewList.prototype.search = function() {
 	var term = $('#list-tool-search-input').val();
 	this.offset = 0;
 	this.searchTerm = term;
-	this.showThreadsOrMessages();
+	//this.showThreadsOrMessages();
+	this.pushAppState();
+};
+
+/**
+ * Updates URL route-like fragment so that it reflects app state; this is
+ * supposed to push a history state (since URL fragment has changed)
+ */
+ViewList.prototype.pushAppState = function() {
+	var fragment = '#!';
+	fragment += '/' + this.mode;
+	fragment += '/' + (this.searchTerm ? this.searchTerm : '*');
+	fragment += '/' + this.offset;
+	fragment += '/' + this.sortDirection;
+	// @TODO date search
+	window.location.hash = fragment;
+};
+
+/**
+ * Reads URL route-like fragment to load app state
+ */
+ViewList.prototype.readAppState = function() {
+	var fragment = window.location.hash;
+	//console.log('fragment: [' + fragment + ']');
+	var parts = fragment.split('/');
+	// remove '#!';
+	parts.shift();
+	//console.log(parts);
+	if (parts.length == 4) { // all or nothing
+		this.mode = parts[0];
+		this.searchTerm = (parts[1] == '*' ? null : parts[1]);
+		this.offset = parseInt(parts[2]);
+		this.sortDirection = parts[3];
+	}
+};
+
+/**
+ * Reads app state then calls services to update rendering
+ * - triggered by hashchange
+ */
+ViewList.prototype.loadAppStateFromUrl = function() {
+	var previousMode = this.mode,
+		previousSearchTerm = this.searchTerm,
+		previousOffset = this.offset,
+		previousSortDirection = this.sortDirection;
+	this.readAppState();
+	console.log('ViewList.intelligentReload()');
+	// intelligent reload
+	var needsDetails = ! this.appLoadedOnce,
+		needsTools = (needsDetails || this.mode != previousMode || this.searchTerm != previousSearchTerm),
+		needsContents = (needsTools || this.offset != previousOffset || this.sortDirection != previousSortDirection);
+	if (needsDetails) {
+		console.log('-- reload details');
+		this.readDetails();
+	}
+	if (needsContents) {
+		console.log('-- reload contents');
+		this.showThreadsOrMessages();
+	}
+	if (needsTools) {
+		console.log('-- reload tools');
+		this.showTools();
+	}
 };

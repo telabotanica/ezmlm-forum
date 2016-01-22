@@ -26,11 +26,10 @@
 				<span class="caret hidden-xs"></span>
 			</button>
 			<ul class="dropdown-menu">
-				<li><a class="list-tool-mode-entry" data-mode="threads" href="#">
-					<span class="hidden-sm hidden-xs">tous les </span>
-					sujets
+				<li><a class="list-tool-mode-entry" href="#!/threads/*/0/desc">
+					<span class="hidden-sm hidden-xs">tous les </span>sujets
 				</a></li>
-				<li><a class="list-tool-mode-entry" data-mode="messages" href="#">
+				<li><a class="list-tool-mode-entry" href="#!/messages/*/0/desc">
 					<span class="hidden-sm hidden-xs">tous les </span>messages
 				</a></li>
 			</ul>
