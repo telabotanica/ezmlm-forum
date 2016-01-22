@@ -70,8 +70,13 @@ table.borderless th, table.borderless td {
 
 .list-pager-page-number {
 	/*border: dotted blue 1px;*/
-	margin-right: 10px;
 	font-weight: bold;
+}
+.list-pager-total-results {
+	font-weight: bold;
+}
+.list-pager-navigation {
+	margin-left: 10px;
 }
 
 /* B.2.b specific-template-related rules ------------------------------------ */

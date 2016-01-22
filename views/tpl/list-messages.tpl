@@ -43,15 +43,19 @@
 	{{#pager}}
 	<div id="list-threads-pager" class="list-pager">
 		<span class="list-pager-total-results">
-			{{totalResults}} résultats - 
+			{{totalResults}} résultats
 		</span>
-		<span class="list-pager-page-number">
-			Page {{currentPage}}/{{totalPages}}
+		{{#totalPages}}
+			<span class="list-pager-page-number">
+				- page {{currentPage}} / {{totalPages}}
+			</span>
+		{{/totalPages}}
+		<span class="list-pager-navigation">
+			<a {{^hasPreviousPages}}disabled {{/hasPreviousPages}} title="Page précédente" id="list-pager-previous-page"
+				class="btn btn-primary glyphicon glyphicon-chevron-left"></a>
+			<a {{^hasNextPages}}disabled {{/hasNextPages}} title="Page suivante" id="list-pager-next-page"
+				class="btn btn-primary glyphicon glyphicon-chevron-right"></a>
 		</span>
-		<a {{^hasPreviousPages}}disabled {{/hasPreviousPages}} title="Page précédente" id="list-pager-previous-page"
-			class="btn btn-primary glyphicon glyphicon-chevron-left"></a>
-		<a {{^hasNextPages}}disabled {{/hasNextPages}} title="Page suivante" id="list-pager-next-page"
-			class="btn btn-primary glyphicon glyphicon-chevron-right"></a>
 	</div>
 	{{/pager}}
 </div>
