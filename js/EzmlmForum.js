@@ -4,6 +4,7 @@
 function EzmlmForum() {
 	this.config = {};
 	this.listRoot = '';
+	this.appLoadedOnce = false;
 	// text enriching options
 	this.enrich = {
 		media: false,
@@ -28,6 +29,23 @@ EzmlmForum.prototype.setConfig = function(configString) {
 // starts the job
 EzmlmForum.prototype.init = function() {
 	console.log('EzmlmForum.init()');
+	this.initDefaults();
+	var lthis = this;
+	// bind URL (fragment) to app state
+	$(window).on('hashchange', function() {
+		console.log('hash changed : [' + window.location.hash + ']');
+		lthis.loadAppStateFromUrl();
+	});
+	// first time load
+	// @WARNING it's said that Safari triggers hashchange on first time load !
+	this.loadAppStateFromUrl();
+	this.appLoadedOnce = true; // allows to read details only once
+};
+
+// set defult values for attributes before binding URL to app state
+// - to be overrided
+EzmlmForum.prototype.initDefaults = function() {
+	console.log('EzmlmForum.initDefaults()');
 };
 
 /**

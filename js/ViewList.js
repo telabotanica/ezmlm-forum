@@ -5,7 +5,6 @@ function ViewList() {
 	this.detailsData = null;
 	this.threadsData = null;
 	this.messagesData = null;
-	this.appLoadedOnce = false;
 	this.mode = null; // "threads" or "messages"
 	this.defaultMode = 'threads';
 	this.sortDirection = null;
@@ -17,20 +16,10 @@ function ViewList() {
 // inheritance
 ViewList.prototype = new EzmlmForum();
 
-ViewList.prototype.init = function() {
-	console.log('ViewList.init()');
-	var lthis = this;
+ViewList.prototype.initDefaults = function() {
+	console.log('ViewList.initDefaults()');
 	this.mode = this.defaultMode;
 	this.sortDirection = this.defaultSortDirection;
-	// bind URL (fragment) to app state
-	$(window).on('hashchange', function() {
-		console.log('hash changed : [' + window.location.hash + ']');
-		lthis.loadAppStateFromUrl();
-	});
-	// first time load
-	// @WARNING it's said that Safari triggers hashchange on first time load !
-	this.loadAppStateFromUrl();
-	this.appLoadedOnce = true; // allows to read details only once
 };
 
 /**
@@ -253,22 +242,20 @@ ViewList.prototype.reloadEventListeners = function() {
 
 ViewList.prototype.search = function() {
 	var term = $('#list-tool-search-input').val();
-	this.offset = 0;
-	this.searchTerm = term;
-	//this.showThreadsOrMessages();
-	this.pushAppState();
+	// search bar should be a form to avoid this trick
+	this.pushAppState(this.mode, term);
 };
 
 /**
  * Updates URL route-like fragment so that it reflects app state; this is
  * supposed to push a history state (since URL fragment has changed)
  */
-ViewList.prototype.pushAppState = function() {
+ViewList.prototype.pushAppState = function(mode, term, offset, sortDirection) {
 	var fragment = '#!';
-	fragment += '/' + this.mode;
-	fragment += '/' + (this.searchTerm ? this.searchTerm : '*');
-	fragment += '/' + this.offset;
-	fragment += '/' + this.sortDirection;
+	fragment += '/' + (mode || this.mode);
+	fragment += '/' + (term || (this.searchTerm ? this.searchTerm : '*'));
+	fragment += '/' + (offset || this.offset);
+	fragment += '/' + (sortDirection || this.sortDirection);
 	// @TODO date search
 	window.location.hash = fragment;
 };
@@ -286,6 +273,7 @@ ViewList.prototype.readAppState = function() {
 	if (parts.length == 4) { // all or nothing
 		this.mode = parts[0];
 		this.searchTerm = (parts[1] == '*' ? null : parts[1]);
+		console.log('AAAA searchTerm: [' + this.searchTerm + '], nst: [' + (parts[1] == '*' ? null : parts[1]) + ']');
 		this.offset = parseInt(parts[2]);
 		this.sortDirection = parts[3];
 	}
@@ -300,9 +288,11 @@ ViewList.prototype.loadAppStateFromUrl = function() {
 		previousSearchTerm = this.searchTerm,
 		previousOffset = this.offset,
 		previousSortDirection = this.sortDirection;
+	// from URL
 	this.readAppState();
 	console.log('ViewList.intelligentReload()');
 	// intelligent reload
+	console.log('searchTerm: [' + this.searchTerm + '], pst: [' + previousSearchTerm + ']');
 	var needsDetails = ! this.appLoadedOnce,
 		needsTools = (needsDetails || this.mode != previousMode || this.searchTerm != previousSearchTerm),
 		needsContents = (needsTools || this.offset != previousOffset || this.sortDirection != previousSortDirection);
