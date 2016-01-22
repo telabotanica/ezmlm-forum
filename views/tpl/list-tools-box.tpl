@@ -1,22 +1,29 @@
 <script type="text/html" id="tpl-list-tools-box" >
-
+<!--
 	<span class="hidden-md hidden-sm hidden-xs">LG</span>
 	<span class="hidden-lg hidden-sm hidden-xs">MD</span>
 	<span class="hidden-md hidden-lg hidden-xs">SM</span>
 	<span class="hidden-md hidden-sm hidden-lg">XS</span>
+-->
 <div class="row">
-	<div class="col-lg-3 col-md-4 col-sm-3 col-xs-5">
+	<div class="col-lg-3 col-md-4 col-sm-4 col-xs-4">
 		<div class="btn-group" role="group">
 			<button class="list-tool btn btn-primary dropdown-toggle" data-toggle="dropdown">
 				<span id="list-tool-mode-selected">
 					{{#messagesMode}}
-						<span class="hidden-sm hidden-xs">tous les </span>messages
+					<span class="hidden-sm hidden-md hidden-lg glyphicon glyphicon-envelope"></span>
+					<span class="hidden-xs">
+						<span class="hidden-sm">tous les </span>messages
+					</span>
 					{{/messagesMode}}
 					{{#threadsMode}}
-						<span class="hidden-sm hidden-xs">tous les </span>sujets
+					<span class="hidden-sm hidden-md hidden-lg glyphicon glyphicon-comment"></span>
+					<span class="hidden-xs">
+						<span class="hidden-sm">tous les </span>sujets
+					</span>
 					{{/threadsMode}}
 				</span>
-				<span class="caret"></span>
+				<span class="caret hidden-xs"></span>
 			</button>
 			<ul class="dropdown-menu">
 				<li><a class="list-tool-mode-entry" data-mode="threads" href="#">
@@ -30,9 +37,11 @@
 		</div>
 		<div class="btn-group" role="group">
 			<button class="list-tool btn btn-default dropdown-toggle" data-toggle="dropdown">
-				<span class="glyphicon glyphicon-calendar hidden-md hidden-lg"></span>
-				<span class="hidden-sm hidden-xs">Par date</span>
-				<span class="caret"></span>
+				<span class="glyphicon glyphicon-calendar hidden-sm hidden-md hidden-lg"></span>
+				<span class="hidden-xs">
+					<span class="hidden-sm">par </span>date
+				</span>
+				<span class="caret hidden-xs"></span>
 			</button>
 			<ul class="dropdown-menu">
 				<li>Pouet pouet c'est la fête</li>
@@ -40,11 +49,10 @@
 		</div>
 	</div>
 
-	<div class="col-lg-7 col-md-6 col-sm-8 col-xs-5">
+	<div class="col-lg-7 col-md-6 col-sm-7 col-xs-6">
 		<div class="input-group">
 			<input id="list-tool-search-input" type="text" class="form-control"
 				   placeholder="Rechercher..." value="{{searchTerm}}" />
-			<!--<span id="searchclear" class="glyphicon glyphicon-remove-circle"></span>-->
 			<span class="input-group-btn">
 				<button id="list-tool-search" class="list-tool btn btn-default glyphicon glyphicon-search"></button>
 			</span>
