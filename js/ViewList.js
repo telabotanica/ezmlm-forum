@@ -103,13 +103,27 @@ ViewList.prototype.readThreads = function(cb) {
 			threads[i].last_message.message_date_moment = lthis.momentize(threads[i].last_message.message_date);
 		}
 
+		var currentPage = 1
+			totalPages = Math.floor(lthis.detailsData.nb_threads / lthis.limit);
+		if (lthis.detailsData.nb_threads % lthis.limit != 0) {
+			totalPages++;
+		}
+		if (lthis.offset > 0) {
+			currentPage = Math.floor(lthis.offset / lthis.limit) + 1;
+		}
 		var templateData = {
 			threads: threads,
 			sortAsc: (lthis.sortDirection == 'asc'),
 			sortTitle: (lthis.sortDirection == 'asc' ? "Les plus anciens d'abord" : "Les plus récents d'abord"),
 			displayedThreads: lthis.threadsData.count,
 			totalThreads: lthis.detailsData.nb_threads,
-			moreThreads: (lthis.detailsData.nb_threads - lthis.threadsData.count > 0)
+			moreThreads: (lthis.detailsData.nb_threads - lthis.threadsData.count > 0),
+			pager: {
+				currentPage: currentPage,
+				totalPages: totalPages,
+				hasNextPages: (currentPage < totalPages),
+				hasPreviousPages: (currentPage > 1)
+			}
 		};
 		lthis.renderTemplate('list-threads', templateData);
 		lthis.reloadEventListeners();
@@ -132,9 +146,6 @@ ViewList.prototype.readThreads = function(cb) {
 		console.log('threads foirax');
 	})
 	.always(displayThreads);
-	
-		console.log('A classe: ' + this.runningQuery.constructor.name);
-		console.log('A type: ' + $.type(this.runningQuery));
 };
 
 
@@ -157,13 +168,27 @@ ViewList.prototype.readMessages = function(cb) {
 			messages[i].message_date_moment = lthis.momentize(messages[i].message_date);
 		}
 
+		var currentPage = 1
+			totalPages = Math.floor(lthis.detailsData.nb_messages / lthis.limit);
+		if (lthis.detailsData.nb_messages % lthis.limit != 0) {
+			totalPages++;
+		}
+		if (lthis.offset > 0) {
+			currentPage = Math.floor(lthis.offset / lthis.limit) + 1;
+		}
 		var templateData = {
 			messages: messages,
 			sortAsc: (lthis.sortDirection == 'asc'),
 			sortTitle: (lthis.sortDirection == 'asc' ? "Les plus anciens d'abord" : "Les plus récents d'abord"),
 			displayedMessages: lthis.messagesData.count,
 			totalMessages: lthis.detailsData.nb_messages,
-			moreMessages: (lthis.detailsData.nb_messages - lthis.messagesData.count > 0)
+			moreMessages: (lthis.detailsData.nb_messages - lthis.messagesData.count > 0),
+			pager: {
+				currentPage: currentPage,
+				totalPages: totalPages,
+				hasNextPages: (currentPage < totalPages),
+				hasPreviousPages: (currentPage > 1)
+			}
 		};
 		lthis.renderTemplate('list-messages', templateData);
 		lthis.reloadEventListeners();
@@ -227,6 +252,24 @@ ViewList.prototype.reloadEventListeners = function() {
 		lthis.sortDirection = lthis.defaultSortDirection;
 		lthis.offset = 0;
 		lthis.showTools();
+		lthis.showThreadsOrMessages();
+	});
+
+	// pager
+	$('#list-pager-previous-page').unbind().click(function() {
+		console.log('previous page');
+		lthis.offset = Math.max(0, lthis.offset - lthis.limit);
+		lthis.showThreadsOrMessages();
+	});
+	$('#list-pager-next-page').unbind().click(function() {
+		console.log('next page');
+		var maxElements = 0;
+		if (lthis.mode == "messages") {
+			maxElements = lthis.detailsData.nb_messages - 1;
+		} else {
+			maxElements = lthis.detailsData.nb_threads - 1;
+		}
+		lthis.offset = Math.min(maxElements, lthis.offset + lthis.limit);
 		lthis.showThreadsOrMessages();
 	});
 };

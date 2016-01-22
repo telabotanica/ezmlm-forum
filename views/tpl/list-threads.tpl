@@ -30,10 +30,22 @@
 				<div class="message-date" title="{{last_message.message_date}}">
 					{{last_message.message_date_moment}}
 				</div>
-				
 			</td>
 		</tr>
 		{{/threads}}
 	</tbody>
 </table>
+<div class="list-pager-area">
+	{{#pager}}
+	<div id="list-threads-pager" class="list-pager">
+		<span class="list-pager-page-number">
+			Page {{currentPage}}/{{totalPages}}
+		</span>
+		<a {{^hasPreviousPages}}disabled {{/hasPreviousPages}} title="Page précédente" id="list-pager-previous-page"
+			class="btn btn-primary glyphicon glyphicon-chevron-left"></a>
+		<a {{^hasNextPages}}disabled {{/hasNextPages}} title="Page suivante" id="list-pager-next-page"
+			class="btn btn-primary glyphicon glyphicon-chevron-right"></a>
+	</div>
+	{{/pager}}
+</div>
 </script>

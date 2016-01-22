@@ -54,6 +54,7 @@ EzmlmForum.prototype.cleanText = function(text) {
 		"&gt; Message du", // ?
 		"------------------------------------------------------------------------", // AVAST
 		"(le|on) ([0-9]{2}(/|-)[0-9]{2}(/|-)[0-9]{4}|[0-9]{4}(/|-)[0-9]{2}(/|-)[0-9]{2}) [0-9]{2}:[0-9]{2}", // ?
+		"le [0-9]{1,2} [a-zA-Z]+ [0-9]{4} (à )?[0-9]{2}:[0-9]{2}", // ?
 		//"-------- (Message transféré|Forwarded message) --------", // ? @WARNING forwarded message might be considered as "contents"
 		"From: .+[\n\r]Sent: .+" // ?
 	];

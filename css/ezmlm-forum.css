@@ -56,6 +56,21 @@ table.borderless th, table.borderless td {
 	width: 48px;
 }
 
+.list-pager-area {
+	/*border: solid red 1px;*/
+}
+
+.list-pager {
+	float: right;
+	/*border: dashed blue 1px;*/
+}
+
+.list-pager-page-number {
+	/*border: dotted blue 1px;*/
+	margin-right: 10px;
+	font-weight: bold;
+}
+
 /* B.2.b specific-template-related rules ------------------------------------ */
 
 #thread-info-box, #list-info-box {

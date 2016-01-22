@@ -3,7 +3,7 @@
 <div class="row">
 	<div class="col-md-4 col-sm-4 col-xs-4">
 		<div class="btn-group" role="group">
-			<button class="list-tool btn btn-default dropdown-toggle" data-toggle="dropdown">
+			<button class="list-tool btn btn-primary dropdown-toggle" data-toggle="dropdown">
 				<span id="list-tool-mode-selected">
 					{{#messagesMode}}
 						Tous les messages
