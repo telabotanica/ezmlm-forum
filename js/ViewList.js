@@ -104,8 +104,8 @@ ViewList.prototype.readThreads = function(cb) {
 		}
 
 		var currentPage = 1
-			totalPages = Math.floor(lthis.detailsData.nb_threads / lthis.limit);
-		if (lthis.detailsData.nb_threads % lthis.limit != 0) {
+			totalPages = Math.floor(lthis.threadsData.total / lthis.limit);
+		if (lthis.threadsData.total % lthis.limit != 0) {
 			totalPages++;
 		}
 		if (lthis.offset > 0) {
@@ -116,13 +116,14 @@ ViewList.prototype.readThreads = function(cb) {
 			sortAsc: (lthis.sortDirection == 'asc'),
 			sortTitle: (lthis.sortDirection == 'asc' ? "Les plus anciens d'abord" : "Les plus récents d'abord"),
 			displayedThreads: lthis.threadsData.count,
-			totalThreads: lthis.detailsData.nb_threads,
-			moreThreads: (lthis.detailsData.nb_threads - lthis.threadsData.count > 0),
+			totalThreads: lthis.threadsData.total,
+			moreThreads: (lthis.threadsData.total - lthis.threadsData.count > 0),
 			pager: {
 				currentPage: currentPage,
 				totalPages: totalPages,
 				hasNextPages: (currentPage < totalPages),
-				hasPreviousPages: (currentPage > 1)
+				hasPreviousPages: (currentPage > 1),
+				totalResults: lthis.threadsData.total
 			}
 		};
 		lthis.renderTemplate('list-threads', templateData);
@@ -169,8 +170,8 @@ ViewList.prototype.readMessages = function(cb) {
 		}
 
 		var currentPage = 1
-			totalPages = Math.floor(lthis.detailsData.nb_messages / lthis.limit);
-		if (lthis.detailsData.nb_messages % lthis.limit != 0) {
+			totalPages = Math.floor(lthis.messagesData.total / lthis.limit);
+		if (lthis.messagesData.total % lthis.limit != 0) {
 			totalPages++;
 		}
 		if (lthis.offset > 0) {
@@ -181,13 +182,14 @@ ViewList.prototype.readMessages = function(cb) {
 			sortAsc: (lthis.sortDirection == 'asc'),
 			sortTitle: (lthis.sortDirection == 'asc' ? "Les plus anciens d'abord" : "Les plus récents d'abord"),
 			displayedMessages: lthis.messagesData.count,
-			totalMessages: lthis.detailsData.nb_messages,
-			moreMessages: (lthis.detailsData.nb_messages - lthis.messagesData.count > 0),
+			totalMessages: lthis.messagesData.total,
+			moreMessages: (lthis.messagesData.total - lthis.messagesData.count > 0),
 			pager: {
 				currentPage: currentPage,
 				totalPages: totalPages,
 				hasNextPages: (currentPage < totalPages),
-				hasPreviousPages: (currentPage > 1)
+				hasPreviousPages: (currentPage > 1),
+				totalResults: lthis.messagesData.total
 			}
 		};
 		lthis.renderTemplate('list-messages', templateData);
@@ -284,6 +286,7 @@ ViewList.prototype.sortByDate = function() {
 
 ViewList.prototype.search = function() {
 	var term = $('#list-tool-search-input').val();
+	this.offset = 0;
 	this.searchTerm = term;
 	this.showThreadsOrMessages();
 };

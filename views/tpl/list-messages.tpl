@@ -42,6 +42,9 @@
 <div class="list-pager-area">
 	{{#pager}}
 	<div id="list-threads-pager" class="list-pager">
+		<span class="list-pager-total-results">
+			{{totalResults}} résultats - 
+		</span>
 		<span class="list-pager-page-number">
 			Page {{currentPage}}/{{totalPages}}
 		</span>
