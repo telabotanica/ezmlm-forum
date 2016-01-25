@@ -242,6 +242,7 @@ ViewList.prototype.reloadEventListeners = function() {
 
 ViewList.prototype.search = function() {
 	var term = $('#list-tool-search-input').val();
+	//console.log('push search: [' + term + ']')
 	// search bar should be a form to avoid this trick
 	this.pushAppState(this.mode, term);
 };
@@ -251,11 +252,15 @@ ViewList.prototype.search = function() {
  * supposed to push a history state (since URL fragment has changed)
  */
 ViewList.prototype.pushAppState = function(mode, term, offset, sortDirection) {
+	if (term == '') {
+		term = '*';
+	}
 	var fragment = '#!';
 	fragment += '/' + (mode || this.mode);
 	fragment += '/' + (term || (this.searchTerm ? this.searchTerm : '*'));
 	fragment += '/' + (offset || this.offset);
 	fragment += '/' + (sortDirection || this.sortDirection);
+	//console.log('pushing framgment: [' + fragment + ']');
 	// @TODO date search
 	window.location.hash = fragment;
 };
