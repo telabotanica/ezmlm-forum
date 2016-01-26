@@ -7,7 +7,7 @@ function EzmlmForum() {
 	this.appLoadedOnce = false;
 	// text enriching options
 	this.enrich = {
-		media: false,
+		media: true,
 		links: true,
 		binettes: false
 	};
@@ -84,6 +84,14 @@ EzmlmForum.prototype.renderTemplate = function(id, data) {
 };
 
 /**
+ * Detects if a text is an address email, and if so censors the domain - intended
+ * for author "names" that might 
+ */
+EzmlmForum.prototype.censorEmail = function(text) {
+	return text;
+};
+
+/**
  * Takes a raw message text and tries to remove the quotations / original
  * message(s) part(s) to return only the message substance
  * @TODO test and improve
@@ -92,14 +100,15 @@ EzmlmForum.prototype.cleanText = function(text) {
 	// (.|[\r\n]) simulates the DOTALL; [\s\S] doesn't work here, no idea why
 	var patterns = [
 		"----- Original Message -----", // ?
-		"Date: [a-zA-Z]{3}, [0-9]{2} [a-zA-Z]{3} [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}( +[0-9]{4})?", // ?
+		"Date: [a-zA-Z]{3}, [0-9]{1,2} [a-zA-Z]{3} [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}( +[0-9]{4})?", // ?
 		"________________________________", // outlook
 		"&gt; Message du", // ?
 		"------------------------------------------------------------------------", // AVAST
 		"(le|on) ([0-9]{2}(/|-)[0-9]{2}(/|-)[0-9]{4}|[0-9]{4}(/|-)[0-9]{2}(/|-)[0-9]{2}) [0-9]{2}:[0-9]{2}", // ?
 		"le [0-9]{1,2} [a-zA-Z]+ [0-9]{4} (à )?[0-9]{2}:[0-9]{2}", // ?
 		//"-------- (Message transféré|Forwarded message) --------", // ? @WARNING forwarded message might be considered as "contents"
-		"From: .+[\n\r]Sent: .+" // ?
+		"From: .+[\n\r](Sent|To): .+", // ?
+		"(Envoyé de mon|Sent from my) i(Phone|Pad|Mac)" // iPhone / iPad
 	];
 
 	for (var i=0; i < patterns.length; ++i) {

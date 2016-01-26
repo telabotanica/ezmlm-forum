@@ -7,7 +7,7 @@ function ViewThread() {
 	this.detailsData = null;
 	this.messagesData = null;
 	this.offset = 0;
-	this.initialLimit = 4;
+	this.initialLimit = 5;
 	this.limit = null;
 }
 // inheritance
@@ -72,9 +72,11 @@ ViewThread.prototype.readThread = function() {
 		var messages = lthis.messagesData.results;
 		for (var i=0; i < messages.length; ++i) {
 			// format text
-			messages[i].quoted_message_id = lthis.detectQuotedMessageId(messages[i].message_contents.text); // do this before cleaning
-			messages[i].message_contents.text = lthis.cleanText(messages[i].message_contents.text);
-			messages[i].message_contents.text = lthis.enrichText(messages[i].message_contents.text);
+			if (messages[i].message_contents) {
+				messages[i].quoted_message_id = lthis.detectQuotedMessageId(messages[i].message_contents.text); // do this before cleaning
+				messages[i].message_contents.text = lthis.cleanText(messages[i].message_contents.text);
+				messages[i].message_contents.text = lthis.enrichText(messages[i].message_contents.text);
+			}
 			// format dates
 			messages[i].message_date_moment = lthis.momentize(messages[i].message_date);
 			// @TODO detect attachments mimetype family and use appropriate
@@ -92,8 +94,10 @@ ViewThread.prototype.readThread = function() {
 			sortAsc: (lthis.sortDirection == 'asc'),
 			sortTitle: (lthis.sortDirection == 'asc' ? "Les plus anciens d'abord" : "Les plus récents d'abord"),
 			displayedMessages: lthis.messagesData.count,
-			totalMessages: lthis.detailsData.thread.nb_messages,
-			moreMessages: (lthis.detailsData.thread.nb_messages - lthis.messagesData.count > 0)
+			//totalMessages: lthis.detailsData.thread.nb_messages,
+			//moreMessages: (lthis.detailsData.thread.nb_messages - lthis.messagesData.count > 0)
+			totalMessages: lthis.messagesData.total,
+			moreMessages: (lthis.messagesData.total - lthis.messagesData.count > 0)
 		}
 		lthis.renderTemplate('thread-messages', templateData);
 

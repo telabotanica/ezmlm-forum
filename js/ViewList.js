@@ -56,7 +56,7 @@ ViewList.prototype.showTools = function() {
 	this.renderTemplate('list-tools-box', {
 		messagesMode: (this.mode == 'messages'),
 		threadsMode: (this.mode == 'threads'),
-		searchTerm: this.searchTerm
+		searchTerm: this.searchTerm != null ? decodeURI(this.searchTerm) : ''
 	});
 };
 
@@ -91,6 +91,10 @@ ViewList.prototype.readThreads = function(cb) {
 		for (var i=0; i < threads.length; ++i) {
 			// format dates
 			threads[i].last_message.message_date_moment = lthis.momentize(threads[i].last_message.message_date);
+			// in case the thread name is empty
+			if (threads[i].subject == "") threads[i].subject = "-- error reading subject --";
+			// email censorship
+			threads[i].first_message.author_name = lthis.censorEmail(threads[i].first_message.author_name);
 		}
 
 		var currentPage = 1
@@ -244,7 +248,7 @@ ViewList.prototype.search = function() {
 	var term = $('#list-tool-search-input').val();
 	//console.log('push search: [' + term + ']')
 	// search bar should be a form to avoid this trick
-	this.pushAppState(this.mode, term);
+	this.pushAppState(this.mode, term, 0);
 };
 
 /**
@@ -255,10 +259,13 @@ ViewList.prototype.pushAppState = function(mode, term, offset, sortDirection) {
 	if (term == '') {
 		term = '*';
 	}
+	if (offset == undefined) {
+		offset = this.offset;
+	}
 	var fragment = '#!';
 	fragment += '/' + (mode || this.mode);
 	fragment += '/' + (term || (this.searchTerm ? this.searchTerm : '*'));
-	fragment += '/' + (offset || this.offset);
+	fragment += '/' + offset;
 	fragment += '/' + (sortDirection || this.sortDirection);
 	//console.log('pushing framgment: [' + fragment + ']');
 	// @TODO date search

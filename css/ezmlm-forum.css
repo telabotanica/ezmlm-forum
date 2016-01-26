@@ -126,7 +126,7 @@ table.borderless th, table.borderless td {
 }
 
 .message-contents {
-	
+	padding: 0 80px 0 0;
 }
 
 .message-bottom-container {
