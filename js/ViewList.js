@@ -39,6 +39,10 @@ ViewList.prototype.readDetails = function() {
 		// display
 		lthis.detailsData.first_message.message_date_moment = lthis.momentize(lthis.detailsData.first_message.message_date);
 		lthis.detailsData.last_message.message_date_moment = lthis.momentize(lthis.detailsData.last_message.message_date);
+		// email censorship
+		lthis.detailsData.first_message.author_name = lthis.censorEmail(lthis.detailsData.first_message.author_name);
+		lthis.detailsData.last_message.author_name = lthis.censorEmail(lthis.detailsData.last_message.author_name);
+
 		infoBoxData.list = lthis.detailsData;
 		// page title
 		document.title = lthis.config['ezmlm-php'].list + ' (' + lthis.mode + ') - ' + lthis.config.title;

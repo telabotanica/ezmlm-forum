@@ -7,7 +7,7 @@ function EzmlmForum() {
 	this.appLoadedOnce = false;
 	// text enriching options
 	this.enrich = {
-		media: true,
+		media: false,
 		links: true,
 		binettes: false
 	};
@@ -85,9 +85,13 @@ EzmlmForum.prototype.renderTemplate = function(id, data) {
 
 /**
  * Detects if a text is an address email, and if so censors the domain - intended
- * for author "names" that might 
+ * for author "names" that might be bare email addresses
  */
 EzmlmForum.prototype.censorEmail = function(text) {
+	if (text.match(/.+@.+\..+/i)) {
+		// would it be quicker to try replacing without matching ?
+		text = text.replace(/(.+@).+\..+/i, "$1...");
+	}
 	return text;
 };
 

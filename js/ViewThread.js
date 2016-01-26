@@ -44,6 +44,10 @@ ViewThread.prototype.readDetails = function(cb, err) {
 		// display
 		lthis.detailsData.thread.first_message.message_date_moment = lthis.momentize(lthis.detailsData.thread.first_message.message_date);
 		lthis.detailsData.thread.last_message.message_date_moment = lthis.momentize(lthis.detailsData.thread.last_message.message_date);
+		// email censorship
+		lthis.detailsData.thread.first_message.author_name = lthis.censorEmail(lthis.detailsData.thread.first_message.author_name);
+		lthis.detailsData.thread.last_message.author_name = lthis.censorEmail(lthis.detailsData.thread.last_message.author_name);
+
 		infoBoxData = lthis.detailsData;
 		// page title
 		document.title = lthis.detailsData.thread.subject + ' (' + lthis.config['ezmlm-php'].list + ') - ' + lthis.config.title;
@@ -83,6 +87,8 @@ ViewThread.prototype.readThread = function() {
 			// glyphicon from Boostrap (video, picture, audio...)
 			// detect original author
 			messages[i].from_original_author = (lthis.detailsData.thread.first_message.author_hash == messages[i].author_hash);
+			// email censorship
+			messages[i].author_name = lthis.censorEmail(messages[i].author_name);
 			// detect first message
 			messages[i].is_first_message = (lthis.detailsData.thread.first_message_id == messages[i].message_id);
 			// need to explicitely show quote (distance > 1) ?
