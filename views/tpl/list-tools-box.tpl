@@ -60,8 +60,8 @@
 									<td class="list-calendar-year">{{year}}</td>
 									{{#months}}
 									<td>
-										<a href="#!/{{mode}}/date/{{yearAndMonth}}/0/desc"
-										   title="voir tous les {{#messagesMode}}messages{{/messagesMode}}{{#threadsMode}}sujets{{/threadsMode}} de {{month}}/{{year}}">
+										<a href="#!/messages/date/{{yearAndMonth}}/0/desc"
+										   title="voir tous les messages de {{month}}/{{year}}">
 											{{count}}
 										</a>
 									</td>

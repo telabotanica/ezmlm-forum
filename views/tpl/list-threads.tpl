@@ -43,6 +43,11 @@
 			</td>
 		</tr>
 		{{/threads}}
+		{{^threads}}
+		<tr>
+			<td colspan="4">Aucun sujet ne correspond à la recherche</td>
+		</tr>
+		{{/threads}}
 	</tbody>
 </table>
 <div class="list-pager-area">

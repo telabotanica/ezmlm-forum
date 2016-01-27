@@ -44,6 +44,11 @@
 			</td>
 		</tr>
 		{{/messages}}
+		{{^messages}}
+		<tr>
+			<td colspan="4">Aucun message ne correspond à la recherche</td>
+		</tr>
+		{{/messages}}
 	</tbody>
 </table>
 <div class="list-pager-area">

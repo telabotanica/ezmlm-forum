@@ -112,7 +112,7 @@ ViewList.prototype.loadTools = function() {
 		calendar.sort(function(a, b) {
 			return parseInt(b.year) - parseInt(a.year);
 		});
-		console.log(calendar);
+		//console.log(calendar);
 		// render
 		lthis.renderTemplate('list-tools-box', {
 			messagesMode: (lthis.mode == 'messages'),
@@ -220,6 +220,7 @@ ViewList.prototype.readThreads = function(cb) {
 		//console.log(lthis.threadsData);
 	})
 	.fail(function() {
+		lthis.threadsData = { results: [] };
 		console.log('threads foirax');
 	})
 	.always(displayThreads);
@@ -299,6 +300,7 @@ ViewList.prototype.readMessages = function(cb) {
 		//console.log(lthis.messagesData);
 	})
 	.fail(function() {
+		lthis.messagesData = { results: [] };
 		console.log('messages foirax');
 	})
 	.always(displayMessages);
@@ -375,7 +377,7 @@ ViewList.prototype.readAppState = function() {
 		this.mode = parts[0];
 		this.searchMode = parts[1];
 		this.searchTerm = (parts[2] == '*' ? null : parts[2]);
-		console.log('AAAA searchTerm: [' + this.searchTerm + '], nst: [' + (parts[2] == '*' ? null : parts[2]) + ']');
+		//console.log('AAAA searchTerm: [' + this.searchTerm + '], nst: [' + (parts[2] == '*' ? null : parts[2]) + ']');
 		this.offset = parseInt(parts[3]);
 		this.sortDirection = parts[4];
 	}
