@@ -2,17 +2,23 @@
 <table class="list-threads-table table borderless table-hover">
 	<thead>
 		<tr>
-			<th>Sujet</th>
-			<th>Message</th>
-			<th>Auteur</th>
-			<th>
+			<th class="col-lg-3 col-md-4 col-sm-3 col-xs-3">Sujet</th>
+			<th class="col-lg-6 col-md-5 col-sm-4 col-xs-5">Message</th>
+			<th class="col-lg-2 col-md-2 col-sm-3 col-xs-3">Auteur</th>
+			<th class="col-lg-1 col-md-1 col-sm-2 col-xs-1">
 				{{#sortAsc}}
 					<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
-					<a href="#!/messages/{{searchMode}}/{{searchTerm}}/0/desc" title="{{sortTitle}}" class="tool" id="list-tool-sort-date">Activité</a>
+					<a href="#!/messages/{{searchMode}}/{{searchTerm}}/0/desc" title="{{sortTitle}}" class="tool" id="list-tool-sort-date">
+						<span class="hidden-xs">Activité</span>
+						<span class="hidden-sm hidden-md hidden-lg">Act</span>
+					</a>
 				{{/sortAsc}}
 				{{^sortAsc}}
 					<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-					<a href="#!/messages/{{searchMode}}/{{searchTerm}}/0/asc" title="{{sortTitle}}" class="tool" id="list-tool-sort-date">Activité</a>
+					<a href="#!/messages/{{searchMode}}/{{searchTerm}}/0/asc" title="{{sortTitle}}" class="tool" id="list-tool-sort-date">
+						<span class="hidden-xs">Activité</span>
+						<span class="hidden-sm hidden-md hidden-lg">Act</span>
+					</a>
 				{{/sortAsc}}
 			</th>
 		</tr>
