@@ -3,7 +3,14 @@
 		erreur: le thread [{{hash}}] n'existe pas dans cette liste
 	{{/thread}}
 	{{#thread}}
-	<h2>{{thread.subject}}</h2>
+	<h2>
+		{{#thread.subject}}
+			{{thread.subject}}
+		{{/thread.subject}}
+		{{^thread.subject}}
+			n/a
+		{{/thread.subject}}
+	</h2>
 	<a href="#" class="tool thread-tool-info-details">détails</a>
 	<div class="thread-info-box-details">
 		<div class="details-row">
