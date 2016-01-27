@@ -5,6 +5,7 @@ function ViewList() {
 	this.detailsData = null;
 	this.threadsData = null;
 	this.messagesData = null;
+	this.calendarData = null;
 	this.mode = null; // "threads" or "messages"
 	this.defaultMode = 'threads';
 	this.sortDirection = null;
@@ -23,8 +24,28 @@ ViewList.prototype.initDefaults = function() {
 };
 
 /**
- * Reads the list's details, displays them, and calls cb() or err() at the end
- * respectively if everything went ok or if an error occurred
+ * Reads the list's calendar, displays it under the "by-date" button, calls cb()
+ * at the end whatever happens
+ */
+ViewList.prototype.readCalendar = function(cb) {
+	var lthis = this;
+	// list info
+	var url = this.listRoot + '/calendar';
+	$.get(url)
+	.done(function(data) {
+		lthis.calendarData = data;
+	})
+	.fail(function() {
+		console.log('calendrier foirax');
+	})
+	.always(function() {
+		//console.log('ALWAYS COCA CALLBACK');
+		cb();
+	});
+};
+
+/**
+ * Reads the list's details, displays them
  */
 ViewList.prototype.readDetails = function() {
 	var lthis = this;
@@ -55,12 +76,52 @@ ViewList.prototype.readDetails = function() {
 	});
 }
 
-ViewList.prototype.showTools = function() {
-	console.log('render tools !');
-	this.renderTemplate('list-tools-box', {
-		messagesMode: (this.mode == 'messages'),
-		threadsMode: (this.mode == 'threads'),
-		searchTerm: this.searchTerm != null ? decodeURI(this.searchTerm) : ''
+/**
+ * Tools need to read the list calendar - suboptimal cause we could read it
+ * only once...
+ */
+ViewList.prototype.loadTools = function() {
+	console.log('load tools and calendar !');
+	var lthis = this;
+	this.readCalendar(function() {
+		// format calendar data for Mustache
+		var calendar = [];
+		//console.log(lthis.calendarData);
+		$.each(lthis.calendarData, function(k, v) {
+			var yearData = {
+				year: k
+			};
+			yearData.months = [];
+			var allMonths = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+			for (var i=0; i < allMonths.length; i++) {
+				yearData.months.push({
+					yearAndMonth: k + allMonths[i],
+					month: allMonths[i],
+					count: v[allMonths[i]]
+				});
+			}
+			// sort by month ascending
+			yearData.months.sort(function(a, b) {
+				return parseInt(a.month) - parseInt(b.month);
+			});
+			calendar.push(yearData);
+		});
+		// sort by year descending
+		calendar.sort(function(a, b) {
+			return parseInt(b.year) - parseInt(a.year);
+		});
+		console.log(calendar);
+		// render
+		lthis.renderTemplate('list-tools-box', {
+			messagesMode: (lthis.mode == 'messages'),
+			threadsMode: (lthis.mode == 'threads'),
+			searchTerm: lthis.searchTerm != null ? decodeURI(lthis.searchTerm) : '',
+			calendar: calendar,
+			mode: lthis.mode,
+			urlSearchTerm: (lthis.searchTerm || '*'),
+			offset: lthis.offset,
+			sortDirection: lthis.sortDirection
+		});
 	});
 };
 
@@ -316,12 +377,12 @@ ViewList.prototype.loadAppStateFromUrl = function() {
 		console.log('-- reload details');
 		this.readDetails();
 	}
+	if (needsTools) {
+		console.log('-- reload tools');
+		this.loadTools();
+	}
 	if (needsContents) {
 		console.log('-- reload contents');
 		this.showThreadsOrMessages();
-	}
-	if (needsTools) {
-		console.log('-- reload tools');
-		this.showTools();
 	}
 };

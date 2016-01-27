@@ -262,10 +262,36 @@ a.tool, a.tool:hover, a.tool:active, a.tool:visited {
 	top: 0;
 }
 
+.list-calendar-list {
+	padding: 5px;
+}
+#list-calendar {
+	/*border: solid red 1px;*/
+}
+#list-calendar td.list-calendar-year {
+	font-weight: bold;
+}
+
 #list-threads {
 	/*border: solid red 1px;*/
 	margin-top: 10px;
 }
 .list-threads-table {
 	width: 100%;
+}
+
+
+/* C. media-queries --------------------------------------------------------- */
+
+/* essentially for calendar @TODO make something more generic */
+@media screen and (max-width: 640px) {
+	.list-calendar-list {
+		margin-left: -45px;
+	}
+	#list-calendar table td, #list-calendar table th {
+		padding: 4px;
+	}
+	#list-calendar table {
+		font-size: 0.9em;
+	}
 }

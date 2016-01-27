@@ -42,8 +42,39 @@
 				</span>
 				<span class="caret hidden-xs"></span>
 			</button>
-			<ul class="dropdown-menu">
-				<li>Pouet pouet c'est la fête</li>
+			<ul class="dropdown-menu list-calendar-list">
+				<li>
+					<div id="list-calendar">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th></th>
+									<!--<th>Janvier</th><th>Février</th><th>Mars</th><th>Avril</th>
+									<th>Mai</th><th>Juin</th><th>Juillet</th><th>Août</th>
+									<th>Septembre</th><th>Octobre</th><th>Novembre</th><th>Décembre</th>-->
+									<th>Jan</th><th>Fév</th><th>Mar</th><th>Avr</th>
+									<th>Mai</th><th>Jun</th><th>Jul</th><th>Aoû</th>
+									<th>Sep</th><th>Oct</th><th>Nov</th><th>Déc</th>
+								</tr>
+							</thead>
+							<tbody>
+								{{#calendar}}
+								<tr>
+									<td class="list-calendar-year">{{year}}</td>
+									{{#months}}
+									<td>
+										<a href="#!/date/{{yearAndMonth}}/0/desc"
+										   title="voir tous les messages de {{month}}/{{year}}">
+											{{count}}
+										</a>
+									</td>
+									{{/months}}
+								</tr>
+								{{/calendar}}
+							</tbody>
+						</table>
+					</div>
+				</li>
 			</ul>
 		</div>
 	</div>
