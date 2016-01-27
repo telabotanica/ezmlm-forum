@@ -100,15 +100,8 @@ EzmlmForum.prototype.cleanText = function(text) {
 	// remove quotations
 	text = this.removeQuotations(text);
 
-	// trim whitespaces and line breaks @TODO make this work !
-	/*if (text.match(new RegExp("^[ \t\r\n]*((.|[\r\n])+)[ \t\r\n]*$"))) {
-		console.log("ça matche");
-	} else {
-		console.log("ça matche pas");
-	}
-	console.log("AVANT: " + text);
-	text = text.replace(/((.|[\r\n])+)[ \t\r\n]*$/ig, "$1");
-	console.log("APRES: " + text);*/
+	// trim whitespaces and line breaks
+	text = text.replace(/[ \t\r\n]*((.|[\r\n])+)[ \t\r\n]*$/i, "$1");
 
 	return text;
 };
