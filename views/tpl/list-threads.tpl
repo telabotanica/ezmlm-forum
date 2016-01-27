@@ -8,11 +8,11 @@
 			<th>
 				{{#sortAsc}}
 					<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
-					<a href="#!/threads/{{searchTerm}}/0/desc" title="{{sortTitle}}" class="tool" id="list-tool-sort-date">Activité</a>
+					<a href="#!/threads/{{searchMode}}/{{searchTerm}}/0/desc" title="{{sortTitle}}" class="tool" id="list-tool-sort-date">Activité</a>
 				{{/sortAsc}}
 				{{^sortAsc}}
 					<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-					<a href="#!/threads/{{searchTerm}}/0/asc" title="{{sortTitle}}" class="tool" id="list-tool-sort-date">Activité</a>
+					<a href="#!/threads/{{searchMode}}/{{searchTerm}}/0/asc" title="{{sortTitle}}" class="tool" id="list-tool-sort-date">Activité</a>
 				{{/sortAsc}}
 			</th>
 		</tr>
@@ -50,10 +50,10 @@
 		<span class="list-pager-navigation">
 			<a {{^hasPreviousPages}}disabled {{/hasPreviousPages}} title="Page précédente" id="list-pager-previous-page"
 				class="btn btn-primary glyphicon glyphicon-chevron-left"
-				href="#!/threads/{{searchTerm}}/{{previousOffset}}/{{sortDirection}}"></a>
+				href="#!/threads/{{searchMode}}/{{searchTerm}}/{{previousOffset}}/{{sortDirection}}"></a>
 			<a {{^hasNextPages}}disabled {{/hasNextPages}} title="Page suivante" id="list-pager-next-page"
 				class="btn btn-primary glyphicon glyphicon-chevron-right"
-				href="#!/threads/{{searchTerm}}/{{nextOffset}}/{{sortDirection}}"></a>
+				href="#!/threads/{{searchMode}}/{{searchTerm}}/{{nextOffset}}/{{sortDirection}}"></a>
 		</span>
 	</div>
 	{{/pager}}

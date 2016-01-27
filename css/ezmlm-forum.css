@@ -1,14 +1,5 @@
 /* A. rules overloading bootstrap 3 ----------------------------------------- */
 
-/*.table.borderless > thead > tr > th,
-.table.borderless > tbody > tr > th,
-.table.borderless > tfoot > tr > th,
-.table.borderless > thead > tr > td,
-.table.borderless > tbody > tr > td,
-.table.borderless > tfoot > tr > td {
-	border: none;
-}*/
-
 .table.list-threads-table > thead > tr > th {
 	border-bottom: solid 1px #d0d0d0;
 	padding-bottom: 4px;
@@ -21,10 +12,6 @@
 /* B.1 generic rules -------------------------------------------------------- */
 body {
 	padding: 40px;
-}
-
-h1 {
-	color: red;
 }
 
 .right {
@@ -252,6 +239,10 @@ a.tool, a.tool:hover, a.tool:active, a.tool:visited {
 
 
 
+#list-name a {
+	text-decoration: none;
+	color: #333;
+}
 
 #list-tools-box {
 	/*border: solid red 1px;*/

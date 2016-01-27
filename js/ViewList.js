@@ -12,6 +12,7 @@ function ViewList() {
 	this.defaultSortDirection = 'desc';
 	this.offset = 0;
 	this.limit = 10;
+	this.searchMode = null;
 	this.searchTerm = null;
 }
 // inheritance
@@ -20,6 +21,7 @@ ViewList.prototype = new EzmlmForum();
 ViewList.prototype.initDefaults = function() {
 	console.log('ViewList.initDefaults()');
 	this.mode = this.defaultMode;
+	this.searchMode = "search";
 	this.sortDirection = this.defaultSortDirection;
 };
 
@@ -95,7 +97,7 @@ ViewList.prototype.loadTools = function() {
 			var allMonths = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
 			for (var i=0; i < allMonths.length; i++) {
 				yearData.months.push({
-					yearAndMonth: k + allMonths[i],
+					yearAndMonth: k + '-' + allMonths[i],
 					month: allMonths[i],
 					count: v[allMonths[i]]
 				});
@@ -115,6 +117,7 @@ ViewList.prototype.loadTools = function() {
 		lthis.renderTemplate('list-tools-box', {
 			messagesMode: (lthis.mode == 'messages'),
 			threadsMode: (lthis.mode == 'threads'),
+			textSearchMode: (lthis.searchMode == 'search'),
 			searchTerm: lthis.searchTerm != null ? decodeURI(lthis.searchTerm) : '',
 			calendar: calendar,
 			mode: lthis.mode,
@@ -156,8 +159,9 @@ ViewList.prototype.readThreads = function(cb) {
 		for (var i=0; i < threads.length; ++i) {
 			// format dates
 			threads[i].last_message.message_date_moment = lthis.momentize(threads[i].last_message.message_date);
-			// in case the thread name is empty
-			if (threads[i].subject == "") threads[i].subject = "-- error reading subject --";
+			// in case some fields are empty or false
+			if (threads[i].subject == "") threads[i].subject = "n/a";
+			if (! threads[i].first_message.author_name) threads[i].first_message.author_name = "n/a";
 			// email censorship
 			threads[i].first_message.author_name = lthis.censorEmail(threads[i].first_message.author_name);
 		}
@@ -172,6 +176,7 @@ ViewList.prototype.readThreads = function(cb) {
 		}
 		var templateData = {
 			threads: threads,
+			searchMode: lthis.searchMode,
 			searchTerm: (lthis.searchTerm || '*'),
 			sortDirection: lthis.sortDirection,
 			sortAsc: (lthis.sortDirection == 'asc'),
@@ -195,12 +200,20 @@ ViewList.prototype.readThreads = function(cb) {
 	}
 
 	// list threads
-	var url = this.listRoot + '/threads/'
-		+ (this.searchTerm ? 'search/*' + this.searchTerm + '*/' : '')
-		+ '?sort=' + this.sortDirection
+	var url = this.listRoot + '/threads/';
+	if (this.searchTerm) {
+		url += this.searchMode + '/';
+		var st = this.searchTerm;
+		if (this.searchMode == "search") {
+			st = '*' + st + '*';
+		}
+		url += st + '/';
+	}
+	url += '?sort=' + this.sortDirection
 		+ (this.offset ? '&offset=' + this.offset : '')
 		+ (this.limit ? '&limit=' + this.limit : '')
-		+ '&details=true';
+		+ '&details=true'
+	;
 	this.runningQuery = $.get(url)
 	.done(function(data) {
 		lthis.threadsData = data;
@@ -243,6 +256,7 @@ ViewList.prototype.readMessages = function(cb) {
 		var templateData = {
 			messages: messages,
 			searchTerm: (lthis.searchTerm || '*'),
+			searchMode: lthis.searchMode,
 			sortDirection: lthis.sortDirection,
 			sortAsc: (lthis.sortDirection == 'asc'),
 			sortTitle: (lthis.sortDirection == 'asc' ? "Les plus anciens d'abord" : "Les plus récents d'abord"),
@@ -265,9 +279,16 @@ ViewList.prototype.readMessages = function(cb) {
 	}
 
 	// list messages
-	var url = this.listRoot + '/messages/'
-		+ (this.searchTerm ? 'search/*' + this.searchTerm + '*/' : '')
-		+ '?contents=abstract'
+	var url = this.listRoot + '/messages/';
+	if (this.searchTerm) {
+		url += this.searchMode + '/';
+		var st = this.searchTerm;
+		if (this.searchMode == "search") {
+			st = '*' + st + '*';
+		}
+		url += st + '/';
+	}
+	url	+= '?contents=abstract'
 		+ '&sort=' + this.sortDirection
 		+ (this.offset ? '&offset=' + this.offset : '')
 		+ (this.limit ? '&limit=' + this.limit : '')
@@ -292,9 +313,11 @@ ViewList.prototype.reloadEventListeners = function() {
 	console.log('reload list event listeners !');
 
 	// show thread details
-	$('.list-tool-info-details').unbind().click(function() {
+	$('.list-tool-info-details').unbind().click(function(e) {
 		// @TODO use closest() to genericize for multiple instances ?
+		e.preventDefault();
 		$('.list-info-box-details').toggle();
+		return false;
 	});
 
 	// search messages / threads
@@ -313,23 +336,24 @@ ViewList.prototype.search = function() {
 	var term = $('#list-tool-search-input').val();
 	//console.log('push search: [' + term + ']')
 	// search bar should be a form to avoid this trick
-	this.pushAppState(this.mode, term, 0);
+	this.pushAppState(this.mode, "search", term, 0);
 };
 
 /**
  * Updates URL route-like fragment so that it reflects app state; this is
  * supposed to push a history state (since URL fragment has changed)
  */
-ViewList.prototype.pushAppState = function(mode, term, offset, sortDirection) {
-	if (term == '') {
-		term = '*';
+ViewList.prototype.pushAppState = function(mode, searchMode, searchTerm, offset, sortDirection) {
+	if (searchTerm == '') {
+		searchTerm = '*';
 	}
 	if (offset == undefined) {
 		offset = this.offset;
 	}
 	var fragment = '#!';
 	fragment += '/' + (mode || this.mode);
-	fragment += '/' + (term || (this.searchTerm ? this.searchTerm : '*'));
+	fragment += '/' + (searchMode || this.searchMode);
+	fragment += '/' + (searchTerm || (this.searchTerm ? this.searchTerm : '*'));
 	fragment += '/' + offset;
 	fragment += '/' + (sortDirection || this.sortDirection);
 	//console.log('pushing framgment: [' + fragment + ']');
@@ -347,12 +371,13 @@ ViewList.prototype.readAppState = function() {
 	// remove '#!';
 	parts.shift();
 	//console.log(parts);
-	if (parts.length == 4) { // all or nothing
+	if (parts.length == 5) { // all or nothing
 		this.mode = parts[0];
-		this.searchTerm = (parts[1] == '*' ? null : parts[1]);
-		console.log('AAAA searchTerm: [' + this.searchTerm + '], nst: [' + (parts[1] == '*' ? null : parts[1]) + ']');
-		this.offset = parseInt(parts[2]);
-		this.sortDirection = parts[3];
+		this.searchMode = parts[1];
+		this.searchTerm = (parts[2] == '*' ? null : parts[2]);
+		console.log('AAAA searchTerm: [' + this.searchTerm + '], nst: [' + (parts[2] == '*' ? null : parts[2]) + ']');
+		this.offset = parseInt(parts[3]);
+		this.sortDirection = parts[4];
 	}
 };
 
@@ -362,16 +387,19 @@ ViewList.prototype.readAppState = function() {
  */
 ViewList.prototype.loadAppStateFromUrl = function() {
 	var previousMode = this.mode,
+		previousSearchMode = this.searchMode,
 		previousSearchTerm = this.searchTerm,
 		previousOffset = this.offset,
 		previousSortDirection = this.sortDirection;
+
 	// from URL
 	this.readAppState();
 	console.log('ViewList.intelligentReload()');
 	// intelligent reload
 	console.log('searchTerm: [' + this.searchTerm + '], pst: [' + previousSearchTerm + ']');
+	console.log('searchMode: [' + this.searchMode + '], psm: [' + previousSearchMode + ']');
 	var needsDetails = ! this.appLoadedOnce,
-		needsTools = (needsDetails || this.mode != previousMode || this.searchTerm != previousSearchTerm),
+		needsTools = (needsDetails || this.mode != previousMode || this.searchTerm != previousSearchTerm || this.searchMode != previousSearchMode),
 		needsContents = (needsTools || this.offset != previousOffset || this.sortDirection != previousSortDirection);
 	if (needsDetails) {
 		console.log('-- reload details');

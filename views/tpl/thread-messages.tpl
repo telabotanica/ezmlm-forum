@@ -34,9 +34,7 @@
 					{{#author_name}}
 						{{author_name}}
 					{{/author_name}}
-					{{^author_name}}
-						-- error reading author --
-					{{/author_name}}
+					{{^author_name}}n/a{{/author_name}}
 				</div>
 				
 				<!-- author / message badges -->

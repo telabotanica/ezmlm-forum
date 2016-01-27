@@ -30,29 +30,6 @@ EzmlmForum.prototype.setConfig = function(configString) {
 
 // starts the job
 EzmlmForum.prototype.init = function() {
-	
-	/*var dates = [false, null, '', '2015-01-28', '2015-03-01', '2015-13-42', '2016',
-		'2016-01-01 14:31:25',
-		'2016-01-15 14:31:25',
-		'2016-01-21 14:31:25',
-		'2016-01-23 14:31:25',
-		'2016-01-24 14:31:25',
-		'2016-01-25 14:31:25',
-		'2016-01-25 15:32:25',
-		'2016-01-25 15:59:25',
-		'2016-01-25 16:00:25',
-		'2016-01-25 16:15:25',
-		'2016-01-26 14:31:25',
-		'2016-01-28 14:31:25',
-		'2016-02-01 14:31:25',
-		'2016-02-07 14:31:25',
-		'2016-02-11 14:31:25',
-		'2016-02-27 14:31:25'
-	];
-	for (var i=0; i<dates.length; i++) {
-		console.log(dates[i] + ' => ' + this.momentize(dates[i]));
-	}
-	return;*/
 	console.log('EzmlmForum.init()');
 	this.initDefaults();
 	var lthis = this;
@@ -88,7 +65,7 @@ EzmlmForum.prototype.renderTemplate = function(id, data) {
  * for author "names" that might be bare email addresses
  */
 EzmlmForum.prototype.censorEmail = function(text) {
-	if (text.match(/.+@.+\..+/i)) {
+	if (text && text.match(/.+@.+\..+/i)) {
 		// would it be quicker to try replacing without matching ?
 		text = text.replace(/(.+@).+\..+/i, "$1...");
 	}

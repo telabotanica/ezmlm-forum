@@ -26,10 +26,10 @@
 				<span class="caret hidden-xs"></span>
 			</button>
 			<ul class="dropdown-menu">
-				<li><a class="list-tool-mode-entry" href="#!/threads/*/0/desc">
+				<li><a class="list-tool-mode-entry" href="#!/threads/search/*/0/desc">
 					<span class="hidden-sm hidden-xs">tous les </span>sujets
 				</a></li>
-				<li><a class="list-tool-mode-entry" href="#!/messages/*/0/desc">
+				<li><a class="list-tool-mode-entry" href="#!/messages/search/*/0/desc">
 					<span class="hidden-sm hidden-xs">tous les </span>messages
 				</a></li>
 			</ul>
@@ -49,9 +49,6 @@
 							<thead>
 								<tr>
 									<th></th>
-									<!--<th>Janvier</th><th>Février</th><th>Mars</th><th>Avril</th>
-									<th>Mai</th><th>Juin</th><th>Juillet</th><th>Août</th>
-									<th>Septembre</th><th>Octobre</th><th>Novembre</th><th>Décembre</th>-->
 									<th>Jan</th><th>Fév</th><th>Mar</th><th>Avr</th>
 									<th>Mai</th><th>Jun</th><th>Jul</th><th>Aoû</th>
 									<th>Sep</th><th>Oct</th><th>Nov</th><th>Déc</th>
@@ -63,8 +60,8 @@
 									<td class="list-calendar-year">{{year}}</td>
 									{{#months}}
 									<td>
-										<a href="#!/date/{{yearAndMonth}}/0/desc"
-										   title="voir tous les messages de {{month}}/{{year}}">
+										<a href="#!/{{mode}}/date/{{yearAndMonth}}/0/desc"
+										   title="voir tous les {{#messagesMode}}messages{{/messagesMode}}{{#threadsMode}}sujets{{/threadsMode}} de {{month}}/{{year}}">
 											{{count}}
 										</a>
 									</td>
@@ -82,7 +79,7 @@
 	<div class="col-lg-7 col-md-6 col-sm-7 col-xs-6">
 		<div class="input-group">
 			<input id="list-tool-search-input" type="text" class="form-control"
-				   placeholder="Rechercher..." value="{{searchTerm}}" />
+				   placeholder="Rechercher..." value="{{#textSearchMode}}{{searchTerm}}{{/textSearchMode}}" />
 			<span class="input-group-btn">
 				<button id="list-tool-search" class="list-tool btn btn-default glyphicon glyphicon-search"></button>
 			</span>
