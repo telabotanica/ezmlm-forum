@@ -1,0 +1,12 @@
+{
+	"domainRoot": "http://localhost",
+	"baseUri": "/ezmlm-forum",
+	"title": "TB_forum",
+	"hrefBuildMode": "REST",
+	"defaultPage": "view-list",
+
+	"ezmlm-php": {
+		"rootUri": "http://localhost/ezmlm-php",
+		"list": "botadrome"
+	}
+}
