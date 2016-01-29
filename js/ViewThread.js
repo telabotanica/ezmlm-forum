@@ -232,6 +232,13 @@ ViewThread.prototype.reloadEventListeners = function() {
 
 		}
 	});
+
+	// read more
+	$('.message-read-more').unbind().click(function(e) {
+		e.preventDefault();
+		$(this).parent().find('.message-read-more-contents').toggle();
+		return false;
+	});
 };
 
 ViewThread.prototype.sortByDate = function() {

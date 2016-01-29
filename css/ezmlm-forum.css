@@ -116,6 +116,23 @@ table.borderless th, table.borderless td {
 	padding: 0 80px 0 0;
 }
 
+.message-read-more {
+	border: 1px solid #b0b0b0;
+	display: block;
+	height: 14px;
+	line-height: 0;
+	padding: 2px;
+	text-align: center;
+	width: 32px;
+}
+.message-read-more:hover {
+	text-decoration: none;
+}
+
+.message-read-more-contents {
+	display: none;
+}
+
 .message-bottom-container {
 	position: relative;
 	/*border: solid red 1px;*/

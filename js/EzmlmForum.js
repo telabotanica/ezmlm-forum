@@ -80,21 +80,23 @@ EzmlmForum.prototype.censorEmail = function(text) {
 EzmlmForum.prototype.cleanText = function(text) {
 	// (.|[\r\n]) simulates the DOTALL; [\s\S] doesn't work here, no idea why
 	var patterns = [
-		"----- Original Message -----", // ?
+		"----- ?(Original Message|Message d'origine) ?-----", // ?
 		"Date: [a-zA-Z]{3}, [0-9]{1,2} [a-zA-Z]{3} [0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}( +[0-9]{4})?", // ?
 		"________________________________", // outlook
-		"&gt; Message du", // ?
+		"&gt; Message du", // ? @WARNING sometimes used for Fwd messages, which means relevant contents
 		"------------------------------------------------------------------------", // AVAST
-		"(le|on) ([0-9]{2}(/|-)[0-9]{2}(/|-)[0-9]{4}|[0-9]{4}(/|-)[0-9]{2}(/|-)[0-9]{2}) [0-9]{2}:[0-9]{2}", // ?
+		"(le|on) ([0-9]{2}(/|-)[0-9]{2}(/|-)[0-9]{4}|[0-9]{4}(/|-)[0-9]{2}(/|-)[0-9]{2}) [0-9]{2}:[0-9]{2}", // Thunderbird
 		"le [0-9]{1,2} [a-zA-Z]+ [0-9]{4} (à )?[0-9]{2}:[0-9]{2}", // ?
 		//"-------- (Message transféré|Forwarded message) --------", // ? @WARNING forwarded message might be considered as "contents"
 		"From: .+[\n\r](Sent|To): .+", // ?
+		//">[\n\r\t ]+", // multiples consecutive lines starting with ">" @TODO doesn't work cause of " and "$" added in the loop below
 		"(Envoyé de mon|Sent from my) i(Phone|Pad|Mac)" // iPhone / iPad
 	];
 
 	for (var i=0; i < patterns.length; ++i) {
-		var re = new RegExp("(^(.|[\r\n])+?)" + patterns[i] + "(.|[\r\n])*$", "gim");
-		text = text.replace(re, "$1");
+		//var re = new RegExp("(^(.|[\r\n])+?)" + patterns[i] + "(.|[\r\n])*$", "gim");
+		var re = new RegExp("(^(.|[\r\n])+?)(" + patterns[i] + "(.|[\r\n])*)$", "gim");
+		text = text.replace(re, "$1<a title=\"lire les messages cités\" href=\"#\" class=\"message-read-more\">...</a><div class=\"message-read-more-contents\">$3</div>");
 	}
 
 	// remove quotations
