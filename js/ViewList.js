@@ -241,7 +241,7 @@ ViewList.prototype.readMessages = function(cb) {
 		var messages = lthis.messagesData.results;
 		for (var i=0; i < messages.length; ++i) {
 			// format text
-			messages[i].message_contents.text = lthis.cleanText(messages[i].message_contents.text);
+			messages[i].message_contents.text = lthis.cleanText(messages[i].message_contents.text, true);
 			// format dates
 			messages[i].message_date_moment = lthis.momentize(messages[i].message_date);
 		}
