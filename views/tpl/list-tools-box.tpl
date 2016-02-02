@@ -37,9 +37,14 @@
 		<div class="btn-group" role="group">
 			<button class="list-tool btn btn-default dropdown-toggle" data-toggle="dropdown">
 				<span class="glyphicon glyphicon-calendar hidden-sm hidden-md hidden-lg"></span>
+				{{#textSearchMode}}
 				<span class="hidden-xs">
 					<span class="hidden-sm">par </span>date
 				</span>
+				{{/textSearchMode}}
+				{{^textSearchMode}}
+					<span class="hidden-xs">{{searchTerm}}</span>
+				{{/textSearchMode}}
 				<span class="caret hidden-xs"></span>
 			</button>
 			<ul class="dropdown-menu list-calendar-list">

@@ -53,9 +53,6 @@
 				{{#message_contents.text}}
 					{{{message_contents.text}}}
 				{{/message_contents.text}}
-				{{^message_contents.text}}
-					-- message empty or error reading message --
-				{{/message_contents.text}}
 			</div>
 			<div class="message-bottom-container">
 				<div class="message-reply-tools" data-id="{{message_id}}">

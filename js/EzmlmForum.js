@@ -88,10 +88,10 @@ EzmlmForum.prototype.cleanText = function(text, remove) {
 		"&gt; Message du", // ? @WARNING sometimes used for Fwd messages, which means relevant contents
 		"------------------------------------------------------------------------", // AVAST
 		"(le|on) ([0-9]{2}(/|-)[0-9]{2}(/|-)[0-9]{4}|[0-9]{4}(/|-)[0-9]{2}(/|-)[0-9]{2}) [0-9]{2}:[0-9]{2}", // Thunderbird
-		"le [0-9]{1,2} [a-zA-Z]+ [0-9]{4} (à )?[0-9]{2}:[0-9]{2}", // ?
+		"le [0-9]{1,2} [a-zA-Z]+\.? [0-9]{4} (à )?[0-9]{2}:[0-9]{2}", // ?
 		//"-------- (Message transféré|Forwarded message) --------", // ? @WARNING forwarded message might be considered as "contents"
 		".*From: .+[\n\r].*(Sent|To): .+", // ?
-		">[\n\r\t ]+", // multiples consecutive lines starting with ">" @TODO doesn't work cause of " and "$" added in the loop below
+		//".*>[\n\r\t ]+>.*", // multiples consecutive lines starting with ">" @TODO doesn't work cause of "^" and "$" added in the loop below
 		"(Envoyé de mon|Sent from my) i(Phone|Pad|Mac)" // iPhone / iPad
 	];
 
