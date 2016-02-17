@@ -33,12 +33,17 @@ class EzmlmForum {
 	/**
 	 * Starts the front controller, reads config, parameters and URI fragments
 	 */
-	public function __construct() {
-		// read config
-		if (! file_exists(self::$CONFIG_PATH)) {
-			throw new Exception("please set a valid config file in [" . self::$CONFIG_PATH . "]");
+	public function __construct($config=null) {
+		if ($config == null) {
+			// read config
+			if (! file_exists(self::$CONFIG_PATH)) {
+				throw new Exception("please set a valid config file in [" . self::$CONFIG_PATH . "]");
+			}
+			$this->config = json_decode(file_get_contents(self::$CONFIG_PATH), true);
+		} else {
+			// external config
+			$this->config = $config;
 		}
-		$this->config = json_decode(file_get_contents(self::$CONFIG_PATH), true);
 
 		// server config
 		$this->domainRoot = $this->config['domainRoot'];
