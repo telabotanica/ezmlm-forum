@@ -50,7 +50,9 @@ ViewThread.prototype.readDetails = function(cb, err) {
 
 		infoBoxData = lthis.detailsData;
 		// page title
-		document.title = lthis.detailsData.thread.subject + ' (' + lthis.config['ezmlm-php'].list + ') - ' + lthis.config.title;
+		if (lthis.config.title != "") {
+			document.title = lthis.detailsData.thread.subject + ' (' + lthis.config['ezmlm-php'].list + ') - ' + lthis.config.title;
+		}
 
 		lthis.renderTemplate('thread-info-box', infoBoxData);
 		// bye

@@ -3,7 +3,9 @@
 		erreur: la liste [{{list_name}}] n'existe pas sur ce serveur
 	{{/list}}
 	{{#list}}
-	<h2 id="list-name"><a href="#!/threads/search/*/0/desc">{{list.list_name}}</a></h2>
+	{{#display_title}}
+		<h2 id="list-name"><a href="#!/threads/search/*/0/desc">{{list.list_name}}</a></h2>
+	{{/display_title}}
 	<span class="list-address" title="Vous pouvez écrire directement à cette adresse">{{list.list_address}}</span> -
 	<a href="#" class="tool list-tool-info-details">détails</a>
 	<div class="list-info-box-details">

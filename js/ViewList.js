@@ -52,7 +52,8 @@ ViewList.prototype.readCalendar = function(cb) {
 ViewList.prototype.readDetails = function() {
 	var lthis = this;
 	var infoBoxData = {
-		list_name: lthis.config['ezmlm-php'].list
+		list_name: lthis.config['ezmlm-php'].list,
+		display_title: lthis.config['displayListTitle']
 	};
 	// list info
 	$.get(this.listRoot)
@@ -68,7 +69,9 @@ ViewList.prototype.readDetails = function() {
 
 		infoBoxData.list = lthis.detailsData;
 		// page title
-		document.title = lthis.config['ezmlm-php'].list + ' (' + lthis.mode + ') - ' + lthis.config.title;
+		if (lthis.config.title != "") {
+			document.title = lthis.config['ezmlm-php'].list + ' (' + lthis.mode + ') - ' + lthis.config.title;
+		}
 
 		lthis.renderTemplate('list-info-box', infoBoxData);
 		// bye

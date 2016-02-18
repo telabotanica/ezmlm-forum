@@ -1,0 +1,7 @@
+/* Those rules are supposed to be applied in "standalone" mode only. When the
+ * forum tool is integrated to another app, those global rules might break the
+ * containing app's style' */
+
+body {
+	padding: 40px;
+}

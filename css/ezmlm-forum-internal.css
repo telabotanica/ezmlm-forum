@@ -1,25 +1,22 @@
 /* A. rules overloading bootstrap 3 ----------------------------------------- */
 
-.table.list-threads-table > thead > tr > th {
+#ezmlm-forum-main .table.list-threads-table > thead > tr > th {
 	border-bottom: solid 1px #d0d0d0;
 	padding-bottom: 4px;
 	color: #707070;
 	white-space: nowrap;
 }
 
-a:focus, *:focus {
+#ezmlm-forum-main a:focus, *:focus {
 	outline: none;
 }
-a:focus {
+#ezmlm-forum-main a:focus {
 	text-decoration: none;
 }
 
 /* B. non-bootstrap-related rules ------------------------------------------- */
 
 /* B.1 generic rules -------------------------------------------------------- */
-body {
-	padding: 40px;
-}
 
 .right {
 	float: right;
@@ -96,6 +93,10 @@ table.borderless th, table.borderless td {
 
 .list-tool-mode-entry:first-letter, #list-tool-mode-selected:first-letter {
 	text-transform: uppercase;
+}
+
+#list-tool-search {
+	top: 0;
 }
 
 #thread-tools {
