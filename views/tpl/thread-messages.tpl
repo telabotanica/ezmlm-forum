@@ -22,7 +22,7 @@
 			</div>
 			<div class="message-author-box">
 				<div class="author-image">
-					<img src="../img/avatar_2.png" />
+					<img src="<?php echo $dataRootUri ?>/img/avatar_2.png" />
 				</div>
 				<!-- author name -->
 				{{#from_original_author}}

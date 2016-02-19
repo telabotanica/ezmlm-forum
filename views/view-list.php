@@ -9,7 +9,7 @@
 			<!-- list-tools-box.tpl -->
 		</div>
 		<div id="work-indicator">
-			<img src="img/wait.gif" />
+			<img src="<?php echo $dataRootUri ?>/img/wait.gif" />
 		</div>
 		<div id="list-threads">
 			<!-- list-threads.tpl -->

@@ -48,6 +48,10 @@ class EzmlmForum {
 		// server config
 		$this->domainRoot = $this->config['domainRoot'];
 		$this->baseURI = $this->config['baseUri'];
+		$this->dataBaseURI = $this->baseURI;
+		if (! empty($this->config['dataBaseUri'])) {
+			$this->dataBaseURI = $this->config['dataBaseUri'];
+		}
 
 		// initialization
 		$this->getHrefBuildMode();
@@ -69,6 +73,16 @@ class EzmlmForum {
 	 */
 	public function getRootUri() {
 		return $this->domainRoot . $this->baseURI;
+	}
+
+	/**
+	 * Returns the base URI for data : identical to getRootUri in the general
+	 * case, but might be different when including the app in a container (for
+	 * ex. Wordpress) whose URL are rewritten, and whose data have to be accessed
+	 * using different URL (ex: /wp-content/...)
+	 */
+	public function getDataRootUri() {
+		return $this->domainRoot . $this->dataBaseURI;
 	}
 
 	/**

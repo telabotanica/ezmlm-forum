@@ -30,6 +30,6 @@ class ViewThread extends BaseController {
 	protected function buildPageData() {
 		parent::buildPageData();
 		$this->data['threadHash'] = $this->threadHash;
-		$this->data['templatesBaseUri'] = $this->fc->getRootUri() . '/views/tpl';
+		$this->data['dataRootUri'] = $this->fc->getDataRootUri();
 	}
 }

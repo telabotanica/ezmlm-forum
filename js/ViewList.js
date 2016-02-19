@@ -78,6 +78,7 @@ ViewList.prototype.readDetails = function() {
 	})
 	.fail(function() {
 		console.log('details foirax');
+		lthis.renderTemplate('list-info-box', infoBoxData);
 	});
 }
 
