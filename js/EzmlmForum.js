@@ -138,9 +138,11 @@ EzmlmForum.prototype.cleanText = function(text, remove) {
 	return text;
 };
 EzmlmForum.prototype.removeQuotations = function(text) {
-	var pattern = /\+\+\+\+\+\+([0-9]+)\+\+\+\+\+\+/;
-	// ^ and $ don't work here => wtf ?
-	text = text.replace(pattern, '');
+	if (text) {
+		var pattern = /\+\+\+\+\+\+([0-9]+)\+\+\+\+\+\+/;
+		// ^ and $ don't work here => wtf ?
+		text = text.replace(pattern, '');
+	}
 	return text;
 };
 
@@ -150,60 +152,69 @@ EzmlmForum.prototype.removeQuotations = function(text) {
  * contents
  */
 EzmlmForum.prototype.enrichText = function(text) {
-	if (this.enrich.media) {
-		text = this.addMedia(text);
+	if (text) {
+		if (this.enrich.media) {
+			text = this.addMedia(text);
+		}
+		if (this.enrich.links) {
+			text = this.addLinks(text);
+		}
+		if (this.enrich.binettes) {
+			// unicode smileys
+			text = Binette.binettize(text);
+		}
+		// @TODO detect plant scientific names
+		text = this.lf2br(text); // previous regex are conditioned by \n
 	}
-	if (this.enrich.links) {
-		text = this.addLinks(text);
-	}
-	if (this.enrich.binettes) {
-		// unicode smileys
-		text = Binette.binettize(text);
-	}
-	// @TODO detect plant scientific names
-	text = this.lf2br(text); // previous regex are conditioned by \n
 	return text;
 };
 EzmlmForum.prototype.lf2br = function(text) {
-	// 2 or more linebreaks => 2 <br> // @TODO doesn't work so well - fix it
-	//console.log('TEXTE AVANT: ' + text);
-	text = text.replace(/[\r\n]{2,}/g, "<br><br>");
-	// remaining (single) line breaks => 1 <br>
-	//text = text.replace(/[\n]{4}/g, "<br>");
-	text = text.replace(/[\r\n]/g, "<br>");
-	//console.log('TEXTE APRES: ' + text);
+	if (text) {
+		// 2 or more linebreaks => 2 <br> // @TODO doesn't work so well - fix it
+		//console.log('TEXTE AVANT: ' + text);
+		text = text.replace(/[\r\n]{2,}/g, "<br><br>");
+		// remaining (single) line breaks => 1 <br>
+		//text = text.replace(/[\n]{4}/g, "<br>");
+		text = text.replace(/[\r\n]/g, "<br>");
+		//console.log('TEXTE APRES: ' + text);
+	}
 	return text;
 };
 EzmlmForum.prototype.addLinks = function(text) {
-	// [^"] excludes links in markup attributes
-	text = text.replace(/([^"])(https?:\/\/[^ ,\n]+)([^"])/gi, '$1<a href="$2" target="_blank">$2</a>$3');
+	if (text) {
+		// [^"] excludes links in markup attributes
+		text = text.replace(/([^"])(https?:\/\/[^ ,\n]+)([^"])/gi, '$1<a href="$2" target="_blank">$2</a>$3');
+	}
 	return text;
 };
 EzmlmForum.prototype.addMedia = function(text) {
-	text = this.addNativeMedia(text);
-	text = this.addOnlineMediaEmbedding(text);
+	if (text) {
+		text = this.addNativeMedia(text);
+		text = this.addOnlineMediaEmbedding(text);
+	}
 	return text;
 };
 /**
  * Replaces links pointing to native media
  */
 EzmlmForum.prototype.addNativeMedia = function(text) {
-	// image
-	text = text.replace(
-		/(https?:\/\/[^ ,\n]+\.(jpg|jpeg|png|gif|tif|tiff|bmp))/gi,
-		'<img src="$1" class="native-media-img"/>'
-	);
-	// video
-	text = text.replace(
-		/(https?:\/\/[^ ,\n]+\.(mp4|webm|ogv|3gp))/gi,
-		'<video controls src="$1" class="native-media-video" />'
-	);
-	// audio
-	text = text.replace(
-		/(https?:\/\/[^ ,\n]+\.(mp3|oga|wav))/gi,
-		'<audio controls src="$1" class="native-media-audio" />'
-	);
-
+	if (text) {
+		// image
+		text = text.replace(
+			/(https?:\/\/[^ ,\n]+\.(jpg|jpeg|png|gif|tif|tiff|bmp))/gi,
+			'<img src="$1" class="native-media-img"/>'
+		);
+		// video
+		text = text.replace(
+			/(https?:\/\/[^ ,\n]+\.(mp4|webm|ogv|3gp))/gi,
+			'<video controls src="$1" class="native-media-video" />'
+		);
+		// audio
+		text = text.replace(
+			/(https?:\/\/[^ ,\n]+\.(mp3|oga|wav))/gi,
+			'<audio controls src="$1" class="native-media-audio" />'
+		);
+	}
 	return text;
 };
 /**
@@ -211,11 +222,13 @@ EzmlmForum.prototype.addNativeMedia = function(text) {
  * embedding
  */
 EzmlmForum.prototype.addOnlineMediaEmbedding = function(text) {
-	// Youtube
-	text = text.replace(
-		/https?:\/\/www\.youtube\.com\/watch\?v=([^ ,\n]+)/gi,
-		'<iframe class="embedded-media-video embedded-media-youtube" src="https://www.youtube.com/embed/$1" allowfullscreen></iframe>'
-	);
+	if (text) {
+		// Youtube
+		text = text.replace(
+			/https?:\/\/www\.youtube\.com\/watch\?v=([^ ,\n]+)/gi,
+			'<iframe class="embedded-media-video embedded-media-youtube" src="https://www.youtube.com/embed/$1" allowfullscreen></iframe>'
+		);
+	}
 	return text;
 };
 
