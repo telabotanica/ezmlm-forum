@@ -133,7 +133,9 @@ EzmlmForum.prototype.cleanText = function(text, remove) {
 	text = this.removeQuotations(text);
 
 	// trim whitespaces and line breaks
-	text = text.replace(/[ \t\r\n]*((.|[\r\n])+)[ \t\r\n]*$/i, "$1");
+	if (text) {
+		text = text.replace(/[ \t\r\n]*((.|[\r\n])+)[ \t\r\n]*$/i, "$1");
+	}
 
 	return text;
 };
