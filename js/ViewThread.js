@@ -29,7 +29,7 @@ ViewThread.prototype.init = function() {
  * Reads the thread's details, displays them, and calls cb() or err() at the end
  * respectively if everything went ok or if an error occurred
  */
-ViewThread.prototype.readDetails = function(cb, err) {
+ViewThread.prototype.readDetails = function(cb) {
 	//console.log('read details');
 	var lthis = this;
 	var infoBoxData = {
@@ -60,7 +60,7 @@ ViewThread.prototype.readDetails = function(cb, err) {
 	})
 	.fail(function() {
 		console.log('details foirax');
-		err();
+		lthis.renderTemplate('thread-info-box', infoBoxData);
 	});
 };
 
