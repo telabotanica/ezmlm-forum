@@ -4,7 +4,6 @@
 	"title": "TB_forum",
 	"hrefBuildMode": "REST",
 	"displayListTitle": true,
-	"hrefBuildMode": "REST",
 	"defaultPage": "view-list",
 
 	"ezmlm-php": {

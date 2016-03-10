@@ -6,7 +6,7 @@
 			<!-- thread-info-box.tpl -->
 		</div>
 		<div id="work-indicator">
-			
+			<img src="<?php echo $dataRootUri ?>/img/wait.gif" />
 		</div>
 		<div id="thread-messages">
 			<!-- thread-messages.tpl -->

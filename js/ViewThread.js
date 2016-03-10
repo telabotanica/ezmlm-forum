@@ -13,16 +13,25 @@ function ViewThread() {
 // inheritance
 ViewThread.prototype = new EzmlmForum();
 
+/**
+ * @WARNING @TODO to be factorized in EzmlmForum.init() and use
+ * loadAppStateFromUrl() to initialize ViewThread instead - or better, make a
+ * single-page app instead of a 2-pages app
+ */
 ViewThread.prototype.init = function() {
-	var lthis = this;
 	console.log('ViewThread.init()');
+	var lthis = this;
 	//console.log(this.config);
 	//console.log('Thread: ' + this.threadHash);
 	this.limit = this.initialLimit;
-	this.readDetails(function() {
-		lthis.readThread();
+	// load user info
+	this.loadSSOStatus(function() {
+		console.log('SSO chargé');
+		lthis.readDetails(function() {
+			lthis.readThread();
+		});
 	});
-	this.reloadEventListeners();
+	//this.reloadEventListeners();
 };
 
 /**
@@ -71,6 +80,7 @@ ViewThread.prototype.readDetails = function(cb) {
 ViewThread.prototype.readThread = function() {
 	//console.log('read thread');
 	var lthis = this;
+	this.startWorking();
 
 	// post-callbacks work
 	function displayThread() {
@@ -110,6 +120,7 @@ ViewThread.prototype.readThread = function() {
 		lthis.renderTemplate('thread-messages', templateData);
 
 		// other
+		lthis.stopWorking();
 		lthis.reloadEventListeners();
 	}
 
@@ -213,10 +224,15 @@ ViewThread.prototype.reloadEventListeners = function() {
 		if (doSend) {
 			// @TODO post message !
 			console.log('POST !!!!');
-			console.log(lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId));
-			$.post(lthis.listRoot + '/threads/' + lthis.threadHash + '/messages', {
-				message_contents: lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId)
-			})
+			//console.log(lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId));
+			var messageContentsRawText = lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId);
+			var message = {
+				body: messageContentsRawText, // @TODO support HTML
+				body_text: messageContentsRawText,
+				html: false
+				// @TODO support attachments
+			};
+			$.post(lthis.listRoot + '/threads/' + lthis.threadHash + '/messages', JSON.stringify(message))
 			.done(function() {
 				console.log('post message OK');
 				// hide reply area

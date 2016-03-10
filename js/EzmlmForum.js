@@ -19,11 +19,14 @@ function EzmlmForum() {
 		nextWeek: 'dddd [prochain à] HH:mm', // doesn't work => WTF ?
 		sameElse: 'DD/MM YYYY'
 	};
+	this.authToken = null;
+	this.userEmail = null;
 	this.runningQuery = null;
 }
 
 // loads the stringified JSON configuration given by PHP through the HTML view template
 EzmlmForum.prototype.setConfig = function(configString) {
+	console.log('EzmlmForum.setConfig()');
 	this.config = JSON.parse(configString);
 	this.listRoot = this.config['ezmlm-php'].rootUri + '/lists/' + this.config['ezmlm-php'].list;
 };
@@ -38,10 +41,14 @@ EzmlmForum.prototype.init = function() {
 		console.log('hash changed : [' + window.location.hash + ']');
 		lthis.loadAppStateFromUrl();
 	});
-	// first time load
-	// @WARNING it's said that Safari triggers hashchange on first time load !
-	this.loadAppStateFromUrl();
-	this.appLoadedOnce = true; // allows to read details only once
+	// load user info
+	this.loadSSOStatus(function() {
+		console.log('SSO chargé');
+		// first time load
+		// @WARNING it's said that Safari triggers hashchange on first time load !
+		lthis.loadAppStateFromUrl();
+		lthis.appLoadedOnce = true; // allows to read details only once
+	});
 };
 
 // set defult values for attributes before binding URL to app state
@@ -292,4 +299,35 @@ EzmlmForum.prototype.abortQuery = function() {
 			//console.log('this.runningQuery was not an XHR');
 		}
 	}
+};
+
+/**
+ * Reads user identity from Tela Botanica SSO service
+ * @TODO make it optional and separate from the core code (bower component ?)
+ * @TODO auto refresh periodically to avoid token expiration
+ */
+EzmlmForum.prototype.loadSSOStatus = function(cb) {
+	var lthis = this;
+	// get TB auth token
+	var authURL = this.config['auth']['annuaireURL'] + '/identite';
+	$.ajax({
+	    url: authURL,
+	    type: "GET",
+	    dataType: 'json',
+	    xhrFields: {
+	         withCredentials: true
+	    }
+	}).done(function(data) {
+		// logged-in
+		if (data.token != undefined) {
+			lthis.authToken = data.token;
+		}
+		// always add Authorization header; not recommanded by jQuery doc (?!)
+		$.ajaxSetup({
+		   headers : {
+				'Authorization' : lthis.authToken
+		    }
+		});
+		cb(); // load app
+	}).fail(cb); // no one is identified; load app anyway
 };
