@@ -323,10 +323,11 @@ EzmlmForum.prototype.loadSSOStatus = function(cb) {
 			lthis.authToken = data.token;
 		}
 		// always add Authorization header; not recommanded by jQuery doc (?!)
+		var customHeaders = {},
+			headerName = lthis.config['auth']['headerName'];
+		customHeaders[headerName] = lthis.authToken;
 		$.ajaxSetup({
-		   headers : {
-				'Authorization' : lthis.authToken
-		    }
+		   headers : customHeaders
 		});
 		cb(); // load app
 	}).fail(cb); // no one is identified; load app anyway

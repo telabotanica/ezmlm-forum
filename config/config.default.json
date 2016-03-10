@@ -9,5 +9,9 @@
 	"ezmlm-php": {
 		"rootUri": "http://localhost/ezmlm-php",
 		"list": "botadrome"
+	},
+	"auth": {
+		"annuaireURL": "https://localhost/service:annuaire:auth",
+		"headerName": "Authorization"
 	}
 }
