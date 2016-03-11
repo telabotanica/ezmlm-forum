@@ -7,7 +7,7 @@ function ViewThread() {
 	this.detailsData = null;
 	this.messagesData = null;
 	this.offset = 0;
-	this.initialLimit = 5;
+	this.initialLimit = 15;
 	this.limit = null;
 }
 // inheritance
