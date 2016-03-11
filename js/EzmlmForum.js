@@ -20,7 +20,14 @@ function EzmlmForum() {
 		sameElse: 'DD/MM YYYY'
 	};
 	this.authToken = null;
-	this.user = {};
+	this.user = { // default user has no rights at all
+		rights: {
+			"read": false,
+			"post": false,
+			"moderator": false,
+			"admin": false
+		}
+	};
 	this.runningQuery = null;
 }
 
