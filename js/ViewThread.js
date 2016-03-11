@@ -27,12 +27,13 @@ ViewThread.prototype.init = function() {
 	// load user info
 	this.loadSSOStatus(function() {
 		console.log('SSO chargé');
-		console.log(lthis.user);
-		lthis.readDetails(function() {
-			lthis.readThread();
+		lthis.loadUserInfo(function() {
+			console.log(lthis.user);
+			lthis.readDetails(function() {
+				lthis.readThread();
+			});
 		});
 	});
-	//this.reloadEventListeners();
 };
 
 /**
@@ -229,7 +230,7 @@ ViewThread.prototype.reloadEventListeners = function() {
 			//console.log(lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId));
 			var messageContentsRawText = lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId);
 			var message = {
-				//body: messageContentsRawText, // @TODO support HTML
+				body: messageContentsRawText.replace("\n",'<br/>'), // @TODO support HTML in editor for real
 				body_text: messageContentsRawText,
 				html: false
 				// @TODO support attachments

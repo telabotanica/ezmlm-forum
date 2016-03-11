@@ -19,10 +19,13 @@ function EzmlmForum() {
 		nextWeek: 'dddd [prochain à] HH:mm', // doesn't work => WTF ?
 		sameElse: 'DD/MM YYYY'
 	};
-	this.authToken = null;
-	this.user = { // default user has no rights at all
+	// default user has only read rights
+	// @WARNING doesn't read list's public/private status
+	// @TODO factorize readListDeatils() and compute read rights here
+	this.user = {
+		email: null,
 		rights: {
-			"read": false,
+			"read": true,
 			"post": false,
 			"moderator": false,
 			"admin": false
@@ -51,11 +54,13 @@ EzmlmForum.prototype.init = function() {
 	// load user info
 	this.loadSSOStatus(function() {
 		console.log('SSO chargé');
-		console.log(lthis.user);
-		// first time load
-		// @WARNING it's said that Safari triggers hashchange on first time load !
-		lthis.loadAppStateFromUrl();
-		lthis.appLoadedOnce = true; // allows to read details only once
+		lthis.loadUserInfo(function() {
+			console.log(lthis.user);
+			// first time load
+			// @WARNING it's said that Safari triggers hashchange on first time load !
+			lthis.loadAppStateFromUrl();
+			lthis.appLoadedOnce = true; // allows to read details only once
+		});
 	});
 };
 
@@ -309,6 +314,27 @@ EzmlmForum.prototype.abortQuery = function() {
 	}
 };
 
+EzmlmForum.prototype.loadUserInfo = function(cb) {
+	var lthis = this;
+	// "sub" contains the current user's email address
+	if (this.user.email != null) {
+		// get user's rights for the current list
+		var userInfoURL = lthis.listRoot + '/users/' + lthis.user.email;
+		$.ajax({
+			url: userInfoURL,
+			type: "GET",
+			dataType: 'json'
+		}).done(function(data) {
+			if (data != null && data.rights != null) {
+				lthis.user.rights = data.rights;
+			}
+			cb(); // load app
+		}).fail(cb); // cound not get user rights; load app anyway
+	} else {
+		cb(); // the token seems invalid; load app anyway
+	}
+};
+
 /**
  * Reads user identity from Tela Botanica SSO service
  * @TODO make it optional and separate from the core code (bower component ?)
@@ -326,40 +352,24 @@ EzmlmForum.prototype.loadSSOStatus = function(cb) {
 	         withCredentials: true
 	    }
 	}).done(function(data) {
-		var decodedToken = null;
+		var authToken = null,
+			decodedToken = null;
 		// logged-in
 		if (data.token != undefined) {
-			lthis.authToken = data.token;
+			authToken = data.token;
 			decodedToken = lthis.decodeToken(data.token);
+			lthis.user.email = decodedToken.sub;
 		}
 		// always add Authorization header; not recommanded by jQuery doc (?!)
 		var customHeaders = {},
 			headerName = lthis.config['auth']['headerName'];
-		customHeaders[headerName] = lthis.authToken;
+		customHeaders[headerName] = authToken;
 		// tell jQuery to always send authorization header
 		$.ajaxSetup({
 		   headers : customHeaders
 		});
-		// "sub" contains the current user's email address
-		if (decodedToken != null && decodedToken.sub != '') {
-			lthis.user = {
-				"email": decodedToken.sub
-			};
-			// get user's rights for the current list
-			var userInfoURL = lthis.listRoot + '/users/' + decodedToken.sub;
-			$.ajax({
-				url: userInfoURL,
-				type: "GET",
-				dataType: 'json'
-			}).done(function(data) {
-				if (data != null && data.rights != null) {
-					lthis.user.rights = data.rights;
-				}
-				cb(); // load app
-			}).fail(cb); // cound not get user rights; load app anyway
-		} else {
-			cb(); // the token seems invalid; load app anyway
-		}
+		// go on
+		cb();
 	}).fail(cb); // no one is identified; load app anyway
 };
 
