@@ -27,6 +27,7 @@ ViewThread.prototype.init = function() {
 	// load user info
 	this.loadSSOStatus(function() {
 		console.log('SSO chargé');
+		console.log(lthis.user);
 		lthis.readDetails(function() {
 			lthis.readThread();
 		});

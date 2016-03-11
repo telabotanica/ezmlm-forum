@@ -20,7 +20,7 @@ function EzmlmForum() {
 		sameElse: 'DD/MM YYYY'
 	};
 	this.authToken = null;
-	this.userEmail = null;
+	this.user = {};
 	this.runningQuery = null;
 }
 
@@ -44,6 +44,7 @@ EzmlmForum.prototype.init = function() {
 	// load user info
 	this.loadSSOStatus(function() {
 		console.log('SSO chargé');
+		console.log(lthis.user);
 		// first time load
 		// @WARNING it's said that Safari triggers hashchange on first time load !
 		lthis.loadAppStateFromUrl();
@@ -318,17 +319,51 @@ EzmlmForum.prototype.loadSSOStatus = function(cb) {
 	         withCredentials: true
 	    }
 	}).done(function(data) {
+		var decodedToken = null;
 		// logged-in
 		if (data.token != undefined) {
 			lthis.authToken = data.token;
+			decodedToken = lthis.decodeToken(data.token);
 		}
 		// always add Authorization header; not recommanded by jQuery doc (?!)
 		var customHeaders = {},
 			headerName = lthis.config['auth']['headerName'];
 		customHeaders[headerName] = lthis.authToken;
+		// tell jQuery to always send authorization header
 		$.ajaxSetup({
 		   headers : customHeaders
 		});
-		cb(); // load app
+		// "sub" contains the current user's email address
+		if (decodedToken != null && decodedToken.sub != '') {
+			lthis.user = {
+				"email": decodedToken.sub
+			};
+			// get user's rights for the current list
+			var userInfoURL = lthis.listRoot + '/users/' + decodedToken.sub;
+			$.ajax({
+				url: userInfoURL,
+				type: "GET",
+				dataType: 'json'
+			}).done(function(data) {
+				if (data != null && data.rights != null) {
+					lthis.user.rights = data.rights;
+				}
+				cb(); // load app
+			}).fail(cb); // cound not get user rights; load app anyway
+		} else {
+			cb(); // the token seems invalid; load app anyway
+		}
 	}).fail(cb); // no one is identified; load app anyway
+};
+
+/**
+ * Decodes an SSO token @WARNING considers it is valid
+ * @TODO make it optional and separate from the core code (bower component ?)
+ */
+EzmlmForum.prototype.decodeToken = function(token) {
+	parts = token.split('.');
+	payload = parts[1];
+	payload = atob(payload);
+	payload = JSON.parse(payload, true);
+	return payload;
 };
