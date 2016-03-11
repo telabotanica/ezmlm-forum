@@ -246,9 +246,9 @@ ViewThread.prototype.reloadEventListeners = function() {
 			//console.log(lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId));
 			var messageContentsRawText = lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId);
 			var message = {
-				body: messageContentsRawText.replace(/\n/g,'<br/>'), // @TODO support HTML in editor for real
+				body: lthis.rawMessageToHtml(messageContentsRawText) + lthis.addPreviousMessageHtmlQuotation(messageId),
 				body_text: messageContentsRawText,
-				html: false
+				html: true
 				// @TODO support attachments
 			};
 			console.log(message);
@@ -281,6 +281,29 @@ ViewThread.prototype.reloadEventListeners = function() {
 		$(this).parent().find('.message-read-more-contents').toggle();
 		return false;
 	});
+};
+
+/**
+ * Converts a raw text message to a minimalistic readable HTML version, and
+ * removes the message quotation mark (++++++N++++++)
+ */
+ViewThread.prototype.rawMessageToHtml = function(rawText) {
+	var HTML = rawText;
+	HTML = HTML.replace(/\+\+\+\+\+\+[0-9]+\+\+\+\+\+\+/g,'');
+	HTML = HTML.replace(/\n/g,'<br/>');
+	return HTML;
+};
+
+ViewThread.prototype.addPreviousMessageHtmlQuotation = function(id) {
+	var quotation = '';
+	// no <br/> because rawMessageToHtml() always leaves at least 2 at the end
+	// @TODO do this better, manage languages, test if it works
+	quotation += "----- Original message -----";
+	var previousMessage = $('#msg-' + id).find('.message-contents').html();
+	// remove previous quotations
+	previousMessage = previousMessage.replace(/<a.+class="message-read-more".*/gi, '');
+	quotation += previousMessage;
+	return quotation;
 };
 
 ViewThread.prototype.sortByDate = function() {
