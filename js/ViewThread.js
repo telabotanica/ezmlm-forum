@@ -246,7 +246,7 @@ ViewThread.prototype.reloadEventListeners = function() {
 			//console.log(lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId));
 			var messageContentsRawText = lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId);
 			var message = {
-				body: lthis.rawMessageToHtml(messageContentsRawText) + lthis.addPreviousMessageHtmlQuotation(messageId),
+				body: lthis.rawMessageToHtml(messageContentsRawText),
 				body_text: messageContentsRawText,
 				html: true
 				// @TODO support attachments
@@ -294,6 +294,7 @@ ViewThread.prototype.rawMessageToHtml = function(rawText) {
 	return HTML;
 };
 
+// doesn't work
 ViewThread.prototype.addPreviousMessageHtmlQuotation = function(id) {
 	var quotation = '';
 	// no <br/> because rawMessageToHtml() always leaves at least 2 at the end
