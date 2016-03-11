@@ -205,7 +205,9 @@ EzmlmForum.prototype.lf2br = function(text) {
 EzmlmForum.prototype.addLinks = function(text) {
 	if (text) {
 		// [^"] excludes links in markup attributes
-		text = text.replace(/([^"])(https?:\/\/[^ ,\n]+)([^"])/gi, '$1<a href="$2" target="_blank">$2</a>$3');
+		text = text.replace(/([^"])(https?:\/\/[^\ ,\n\t]+)([^"])/gi, '$1<a href="$2" target="_blank">$2</a>$3');
+		// why doesn't this work ??? (exclude ending ">")
+		//text = text.replace(/([^"])(https?:\/\/[^\ ,\n\t>]+)([^"])/gi, '$1<a href="$2" target="_blank">$2</a>$3');
 	}
 	return text;
 };
