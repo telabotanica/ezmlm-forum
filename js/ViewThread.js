@@ -76,6 +76,22 @@ ViewThread.prototype.readDetails = function(cb) {
 };
 
 /**
+ * Clears the messages, displays wait animation, waits a few seconds
+ * (5 by default) and reloads thread messages, hoping that the newly sent one
+ * will be visible (ie. ezmlm-idx had enough time to index it)
+ */
+ViewThread.prototype.waitAndReadThread = function(seconds) {
+	var lthis = this;
+	seconds = seconds || 5; // default wait : 5s
+	var milliseconds = seconds * 1000;
+	$('#thread-messages').html("");
+	this.startWorking();
+	setTimeout(function() {
+		lthis.readThread();
+	}, milliseconds);
+};
+
+/**
  * Reads all messages in a thread and displays them adequately; be sure to have
  * read thread details data before (at least once)
  */
@@ -230,11 +246,12 @@ ViewThread.prototype.reloadEventListeners = function() {
 			//console.log(lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId));
 			var messageContentsRawText = lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId);
 			var message = {
-				body: messageContentsRawText.replace("\n",'<br/>'), // @TODO support HTML in editor for real
+				body: messageContentsRawText.replace(/\n/g,'<br/>'), // @TODO support HTML in editor for real
 				body_text: messageContentsRawText,
 				html: false
 				// @TODO support attachments
 			};
+			console.log(message);
 			$.post(lthis.listRoot + '/threads/' + lthis.threadHash + '/messages', JSON.stringify(message))
 			.done(function() {
 				console.log('post message OK');
@@ -246,9 +263,13 @@ ViewThread.prototype.reloadEventListeners = function() {
 				// hide send / cancel buttons
 				sendButton.hide();
 				cancelButton.hide();
+				// minimalist way of waiting a little for the new message to be
+				// archived by ezmlm
+				lthis.waitAndReadThread(3);
 			})
 			.fail(function() {
 				console.log('post message FOIRAX');
+				alert("Erreur lors de l'envoi du message");
 			});
 
 		}
