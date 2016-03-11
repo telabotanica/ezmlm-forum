@@ -57,7 +57,7 @@
 			<div class="message-bottom-container">
 				<div class="message-reply-tools" data-id="{{message_id}}">
 					<div class="btn-group">
-						<a class="btn btn-default reply-to-message glyphicon glyphicon-share-alt" title="Répondre">
+						<a class="btn btn-default reply-to-message glyphicon glyphicon-share-alt" {{#noPostRights}}disabled {{/noPostRights}}title="Répondre">
 						</a>
 						<a class="btn btn-default cancel-reply glyphicon glyphicon-remove" title="Annuler la réponse">
 						</a>

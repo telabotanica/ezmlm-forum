@@ -116,7 +116,8 @@ ViewThread.prototype.readThread = function() {
 			//totalMessages: lthis.detailsData.thread.nb_messages,
 			//moreMessages: (lthis.detailsData.thread.nb_messages - lthis.messagesData.count > 0)
 			totalMessages: lthis.messagesData.total,
-			moreMessages: (lthis.messagesData.total - lthis.messagesData.count > 0)
+			moreMessages: (lthis.messagesData.total - lthis.messagesData.count > 0),
+			noPostRights: (! lthis.user.rights.post)
 		}
 		lthis.renderTemplate('thread-messages', templateData);
 
@@ -228,7 +229,7 @@ ViewThread.prototype.reloadEventListeners = function() {
 			//console.log(lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId));
 			var messageContentsRawText = lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId);
 			var message = {
-				body: messageContentsRawText, // @TODO support HTML
+				//body: messageContentsRawText, // @TODO support HTML
 				body_text: messageContentsRawText,
 				html: false
 				// @TODO support attachments
