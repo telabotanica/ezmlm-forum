@@ -298,7 +298,7 @@ ViewThread.prototype.addPreviousMessageHtmlQuotation = function(id) {
 	var quotation = '';
 	// no <br/> because rawMessageToHtml() always leaves at least 2 at the end
 	// @TODO do this better, manage languages, test if it works
-	quotation += "----- Original message -----";
+	quotation += "----- Original message -----<br/>";
 	var previousMessage = $('#msg-' + id).find('.message-contents').html();
 	// remove previous quotations
 	previousMessage = previousMessage.replace(/<a.+class="message-read-more".*/gi, '');
