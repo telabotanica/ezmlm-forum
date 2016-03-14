@@ -127,7 +127,8 @@ ViewList.prototype.loadTools = function() {
 			mode: lthis.mode,
 			urlSearchTerm: (lthis.searchTerm || '*'),
 			offset: lthis.offset,
-			sortDirection: lthis.sortDirection
+			sortDirection: lthis.sortDirection,
+			noPostRights: (! lthis.auth.user.rights.post)
 		});
 	});
 };
@@ -339,90 +340,65 @@ ViewList.prototype.reloadEventListeners = function() {
 
 	// show new thread area
 	$('.list-tool-new-thread').unbind().click(function() {
-		console.log('open new thread !');
-		var newThreadArea = $('#new-thread'),
-			
-			sendButton = $(this).parent().find('.list-tool-send-new-thread'),
-			cancelButton = $(this).parent().find('.list-tool-cancel-new-thread');
+		var newThreadArea = $('#new-thread');
 		// show new thread area
 		newThreadArea.show();
-		// @TODO hide current list (threads or messages)
-		// transform "new thread" button into "cancel thread"
-
-		// show send / cancel buttons
-		sendButton.show();
-		cancelButton.show();
 	});
 
-	// cancel a reply
-	$('.list-tool-cancel-new-thread').unbind().click(function() {
-		var messageId = $(this).parent().parent().data("id");
-		//console.log('cancel reply to message #' + messageId);
-		var replyArea = $('#reply-to-message-' + messageId),
-			replyButton = $(this).parent().find('.reply-to-message'),
-			sendButton = $(this).parent().find('.send-reply'),
-			cancelButton = $(this),
+	// cancel the new thread
+	$('#cancel-new-thread').unbind().click(function() {
+		var newThreadArea = $('#new-thread'),
+			threadTitle = $('#new-thread-title'),
+			threadBody = $('#new-thread-body'),
 			doCancel = true;
 
-		if (replyArea.val() != '') {
-			doCancel = confirm('Annuler la réponse ?');
+		if (threadTitle.val() != '' || threadBody.val() != '' ) {
+			doCancel = confirm('Annuler le nouveau sujet ?');
 		}
 		if (doCancel) {
-			// hide reply area
-			replyArea.val('');
-			replyArea.hide();
-			// show reply button
-			replyButton.show()
-			// hide send / cancel buttons
-			sendButton.hide();
-			cancelButton.hide();
+			threadTitle.val("");
+			threadBody.val("");
+			newThreadArea.hide();
 		}
 	});
 
-	// send a reply
-	$('.list-tool-send-new-thread').unbind().click(function() {
-		var messageId = $(this).parent().parent().data("id");
-		//console.log('send reply to message #' + messageId);
-		var replyArea = $('#reply-to-message-' + messageId),
-			replyButton = $(this).parent().find('.reply-to-message'),
-			sendButton = $(this),
-			cancelButton = $(this).parent().find('.cancel-reply'),
-			doSend = false;
+	// send the new thread
+	$('#send-new-thread').unbind().click(function() {
+		var newThreadArea = $('#new-thread'),
+			threadTitle = $('#new-thread-title'),
+			threadBody = $('#new-thread-body'),
+			doSend = true;
 
-		//console.log(replyArea.val());
-		if (replyArea.val() != '') {
-			doSend = confirm('Envoyer la réponse ?');
+		if (threadTitle.val() != '' && threadBody.val() != '' ) {
+			doSend = confirm('Envoyer le nouveau sujet ?');
+		} else {
+			alert("Merci de saisir un titre et un message");
 		}
+
 		if (doSend) {
-			// @TODO post message !
-			console.log('POST !!!!');
-			//console.log(lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId));
-			var messageContentsRawText = lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId);
+			console.log('POST new thread !!!!');
+			var messageContentsRawText = threadBody.val();
 			var message = {
 				body: lthis.rawMessageToHtml(messageContentsRawText),
 				body_text: messageContentsRawText,
+				subject: threadTitle.val(),
 				html: true
 				// @TODO support attachments
 			};
 			console.log(message);
-			$.post(lthis.listRoot + '/threads/' + lthis.threadHash + '/messages', JSON.stringify(message))
+			$.post(lthis.listRoot + '/messages', JSON.stringify(message))
 			.done(function() {
-				console.log('post message OK');
-				// hide reply area
-				replyArea.val('');
-				replyArea.hide();
-				// show reply button
-				replyButton.show()
-				// hide send / cancel buttons
-				sendButton.hide();
-				cancelButton.hide();
+				console.log('post new thread OK');
+				threadTitle.val("");
+				threadBody.val("");
+				newThreadArea.hide();
 				// minimalist way of waiting a little for the new message to be
 				// archived by ezmlm
-				lthis.waitAndReadThread(3);
+				lthis.waitAndReload(3);
 			})
 			.fail(function() {
-				console.log('post message FOIRAX');
-				alert("Erreur lors de l'envoi du message");
+				console.log('post new thread FOIRAX');
+				alert("Erreur lors de l'envoi du nouveau sujet");
 			});
 
 		}
@@ -510,4 +486,33 @@ ViewList.prototype.loadAppStateFromUrl = function() {
 		console.log('-- reload contents');
 		this.showThreadsOrMessages();
 	}
+};
+
+/**
+ * Clears the list, displays wait animation, waits a few seconds
+ * (5 by default) and reloads what was loaded before (messages or threads),
+ * hoping that the newly sent subject will be visible (ie. ezmlm-idx had enough
+ * time to index it)
+ */
+ViewList.prototype.waitAndReload = function(seconds) {
+	var lthis = this;
+	seconds = seconds || 5; // default wait : 5s
+	var milliseconds = seconds * 1000;
+	// @TODO make it more generic
+	$('#list-threads').html("");
+	$('#list-messages').html("");
+	this.startWorking();
+	setTimeout(function() {
+		if (lthis.mode == "messages") {
+			console.log('reload messages after timeout');
+			lthis.readMessages(function() {
+				lthis.stopWorking();
+			});
+		} else {
+			console.log('reload threads after timeout');
+			lthis.readThreads(function() {
+				lthis.stopWorking();
+			});
+		}
+	}, milliseconds);
 };

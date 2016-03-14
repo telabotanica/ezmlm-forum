@@ -93,9 +93,11 @@
 
 	<div class="col-lg-2 col-md-2 col-sm-1 col-xs-2 right">
 		<button title="Créer un nouveau sujet de discussion"
+			{{#noPostRights}}disabled{{/noPostRights}}
 			class="hidden-md hidden-lg list-tool btn btn-success right glyphicon glyphicon-plus list-tool-new-thread">
 		</button>
 		<button title="Créer un nouveau sujet de discussion"
+			{{#noPostRights}}disabled{{/noPostRights}}
 			class="hidden-sm hidden-xs list-tool btn btn-success right list-tool-new-thread">
 			Nouveau sujet
 		</button>

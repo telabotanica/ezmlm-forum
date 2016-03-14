@@ -12,7 +12,22 @@
 			<img src="<?php echo $dataRootUri ?>/img/wait.gif" />
 		</div>
 		<div id="new-thread">
-			Create your new thread here !!
+			<div id="new-thread-tools">
+				<div class="btn-group">
+					<a id="cancel-new-thread"
+						class="btn btn-default glyphicon glyphicon-remove"
+						title="Annuler le nouveau sujet"
+						style="display: inline;">
+					</a>
+					<a id="send-new-thread"
+						class="btn btn-default glyphicon glyphicon-envelope"
+						title="Envoyer le nouveau sujet"
+						style="display: inline;">
+					</a>
+				</div>
+			</div>
+			<input placeholder="Titre du nouveau sujet" type="text" id="new-thread-title" />
+			<textarea id="new-thread-body" placeholder="Saisissez votre message ici"></textarea>
 		</div>
 		<div id="list-threads">
 			<!-- list-threads.tpl -->

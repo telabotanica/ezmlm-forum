@@ -247,6 +247,17 @@ EzmlmForum.prototype.addOnlineMediaEmbedding = function(text) {
 };
 
 /**
+ * Converts a raw text message to a minimalistic readable HTML version, and
+ * removes the message quotation mark (++++++N++++++)
+ */
+EzmlmForum.prototype.rawMessageToHtml = function(rawText) {
+	var HTML = rawText;
+	HTML = HTML.replace(/\+\+\+\+\+\+[0-9]+\+\+\+\+\+\+/g,'');
+	HTML = HTML.replace(/\n/g,'<br/>');
+	return HTML;
+};
+
+/**
  * Uses moment.js to format dates : if time difference from now is lower than
  * 45 minutes, uses moment().fromNow(); otherwise uses moment().calendar() with
  * this.calendarOptions

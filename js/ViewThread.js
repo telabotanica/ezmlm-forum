@@ -27,7 +27,7 @@ ViewThread.prototype.init = function() {
 	// load aut and user info
 	this.auth = new AuthAdapter(this.config);
 	this.auth.load(function() {
-		console.log('SSO chargé');
+		console.log('auth chargée');
 		lthis.loadUserInfo(function() {
 			console.log(lthis.auth.user);
 			lthis.readDetails(function() {
@@ -282,17 +282,6 @@ ViewThread.prototype.reloadEventListeners = function() {
 		$(this).parent().find('.message-read-more-contents').toggle();
 		return false;
 	});
-};
-
-/**
- * Converts a raw text message to a minimalistic readable HTML version, and
- * removes the message quotation mark (++++++N++++++)
- */
-ViewThread.prototype.rawMessageToHtml = function(rawText) {
-	var HTML = rawText;
-	HTML = HTML.replace(/\+\+\+\+\+\+[0-9]+\+\+\+\+\+\+/g,'');
-	HTML = HTML.replace(/\n/g,'<br/>');
-	return HTML;
 };
 
 // doesn't work

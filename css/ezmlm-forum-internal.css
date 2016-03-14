@@ -52,6 +52,43 @@ table.borderless th, table.borderless td {
 
 #new-thread {
 	display: none;
+	margin-top: 10px;
+	position: relative;
+}
+
+#new-thread-tools {
+	position: absolute;
+	bottom: 2px;
+	right: 0;
+}
+
+#send-new-thread {
+	font-size: 1.8em;
+	border-radius: 2px;
+	color: #51B13D;
+	
+}
+#cancel-new-thread {
+	font-size: 1.8em;
+	border-radius: 2px;
+	color: #EF4B2C;
+}
+
+#new-thread-title {
+	border: none;
+	border: solid #d0d0d0 1px;
+	width: 100%;
+	padding: 10px;
+	color: #555;
+	margin-bottom: 5px;
+}
+
+#new-thread-body {
+	border: solid #d0d0d0 1px;
+	height: 200px;
+	width: 100%;
+	padding: 10px;
+	color: #555;
 }
 
 .list-pager-area {
