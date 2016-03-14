@@ -38,7 +38,16 @@ AuthAdapter.prototype.load = function(cb) {
 		});
 		// go on
 		cb();
-	}).fail(cb); // no one is identified; load app anyway
+	}).fail(function() {
+		// only read rights by default
+		lthis.user.rights = {
+			"read": true, // @TODO check if list is public
+			"post": false,
+			"moderator": false,
+			"admin": false
+		};
+		cb(); // no one is identified; load app anyway
+	});
 };
 
 /**
