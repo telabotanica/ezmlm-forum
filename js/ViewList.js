@@ -336,6 +336,97 @@ ViewList.prototype.reloadEventListeners = function() {
 			lthis.search();
 		}
 	});
+
+	// show new thread area
+	$('.list-tool-new-thread').unbind().click(function() {
+		console.log('open new thread !');
+		var newThreadArea = $('#new-thread'),
+			
+			sendButton = $(this).parent().find('.list-tool-send-new-thread'),
+			cancelButton = $(this).parent().find('.list-tool-cancel-new-thread');
+		// show new thread area
+		newThreadArea.show();
+		// @TODO hide current list (threads or messages)
+		// transform "new thread" button into "cancel thread"
+
+		// show send / cancel buttons
+		sendButton.show();
+		cancelButton.show();
+	});
+
+	// cancel a reply
+	$('.list-tool-cancel-new-thread').unbind().click(function() {
+		var messageId = $(this).parent().parent().data("id");
+		//console.log('cancel reply to message #' + messageId);
+		var replyArea = $('#reply-to-message-' + messageId),
+			replyButton = $(this).parent().find('.reply-to-message'),
+			sendButton = $(this).parent().find('.send-reply'),
+			cancelButton = $(this),
+			doCancel = true;
+
+		if (replyArea.val() != '') {
+			doCancel = confirm('Annuler la réponse ?');
+		}
+		if (doCancel) {
+			// hide reply area
+			replyArea.val('');
+			replyArea.hide();
+			// show reply button
+			replyButton.show()
+			// hide send / cancel buttons
+			sendButton.hide();
+			cancelButton.hide();
+		}
+	});
+
+	// send a reply
+	$('.list-tool-send-new-thread').unbind().click(function() {
+		var messageId = $(this).parent().parent().data("id");
+		//console.log('send reply to message #' + messageId);
+		var replyArea = $('#reply-to-message-' + messageId),
+			replyButton = $(this).parent().find('.reply-to-message'),
+			sendButton = $(this),
+			cancelButton = $(this).parent().find('.cancel-reply'),
+			doSend = false;
+
+		//console.log(replyArea.val());
+		if (replyArea.val() != '') {
+			doSend = confirm('Envoyer la réponse ?');
+		}
+		if (doSend) {
+			// @TODO post message !
+			console.log('POST !!!!');
+			//console.log(lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId));
+			var messageContentsRawText = lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId);
+			var message = {
+				body: lthis.rawMessageToHtml(messageContentsRawText),
+				body_text: messageContentsRawText,
+				html: true
+				// @TODO support attachments
+			};
+			console.log(message);
+			$.post(lthis.listRoot + '/threads/' + lthis.threadHash + '/messages', JSON.stringify(message))
+			.done(function() {
+				console.log('post message OK');
+				// hide reply area
+				replyArea.val('');
+				replyArea.hide();
+				// show reply button
+				replyButton.show()
+				// hide send / cancel buttons
+				sendButton.hide();
+				cancelButton.hide();
+				// minimalist way of waiting a little for the new message to be
+				// archived by ezmlm
+				lthis.waitAndReadThread(3);
+			})
+			.fail(function() {
+				console.log('post message FOIRAX');
+				alert("Erreur lors de l'envoi du message");
+			});
+
+		}
+	});
 };
 
 ViewList.prototype.search = function() {

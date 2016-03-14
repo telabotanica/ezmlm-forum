@@ -11,6 +11,9 @@
 		<div id="work-indicator">
 			<img src="<?php echo $dataRootUri ?>/img/wait.gif" />
 		</div>
+		<div id="new-thread">
+			Create your new thread here !!
+		</div>
 		<div id="list-threads">
 			<!-- list-threads.tpl -->
 		</div>

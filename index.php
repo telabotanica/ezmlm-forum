@@ -18,6 +18,10 @@
 		<link rel="stylesheet" type="text/css" href="<?= $fc->getRootUri() ?>/bower_components/bootstrap/dist/css/bootstrap.min.css" />
 
 		<!-- local resources -->
+		<script type="text/javascript" src="<?= $fc->getRootUri() ?>/js/AuthAdapter.js"></script>
+		<?php if($fc->getAuthAdapterPath() != ""): ?>
+			<script type="text/javascript" src="<?= $fc->getAuthAdapterPath() ?>"></script>
+		<?php endif ?>
 		<script type="text/javascript" src="<?= $fc->getRootUri() ?>/js/EzmlmForum.js"></script>
 		<script type="text/javascript" src="<?= $fc->getRootUri() ?>/js/ViewThread.js"></script>
 		<script type="text/javascript" src="<?= $fc->getRootUri() ?>/js/ViewList.js"></script>

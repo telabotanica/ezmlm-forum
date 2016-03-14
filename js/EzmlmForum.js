@@ -19,19 +19,8 @@ function EzmlmForum() {
 		nextWeek: 'dddd [prochain à] HH:mm', // doesn't work => WTF ?
 		sameElse: 'DD/MM YYYY'
 	};
-	// default user has only read rights
-	// @WARNING doesn't read list's public/private status
-	// @TODO factorize readListDeatils() and compute read rights here
-	this.user = {
-		email: null,
-		rights: {
-			"read": true,
-			"post": false,
-			"moderator": false,
-			"admin": false
-		}
-	};
 	this.runningQuery = null;
+	this.auth = null;
 }
 
 // loads the stringified JSON configuration given by PHP through the HTML view template
@@ -51,11 +40,12 @@ EzmlmForum.prototype.init = function() {
 		console.log('hash changed : [' + window.location.hash + ']');
 		lthis.loadAppStateFromUrl();
 	});
-	// load user info
-	this.loadSSOStatus(function() {
-		console.log('SSO chargé');
+	// load auth and user info
+	this.auth = new AuthAdapter(this.config);
+	this.auth.load(function() {
+		console.log('Auth chargée');
 		lthis.loadUserInfo(function() {
-			console.log(lthis.user);
+			console.log(lthis.auth.user);
 			// first time load
 			// @WARNING it's said that Safari triggers hashchange on first time load !
 			lthis.loadAppStateFromUrl();
@@ -316,73 +306,28 @@ EzmlmForum.prototype.abortQuery = function() {
 	}
 };
 
+/**
+ * Questions the list about what the user rights are; if user.email is null,
+ * will keep the default rights set in AuthAdapter
+ */
 EzmlmForum.prototype.loadUserInfo = function(cb) {
 	var lthis = this;
-	// "sub" contains the current user's email address
-	if (this.user.email != null) {
+	// supposed to contain the current user's email address
+	if (this.auth.user.email != null) {
 		// get user's rights for the current list
-		var userInfoURL = lthis.listRoot + '/users/' + lthis.user.email;
+		var userInfoURL = lthis.listRoot + '/users/' + lthis.auth.user.email;
 		$.ajax({
 			url: userInfoURL,
 			type: "GET",
 			dataType: 'json'
 		}).done(function(data) {
 			if (data != null && data.rights != null) {
-				lthis.user.rights = data.rights;
+				// overwrites default rights
+				lthis.auth.user.rights = data.rights;
 			}
 			cb(); // load app
 		}).fail(cb); // cound not get user rights; load app anyway
 	} else {
 		cb(); // the token seems invalid; load app anyway
 	}
-};
-
-/**
- * Reads user identity from Tela Botanica SSO service
- * @TODO make it optional and separate from the core code (bower component ?)
- * @TODO auto refresh periodically to avoid token expiration
- */
-EzmlmForum.prototype.loadSSOStatus = function(cb) {
-	var lthis = this;
-	// get TB auth token
-	var authURL = this.config['auth']['annuaireURL'] + '/identite';
-	$.ajax({
-	    url: authURL,
-	    type: "GET",
-	    dataType: 'json',
-	    xhrFields: {
-	         withCredentials: true
-	    }
-	}).done(function(data) {
-		var authToken = null,
-			decodedToken = null;
-		// logged-in
-		if (data.token != undefined) {
-			authToken = data.token;
-			decodedToken = lthis.decodeToken(data.token);
-			lthis.user.email = decodedToken.sub;
-		}
-		// always add Authorization header; not recommanded by jQuery doc (?!)
-		var customHeaders = {},
-			headerName = lthis.config['auth']['headerName'];
-		customHeaders[headerName] = authToken;
-		// tell jQuery to always send authorization header
-		$.ajaxSetup({
-		   headers : customHeaders
-		});
-		// go on
-		cb();
-	}).fail(cb); // no one is identified; load app anyway
-};
-
-/**
- * Decodes an SSO token @WARNING considers it is valid
- * @TODO make it optional and separate from the core code (bower component ?)
- */
-EzmlmForum.prototype.decodeToken = function(token) {
-	parts = token.split('.');
-	payload = parts[1];
-	payload = atob(payload);
-	payload = JSON.parse(payload, true);
-	return payload;
 };

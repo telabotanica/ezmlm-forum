@@ -27,6 +27,9 @@ class EzmlmForum {
 	/** Base URI (to parse resources) */
 	protected $baseURI;
 
+	/** Name of the auth adapter defined in the config file */
+	protected $authAdapter;
+
 	/** Page to render */
 	protected $page;
 
@@ -51,6 +54,11 @@ class EzmlmForum {
 		$this->dataBaseURI = $this->baseURI;
 		if (! empty($this->config['dataBaseUri'])) {
 			$this->dataBaseURI = $this->config['dataBaseUri'];
+		}
+
+		// auth adapter config
+		if (! empty($this->config['authAdapter'])) {
+			$this->authAdapter = $this->config['authAdapter'];
 		}
 
 		// initialization
@@ -83,6 +91,18 @@ class EzmlmForum {
 	 */
 	public function getDataRootUri() {
 		return $this->domainRoot . $this->dataBaseURI;
+	}
+
+	/**
+	 * Returns the full path (including rootURI) of the auth adapter defined in
+	 * the config file if any, or false
+	 */
+	public function getAuthAdapterPath() {
+		$path = false;
+		if ($this->authAdapter != null) {
+			$path = $this->getRootUri() . '/js/auth/' . $this->authAdapter . '.js';
+		}
+		return $path;
 	}
 
 	/**

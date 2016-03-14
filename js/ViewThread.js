@@ -24,11 +24,12 @@ ViewThread.prototype.init = function() {
 	//console.log(this.config);
 	//console.log('Thread: ' + this.threadHash);
 	this.limit = this.initialLimit;
-	// load user info
-	this.loadSSOStatus(function() {
+	// load aut and user info
+	this.auth = new AuthAdapter(this.config);
+	this.auth.load(function() {
 		console.log('SSO chargé');
 		lthis.loadUserInfo(function() {
-			console.log(lthis.user);
+			console.log(lthis.auth.user);
 			lthis.readDetails(function() {
 				lthis.readThread();
 			});
@@ -134,7 +135,7 @@ ViewThread.prototype.readThread = function() {
 			//moreMessages: (lthis.detailsData.thread.nb_messages - lthis.messagesData.count > 0)
 			totalMessages: lthis.messagesData.total,
 			moreMessages: (lthis.messagesData.total - lthis.messagesData.count > 0),
-			noPostRights: (! lthis.user.rights.post)
+			noPostRights: (! lthis.auth.user.rights.post)
 		}
 		lthis.renderTemplate('thread-messages', templateData);
 

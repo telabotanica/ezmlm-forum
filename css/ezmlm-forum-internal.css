@@ -50,6 +50,10 @@ table.borderless th, table.borderless td {
 	width: 48px;
 }
 
+#new-thread {
+	display: none;
+}
+
 .list-pager-area {
 	/*border: solid red 1px;*/
 }
