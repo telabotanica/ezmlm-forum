@@ -16,5 +16,6 @@
 			"annuaireURL": "https://localhost/service:annuaire:auth",
 			"headerName": "Authorization"
 		}
-	}
+	},
+	"avatarService": "http://localhost/avatar-service/?user_email={email}"
 }
