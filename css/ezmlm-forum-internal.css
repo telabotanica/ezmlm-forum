@@ -259,9 +259,9 @@ table.borderless th, table.borderless td {
 	margin-right: 10px;
 	overflow: hidden;
 }
-/*.author-image > img {
+.author-image > img {
 	width: 50px;
-}*/
+}
 .author-name {
 	font-weight: bold;
 	color: #606060;
