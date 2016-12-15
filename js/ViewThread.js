@@ -97,7 +97,7 @@ ViewThread.prototype.waitAndReadThread = function(seconds) {
  * Reads all messages in a thread and displays them adequately; be sure to have
  * read thread details data before (at least once)
  */
-ViewThread.prototype.readThread = function(cb) {
+ViewThread.prototype.readThread = function() {
 	//console.log('read thread');
 	var lthis = this;
 	this.startWorking();
@@ -357,15 +357,15 @@ ViewThread.prototype.fetchAvatars = function() {
 			} else {
 				// fetch it using the service
 				var url = lthis.config.avatarService.replace('{email}', authorEmail);
-				var that = this; // inception
+				var currentThreadMessage = this;
 				$.getJSON(url)
 				.done(function(avatar) {
 					//console.log("je l'ai : " + avatar);
-					// cache it
-					lthis.avatarCache[authorEmail] = avatar;
-					// display it !
 					if (avatar != null) {
-						$(that).find('.author-image > img').attr('src', avatar);
+						// cache it
+						lthis.avatarCache[authorEmail] = avatar;
+						// display it !
+						$(currentThreadMessage).find('.author-image > img').attr('src', avatar);
 					}
 				})
 				.fail(function() {
