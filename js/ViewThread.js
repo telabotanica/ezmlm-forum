@@ -7,8 +7,9 @@ function ViewThread() {
 	this.detailsData = null;
 	this.messagesData = null;
 	this.offset = 0;
-	this.initialLimit = 15;
+	this.initialLimit = 3;
 	this.limit = null;
+	this.avatarCache = {};
 }
 // inheritance
 ViewThread.prototype = new EzmlmForum();
@@ -27,9 +28,9 @@ ViewThread.prototype.init = function() {
 	// load aut and user info
 	this.auth = new AuthAdapter(this.config);
 	this.auth.load(function() {
-		console.log('auth chargée');
+		//console.log('auth chargée');
 		lthis.loadUserInfo(function() {
-			console.log(lthis.auth.user);
+			//console.log(lthis.auth.user);
 			lthis.readDetails(function() {
 				lthis.readThread();
 			});
@@ -71,7 +72,7 @@ ViewThread.prototype.readDetails = function(cb) {
 		cb();
 	})
 	.fail(function() {
-		console.log('details foirax');
+		console.log('failed to fetch details');
 		lthis.renderTemplate('thread-info-box', infoBoxData);
 	});
 };
@@ -142,6 +143,8 @@ ViewThread.prototype.readThread = function() {
 		// other
 		lthis.stopWorking();
 		lthis.reloadEventListeners();
+		// fetch avatars
+		lthis.fetchAvatars();
 	}
 
 	// thread messages
@@ -156,7 +159,7 @@ ViewThread.prototype.readThread = function() {
 		//console.log(lthis.messagesData);
 	})
 	.fail(function() {
-		console.log('messages foirax');
+		console.log('failed to fetch messages');
 	})
 	.always(displayThread);
 };
@@ -243,7 +246,7 @@ ViewThread.prototype.reloadEventListeners = function() {
 		}
 		if (doSend) {
 			// @TODO post message !
-			console.log('POST !!!!');
+			//console.log('POST !!!!');
 			//console.log(lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId));
 			var messageContentsRawText = lthis.addQuoteToOutgoingMessage(replyArea.val(), messageId);
 			var message = {
@@ -252,8 +255,8 @@ ViewThread.prototype.reloadEventListeners = function() {
 				html: true
 				// @TODO support attachments
 			};
-			console.log(message);
 			$jq.post(lthis.listRoot + '/threads/' + lthis.threadHash + '/messages', JSON.stringify(message))
+			//console.log(message);
 			.done(function() {
 				console.log('post message OK');
 				// hide reply area
@@ -269,7 +272,7 @@ ViewThread.prototype.reloadEventListeners = function() {
 				lthis.waitAndReadThread(3);
 			})
 			.fail(function() {
-				console.log('post message FOIRAX');
+				console.log('failed to post message');
 				alert("Erreur lors de l'envoi du message");
 			});
 
@@ -298,7 +301,7 @@ ViewThread.prototype.addPreviousMessageHtmlQuotation = function(id) {
 };
 
 ViewThread.prototype.sortByDate = function() {
-	console.log('sort by date');
+	//console.log('sort by date');
 	this.sortDirection = (this.sortDirection == 'desc' ? 'asc' : 'desc');
 	this.limit = this.initialLimit;
 	// refresh messages + tools template
@@ -306,7 +309,7 @@ ViewThread.prototype.sortByDate = function() {
 };
 
 ViewThread.prototype.loadMoreMessages = function() {
-	console.log('loadMoreMessages');
+	//console.log('loadMoreMessages');
 	this.limit = null;
 	// refresh messages + tools template
 	this.readThread();
@@ -331,4 +334,64 @@ ViewThread.prototype.detectQuotedMessageId = function(text) {
 		quotedId = matches[1];
 	}
 	return quotedId;
+};
+
+/**
+ * For every author currently displayed, fetch and display the avatar
+ */
+ViewThread.prototype.fetchAvatars = function() {
+	//console.log("récupération d'avatars !");
+	var lthis = this;
+	$('.thread-message').each(function() {
+		var avatar = null;
+		var messageId = $(this).attr('id').substr(4);
+		// get author email
+		var authorEmail = lthis.getAuthorEmailFromMsgId(messageId);
+		if (authorEmail != null) {
+			// is the avatar already in the cache ?
+			if (authorEmail in lthis.avatarCache) {
+				//console.log('trouvé dans le cache : ' + lthis.avatarCache[authorEmail]);
+				avatar = lthis.avatarCache[authorEmail];
+				if (avatar != null) {
+					// display it !
+					$(this).find('.author-image > img').attr('src', avatar);
+				}
+			} else {
+				// fetch it using the service
+				var url = lthis.config.avatarService.replace('{email}', authorEmail);
+				var currentThreadMessage = this;
+				$.getJSON(url)
+				.done(function(avatar) {
+					//console.log("je l'ai : " + avatar);
+					// cache it even if null, to avoid more useless requests
+					lthis.avatarCache[authorEmail] = avatar;
+					if (avatar != null) {
+						// display it !
+						$(currentThreadMessage).find('.author-image > img').attr('src', avatar);
+					}
+				})
+				.fail(function() {
+					console.log('failed to fetch avatar');
+				});
+			}
+		}
+	});
+};
+
+/**
+ * Retrieves the author email address given a message id;
+ * needs to have called readThread() at least once (messagesData must be loaded)
+ */
+ViewThread.prototype.getAuthorEmailFromMsgId = function(messageId) {
+	var authorEmail = null,
+		msgs = this.messagesData.results,
+		i = 0;
+	while (authorEmail == null && i < msgs.length) {
+		if (msgs[i].message_id == messageId) {
+			//console.log('auteur trouvé : ' + msgs[i].author_email);
+			authorEmail = msgs[i].author_email;
+		}
+		i++;
+	}
+	return authorEmail;
 };
