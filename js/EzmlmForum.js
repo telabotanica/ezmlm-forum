@@ -36,7 +36,7 @@ EzmlmForum.prototype.init = function() {
 	this.initDefaults();
 	var lthis = this;
 	// bind URL (fragment) to app state
-	$(window).on('hashchange', function() {
+	$jq(window).on('hashchange', function() {
 		console.log('hash changed : [' + window.location.hash + ']');
 		lthis.loadAppStateFromUrl();
 	});
@@ -64,8 +64,8 @@ EzmlmForum.prototype.initDefaults = function() {
  * Renders #tpl-{id} template inside #{id} element, using {data}
  */
 EzmlmForum.prototype.renderTemplate = function(id, data) {
-	var container = $('#' + id),
-		template = $('#tpl-' + id).html(),
+	var container = $jq('#' + id),
+		template = $jq('#tpl-' + id).html(),
 		output = Mustache.render(template, data);
 	container.html(output);
 };
@@ -281,7 +281,7 @@ EzmlmForum.prototype.working = function(work) {
 	if (work == undefined) {
 		work = true;
 	}
-	var workIndicator = $('#work-indicator');
+	var workIndicator = $jq('#work-indicator');
 	if (workIndicator != null) {
 		if (work) {
 			workIndicator.show();
@@ -327,7 +327,7 @@ EzmlmForum.prototype.loadUserInfo = function(cb) {
 	if (this.auth.user.email != null) {
 		// get user's rights for the current list
 		var userInfoURL = lthis.listRoot + '/users/' + lthis.auth.user.email;
-		$.ajax({
+		$jq.ajax({
 			url: userInfoURL,
 			type: "GET",
 			dataType: 'json'

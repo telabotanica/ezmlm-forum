@@ -12,7 +12,7 @@ AuthAdapter.prototype.load = function(cb) {
 	var lthis = this;
 	// get TB auth token
 	var authURL = this.config['adapters']['AuthAdapterTB']['annuaireURL'] + '/identite';
-	$.ajax({
+	$jq.ajax({
 	    url: authURL,
 	    type: "GET",
 	    dataType: 'json',
@@ -33,7 +33,7 @@ AuthAdapter.prototype.load = function(cb) {
 			headerName = lthis.config['adapters']['AuthAdapterTB']['headerName'];
 		customHeaders[headerName] = authToken;
 		// tell jQuery to always send authorization header
-		$.ajaxSetup({
+		$jq.ajaxSetup({
 		   headers : customHeaders
 		});
 		// go on

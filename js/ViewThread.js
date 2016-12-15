@@ -49,7 +49,7 @@ ViewThread.prototype.readDetails = function(cb) {
 	};
 
 	// thread info
-	$.get(this.listRoot + '/threads/' + this.threadHash + '?details')
+	$jq.get(this.listRoot + '/threads/' + this.threadHash + '?details')
 	.done(function(data) {
 		lthis.detailsData = data;
 		//console.log(lthis.detailsData);
@@ -85,7 +85,7 @@ ViewThread.prototype.waitAndReadThread = function(seconds) {
 	var lthis = this;
 	seconds = seconds || 5; // default wait : 5s
 	var milliseconds = seconds * 1000;
-	$('#thread-messages').html("");
+	$jq('#thread-messages').html("");
 	this.startWorking();
 	setTimeout(function() {
 		lthis.readThread();
@@ -150,7 +150,7 @@ ViewThread.prototype.readThread = function() {
 		+ (this.offset ? '&offset=' + this.offset : '')
 		+ (this.limit ? '&limit=' + this.limit : '');
 
-	$.get(url)
+	$jq.get(url)
 	.done(function(data) {
 		lthis.messagesData = data;
 		//console.log(lthis.messagesData);
@@ -170,29 +170,29 @@ ViewThread.prototype.reloadEventListeners = function() {
 	console.log('reload thread event listeners !');
 
 	// sort messages by date
-	$('#thread-tool-sort-date').unbind().click(function() {
+	$jq('#thread-tool-sort-date').unbind().click(function() {
 		lthis.sortByDate();
 	});
 
 	// show thread details
-	$('.thread-tool-info-details').unbind().click(function() {
+	$jq('.thread-tool-info-details').unbind().click(function() {
 		// @TODO use closest() to genericize for multiple instances ?
-		$('.thread-info-box-details').toggle();
+		$jq('.thread-info-box-details').toggle();
 	});
 
 	// load more messages
-	$('.load-more-messages').unbind().click(function() {
+	$jq('.load-more-messages').unbind().click(function() {
 		lthis.loadMoreMessages();
 	});
 
 	// show reply area
-	$('.reply-to-message').unbind().click(function() {
-		var messageId = $(this).parent().parent().data("id");
+	$jq('.reply-to-message').unbind().click(function() {
+		var messageId = $jq(this).parent().parent().data("id");
 		//console.log('reply to message #' + messageId);
-		var replyArea = $('#reply-to-message-' + messageId),
-			replyButton = $(this),
-			sendButton = $(this).parent().find('.send-reply'),
-			cancelButton = $(this).parent().find('.cancel-reply');
+		var replyArea = $jq('#reply-to-message-' + messageId),
+			replyButton = $jq(this),
+			sendButton = $jq(this).parent().find('.send-reply'),
+			cancelButton = $jq(this).parent().find('.cancel-reply');
 		// show reply area
 		replyArea.show();
 		// hide reply button
@@ -203,13 +203,13 @@ ViewThread.prototype.reloadEventListeners = function() {
 	});
 
 	// cancel a reply
-	$('.cancel-reply').unbind().click(function() {
-		var messageId = $(this).parent().parent().data("id");
+	$jq('.cancel-reply').unbind().click(function() {
+		var messageId = $jq(this).parent().parent().data("id");
 		//console.log('cancel reply to message #' + messageId);
-		var replyArea = $('#reply-to-message-' + messageId),
-			replyButton = $(this).parent().find('.reply-to-message'),
-			sendButton = $(this).parent().find('.send-reply'),
-			cancelButton = $(this),
+		var replyArea = $jq('#reply-to-message-' + messageId),
+			replyButton = $jq(this).parent().find('.reply-to-message'),
+			sendButton = $jq(this).parent().find('.send-reply'),
+			cancelButton = $jq(this),
 			doCancel = true;
 
 		if (replyArea.val() != '') {
@@ -228,13 +228,13 @@ ViewThread.prototype.reloadEventListeners = function() {
 	});
 
 	// send a reply
-	$('.send-reply').unbind().click(function() {
-		var messageId = $(this).parent().parent().data("id");
+	$jq('.send-reply').unbind().click(function() {
+		var messageId = $jq(this).parent().parent().data("id");
 		//console.log('send reply to message #' + messageId);
-		var replyArea = $('#reply-to-message-' + messageId),
-			replyButton = $(this).parent().find('.reply-to-message'),
-			sendButton = $(this),
-			cancelButton = $(this).parent().find('.cancel-reply'),
+		var replyArea = $jq('#reply-to-message-' + messageId),
+			replyButton = $jq(this).parent().find('.reply-to-message'),
+			sendButton = $jq(this),
+			cancelButton = $jq(this).parent().find('.cancel-reply'),
 			doSend = false;
 
 		//console.log(replyArea.val());
@@ -253,7 +253,7 @@ ViewThread.prototype.reloadEventListeners = function() {
 				// @TODO support attachments
 			};
 			console.log(message);
-			$.post(lthis.listRoot + '/threads/' + lthis.threadHash + '/messages', JSON.stringify(message))
+			$jq.post(lthis.listRoot + '/threads/' + lthis.threadHash + '/messages', JSON.stringify(message))
 			.done(function() {
 				console.log('post message OK');
 				// hide reply area
@@ -277,9 +277,9 @@ ViewThread.prototype.reloadEventListeners = function() {
 	});
 
 	// read more
-	$('.message-read-more').unbind().click(function(e) {
+	$jq('.message-read-more').unbind().click(function(e) {
 		e.preventDefault();
-		$(this).parent().find('.message-read-more-contents').toggle();
+		$jq(this).parent().find('.message-read-more-contents').toggle();
 		return false;
 	});
 };
@@ -290,7 +290,7 @@ ViewThread.prototype.addPreviousMessageHtmlQuotation = function(id) {
 	// no <br/> because rawMessageToHtml() always leaves at least 2 at the end
 	// @TODO do this better, manage languages, test if it works
 	quotation += "----- Original message -----<br/>";
-	var previousMessage = $('#msg-' + id).find('.message-contents').html();
+	var previousMessage = $jq('#msg-' + id).find('.message-contents').html();
 	// remove previous quotations
 	previousMessage = previousMessage.replace(/<a.+class="message-read-more".*/gi, '');
 	quotation += previousMessage;
