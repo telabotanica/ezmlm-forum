@@ -33,7 +33,7 @@ ViewList.prototype.readCalendar = function(cb) {
 	var lthis = this;
 	// list info
 	var url = this.listRoot + '/calendar';
-	$.get(url)
+	$jq.get(url)
 	.done(function(data) {
 		lthis.calendarData = data;
 	})
@@ -56,7 +56,7 @@ ViewList.prototype.readDetails = function() {
 		display_title: lthis.config['displayListTitle']
 	};
 	// list info
-	$.get(this.listRoot)
+	$jq.get(this.listRoot)
 	.done(function(data) {
 		lthis.detailsData = data;
 		//console.log(lthis.detailsData);
@@ -93,7 +93,7 @@ ViewList.prototype.loadTools = function() {
 		// format calendar data for Mustache
 		var calendar = [];
 		//console.log(lthis.calendarData);
-		$.each(lthis.calendarData, function(k, v) {
+		$jq.each(lthis.calendarData, function(k, v) {
 			var yearData = {
 				year: k
 			};
@@ -139,8 +139,8 @@ ViewList.prototype.showThreadsOrMessages = function() {
 		lthis.stopWorking();
 		lthis.pushAppState();
 	}
-	$('#list-threads').html('');
-	$('#list-messages').html('');
+	$jq('#list-threads').html('');
+	$jq('#list-messages').html('');
 	this.startWorking();
 	if (this.mode == 'messages') {
 		this.readMessages(done);
@@ -219,7 +219,7 @@ ViewList.prototype.readThreads = function(cb) {
 		+ (this.limit ? '&limit=' + this.limit : '')
 		+ '&details=true'
 	;
-	this.runningQuery = $.get(url)
+	this.runningQuery = $jq.get(url)
 	.done(function(data) {
 		lthis.threadsData = data;
 		//console.log(lthis.threadsData);
@@ -299,7 +299,7 @@ ViewList.prototype.readMessages = function(cb) {
 		+ (this.offset ? '&offset=' + this.offset : '')
 		+ (this.limit ? '&limit=' + this.limit : '')
 	;
-	this.runningQuery = $.get(url)
+	this.runningQuery = $jq.get(url)
 	.done(function(data) {
 		lthis.messagesData = data;
 		//console.log(lthis.messagesData);
@@ -320,36 +320,36 @@ ViewList.prototype.reloadEventListeners = function() {
 	console.log('reload list event listeners !');
 
 	// show thread details
-	$('.list-tool-info-details').unbind().click(function(e) {
+	$jq('.list-tool-info-details').unbind().click(function(e) {
 		// @TODO use closest() to genericize for multiple instances ?
 		e.preventDefault();
-		$('.list-info-box-details').toggle();
+		$jq('.list-info-box-details').toggle();
 		return false;
 	});
 
 	// search messages / threads
-	$('#list-tool-search').unbind().click(function() {
+	$jq('#list-tool-search').unbind().click(function() {
 		lthis.search();
 	});
 	// press Return to search
-	$('#list-tool-search-input').unbind().keypress(function(e) {
+	$jq('#list-tool-search-input').unbind().keypress(function(e) {
 		if (e.which == 13) { // "return" key
 			lthis.search();
 		}
 	});
 
 	// show new thread area
-	$('.list-tool-new-thread').unbind().click(function() {
-		var newThreadArea = $('#new-thread');
+	$jq('.list-tool-new-thread').unbind().click(function() {
+		var newThreadArea = $jq('#new-thread');
 		// show new thread area
 		newThreadArea.show();
 	});
 
 	// cancel the new thread
-	$('#cancel-new-thread').unbind().click(function() {
-		var newThreadArea = $('#new-thread'),
-			threadTitle = $('#new-thread-title'),
-			threadBody = $('#new-thread-body'),
+	$jq('#cancel-new-thread').unbind().click(function() {
+		var newThreadArea = $jq('#new-thread'),
+			threadTitle = $jq('#new-thread-title'),
+			threadBody = $jq('#new-thread-body'),
 			doCancel = true;
 
 		if (threadTitle.val() != '' || threadBody.val() != '' ) {
@@ -363,10 +363,10 @@ ViewList.prototype.reloadEventListeners = function() {
 	});
 
 	// send the new thread
-	$('#send-new-thread').unbind().click(function() {
-		var newThreadArea = $('#new-thread'),
-			threadTitle = $('#new-thread-title'),
-			threadBody = $('#new-thread-body'),
+	$jq('#send-new-thread').unbind().click(function() {
+		var newThreadArea = $jq('#new-thread'),
+			threadTitle = $jq('#new-thread-title'),
+			threadBody = $jq('#new-thread-body'),
 			doSend = true;
 
 		if (threadTitle.val() != '' && threadBody.val() != '' ) {
@@ -386,7 +386,7 @@ ViewList.prototype.reloadEventListeners = function() {
 				// @TODO support attachments
 			};
 			console.log(message);
-			$.post(lthis.listRoot + '/messages', JSON.stringify(message))
+			$jq.post(lthis.listRoot + '/messages', JSON.stringify(message))
 			.done(function() {
 				console.log('post new thread OK');
 				threadTitle.val("");
@@ -406,7 +406,7 @@ ViewList.prototype.reloadEventListeners = function() {
 };
 
 ViewList.prototype.search = function() {
-	var term = $('#list-tool-search-input').val();
+	var term = $jq('#list-tool-search-input').val();
 	//console.log('push search: [' + term + ']')
 	// search bar should be a form to avoid this trick
 	this.pushAppState(this.mode, "search", term, 0);
@@ -499,8 +499,8 @@ ViewList.prototype.waitAndReload = function(seconds) {
 	seconds = seconds || 5; // default wait : 5s
 	var milliseconds = seconds * 1000;
 	// @TODO make it more generic
-	$('#list-threads').html("");
-	$('#list-messages').html("");
+	$jq('#list-threads').html("");
+	$jq('#list-messages').html("");
 	this.startWorking();
 	setTimeout(function() {
 		if (lthis.mode == "messages") {
