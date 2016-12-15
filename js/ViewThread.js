@@ -352,8 +352,10 @@ ViewThread.prototype.fetchAvatars = function() {
 			if (authorEmail in lthis.avatarCache) {
 				//console.log('trouvé dans le cache : ' + lthis.avatarCache[authorEmail]);
 				avatar = lthis.avatarCache[authorEmail];
-				// display it !
-				$(this).find('.author-image > img').attr('src', avatar);
+				if (avatar != null) {
+					// display it !
+					$(this).find('.author-image > img').attr('src', avatar);
+				}
 			} else {
 				// fetch it using the service
 				var url = lthis.config.avatarService.replace('{email}', authorEmail);
@@ -361,9 +363,9 @@ ViewThread.prototype.fetchAvatars = function() {
 				$.getJSON(url)
 				.done(function(avatar) {
 					//console.log("je l'ai : " + avatar);
+					// cache it even if null, to avoid more useless requests
+					lthis.avatarCache[authorEmail] = avatar;
 					if (avatar != null) {
-						// cache it
-						lthis.avatarCache[authorEmail] = avatar;
 						// display it !
 						$(currentThreadMessage).find('.author-image > img').attr('src', avatar);
 					}
