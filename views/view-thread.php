@@ -2,6 +2,12 @@
 
 <div class="container-fluid">
 	<div class="row">
+		<div id="back-to-list">
+			<a title="Retour à la liste"
+				class="back-to-list-link glyphicon glyphicon-circle-arrow-left"
+				href="<?php echo $rootUri ?>/view-list">
+			</a>
+		</div>
 		<div id="thread-info-box">
 			<!-- thread-info-box.tpl -->
 		</div>

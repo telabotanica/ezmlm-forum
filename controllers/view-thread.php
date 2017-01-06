@@ -31,5 +31,6 @@ class ViewThread extends BaseController {
 		parent::buildPageData();
 		$this->data['threadHash'] = $this->threadHash;
 		$this->data['dataRootUri'] = $this->fc->getDataRootUri();
+		$this->data['rootUri'] = $this->fc->getRootUri();
 	}
 }

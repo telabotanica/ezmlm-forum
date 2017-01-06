@@ -113,8 +113,23 @@ table.borderless th, table.borderless td {
 
 /* B.2.b specific-template-related rules ------------------------------------ */
 
+#back-to-list {
+    /*border: 1px solid red;*/
+    float: left;
+}
+a.back-to-list-link {
+	margin-top: 6px;
+	font-size: 44px;
+}
+a.back-to-list-link:hover {
+	text-decoration: none;
+}
+
 #thread-info-box, #list-info-box {
 	/*border: solid #808080 1px;*/
+}
+#thread-info-box {
+	margin-left: 60px;
 }
 #thread-info-box h2, #list-info-box h2 {
 	margin: 0;

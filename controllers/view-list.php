@@ -17,6 +17,5 @@ class ViewList extends BaseController {
 	protected function buildPageData() {
 		parent::buildPageData();
 		$this->data['dataRootUri'] = $this->fc->getDataRootUri();
-		//$this->data['listName'] = $this->fc->
 	}
 }
