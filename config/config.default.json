@@ -17,5 +17,5 @@
 			"headerName": "Authorization"
 		}
 	},
-	"avatarService": "http://localhost/avatar-service/?user_email={email}"
+	"avatarService": "http://localhost/service:annuaire-ng:utilisateur/avatar-par-courriel/{email}"
 }
