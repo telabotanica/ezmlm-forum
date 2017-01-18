@@ -6,7 +6,7 @@
 	<span class="hidden-md hidden-sm hidden-lg">XS</span>
 -->
 <div class="row">
-	<div class="col-lg-3 col-md-4 col-sm-4 col-xs-4">
+	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
 		<div class="btn-group" role="group">
 			<button class="list-tool btn btn-primary dropdown-toggle" data-toggle="dropdown">
 				<span id="list-tool-mode-selected">
@@ -81,7 +81,7 @@
 		</div>
 	</div>
 
-	<div class="col-lg-7 col-md-6 col-sm-7 col-xs-6">
+	<div class="col-lg-6 col-md-6 col-sm-7 col-xs-6">
 		<div class="input-group">
 			<input id="list-tool-search-input" type="text" class="form-control"
 				   placeholder="Rechercher..." value="{{#textSearchMode}}{{searchTerm}}{{/textSearchMode}}" />
