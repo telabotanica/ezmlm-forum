@@ -21,12 +21,16 @@ function EzmlmForum() {
 	};
 	this.runningQuery = null;
 	this.auth = null;
+	// absolute links everywhere
+	this.linkBase = null;
 }
 
 // loads the stringified JSON configuration given by PHP through the HTML view template
 EzmlmForum.prototype.setConfig = function(configString) {
 	console.log('EzmlmForum.setConfig()');
 	this.config = JSON.parse(configString);
+	this.linkBase = this.config.domainRoot + this.config.baseUri;
+	console.log('Link base: ' + this.linkBase);
 	this.listRoot = this.config['ezmlm-php'].rootUri + '/lists/' + this.config['ezmlm-php'].list;
 };
 

@@ -53,7 +53,8 @@ ViewList.prototype.readDetails = function() {
 	var lthis = this;
 	var infoBoxData = {
 		list_name: lthis.config['ezmlm-php'].list,
-		display_title: lthis.config['displayListTitle']
+		display_title: lthis.config['displayListTitle'],
+		link_base: lthis.linkBase
 	};
 	// list info
 	$jq.get(this.listRoot)
@@ -128,7 +129,8 @@ ViewList.prototype.loadTools = function() {
 			urlSearchTerm: (lthis.searchTerm || '*'),
 			offset: lthis.offset,
 			sortDirection: lthis.sortDirection,
-			noPostRights: (! lthis.auth.user.rights.post)
+			noPostRights: (! lthis.auth.user.rights.post),
+			link_base: lthis.linkBase
 		});
 	});
 };
@@ -181,6 +183,7 @@ ViewList.prototype.readThreads = function(cb) {
 		}
 		var templateData = {
 			threads: threads,
+			link_base: lthis.linkBase,
 			searchMode: lthis.searchMode,
 			searchTerm: (lthis.searchTerm || '*'),
 			sortDirection: lthis.sortDirection,
@@ -261,6 +264,7 @@ ViewList.prototype.readMessages = function(cb) {
 		}
 		var templateData = {
 			messages: messages,
+			link_base: lthis.linkBase,
 			searchTerm: (lthis.searchTerm || '*'),
 			searchMode: lthis.searchMode,
 			sortDirection: lthis.sortDirection,

@@ -46,6 +46,7 @@ ViewThread.prototype.readDetails = function(cb) {
 	//console.log('read details');
 	var lthis = this;
 	var infoBoxData = {
+		link_base: lthis.linkBase,
 		hash: lthis.threadHash
 	};
 
@@ -129,6 +130,7 @@ ViewThread.prototype.readThread = function() {
 
 		var templateData = {
 			messages: messages,
+			link_base: lthis.linkBase,
 			sortAsc: (lthis.sortDirection == 'asc'),
 			sortTitle: (lthis.sortDirection == 'asc' ? "Les plus anciens d'abord" : "Les plus récents d'abord"),
 			displayedMessages: lthis.messagesData.count,
