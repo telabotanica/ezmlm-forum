@@ -175,23 +175,30 @@ ViewThread.prototype.reloadEventListeners = function() {
 	console.log('reload thread event listeners !');
 
 	// sort messages by date
-	$jq('#thread-tool-sort-date').unbind().click(function() {
+	$jq('#thread-tool-sort-date').unbind().click(function(e) {
+		e.preventDefault();
 		lthis.sortByDate();
+		return false;
 	});
 
 	// show thread details
-	$jq('.thread-tool-info-details').unbind().click(function() {
+	$jq('.thread-tool-info-details').unbind().click(function(e) {
+		e.preventDefault();
 		// @TODO use closest() to genericize for multiple instances ?
 		$jq('.thread-info-box-details').toggle();
+		return false;
 	});
 
 	// load more messages
-	$jq('.load-more-messages').unbind().click(function() {
+	$jq('.load-more-messages').unbind().click(function(e) {
+		e.preventDefault();
 		lthis.loadMoreMessages();
+		return false;
 	});
 
 	// show reply area
-	$jq('.reply-to-message').unbind().click(function() {
+	$jq('.reply-to-message').unbind().click(function(e) {
+		e.preventDefault();
 		var messageId = $jq(this).parent().parent().data("id");
 		//console.log('reply to message #' + messageId);
 		var replyArea = $jq('#reply-to-message-' + messageId),
@@ -205,10 +212,12 @@ ViewThread.prototype.reloadEventListeners = function() {
 		// show send / cancel buttons
 		sendButton.show();
 		cancelButton.show();
+		return false;
 	});
 
 	// cancel a reply
-	$jq('.cancel-reply').unbind().click(function() {
+	$jq('.cancel-reply').unbind().click(function(e) {
+		e.preventDefault();
 		var messageId = $jq(this).parent().parent().data("id");
 		//console.log('cancel reply to message #' + messageId);
 		var replyArea = $jq('#reply-to-message-' + messageId),
@@ -230,10 +239,12 @@ ViewThread.prototype.reloadEventListeners = function() {
 			sendButton.hide();
 			cancelButton.hide();
 		}
+		return false;
 	});
 
 	// send a reply
-	$jq('.send-reply').unbind().click(function() {
+	$jq('.send-reply').unbind().click(function(e) {
+		e.preventDefault();
 		var messageId = $jq(this).parent().parent().data("id");
 		//console.log('send reply to message #' + messageId);
 		var replyArea = $jq('#reply-to-message-' + messageId),
@@ -279,6 +290,7 @@ ViewThread.prototype.reloadEventListeners = function() {
 			});
 
 		}
+		return false;
 	});
 
 	// read more

@@ -332,8 +332,10 @@ ViewList.prototype.reloadEventListeners = function() {
 	});
 
 	// search messages / threads
-	$jq('#list-tool-search').unbind().click(function() {
+	$jq('#list-tool-search').unbind().click(function(e) {
+		e.preventDefault();
 		lthis.search();
+		return false;
 	});
 	// press Return to search
 	$jq('#list-tool-search-input').unbind().keypress(function(e) {
@@ -343,14 +345,17 @@ ViewList.prototype.reloadEventListeners = function() {
 	});
 
 	// show new thread area
-	$jq('.list-tool-new-thread').unbind().click(function() {
+	$jq('.list-tool-new-thread').unbind().click(function(e) {
+		e.preventDefault();
 		var newThreadArea = $jq('#new-thread');
 		// show new thread area
 		newThreadArea.show();
+		return false;
 	});
 
 	// cancel the new thread
-	$jq('#cancel-new-thread').unbind().click(function() {
+	$jq('#cancel-new-thread').unbind().click(function(e) {
+		e.preventDefault();
 		var newThreadArea = $jq('#new-thread'),
 			threadTitle = $jq('#new-thread-title'),
 			threadBody = $jq('#new-thread-body'),
@@ -364,10 +369,12 @@ ViewList.prototype.reloadEventListeners = function() {
 			threadBody.val("");
 			newThreadArea.hide();
 		}
+		return false;
 	});
 
 	// send the new thread
-	$jq('#send-new-thread').unbind().click(function() {
+	$jq('#send-new-thread').unbind().click(function(e) {
+		e.preventDefault();
 		var newThreadArea = $jq('#new-thread'),
 			threadTitle = $jq('#new-thread-title'),
 			threadBody = $jq('#new-thread-body'),
@@ -406,6 +413,7 @@ ViewList.prototype.reloadEventListeners = function() {
 			});
 
 		}
+		return false;
 	});
 };
 
