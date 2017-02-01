@@ -356,9 +356,9 @@ ViewThread.prototype.detectQuotedMessageId = function(text) {
 ViewThread.prototype.fetchAvatars = function() {
 	//console.log("récupération d'avatars !");
 	var lthis = this;
-	jq('.thread-message').each(function() {
+	$jq('.thread-message').each(function() {
 		var avatar = null;
-		var messageId = jq(this).attr('id').substr(4);
+		var messageId = $jq(this).attr('id').substr(4);
 		// get author email
 		var authorEmail = lthis.getAuthorEmailFromMsgId(messageId);
 		if (authorEmail != null) {
@@ -368,20 +368,20 @@ ViewThread.prototype.fetchAvatars = function() {
 				avatar = lthis.avatarCache[authorEmail];
 				if (avatar != null) {
 					// display it !
-					jq(this).find('.author-image > img').attr('src', avatar);
+					$jq(this).find('.author-image > img').attr('src', avatar);
 				}
 			} else {
 				// fetch it using the service
 				var url = lthis.config.avatarService.replace('{email}', authorEmail);
 				var currentThreadMessage = this;
-				jq.getJSON(url)
+				$jq.getJSON(url)
 				.done(function(avatar) {
 					//console.log("je l'ai : " + avatar);
 					// cache it even if null, to avoid more useless requests
 					lthis.avatarCache[authorEmail] = avatar;
 					if (avatar != null) {
 						// display it !
-						jq(currentThreadMessage).find('.author-image > img').attr('src', avatar);
+						$jq(currentThreadMessage).find('.author-image > img').attr('src', avatar);
 					}
 				})
 				.fail(function() {
