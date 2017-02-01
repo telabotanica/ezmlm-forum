@@ -26,10 +26,10 @@
 				<span class="caret hidden-xs"></span>
 			</button>
 			<ul class="dropdown-menu">
-				<li><a class="list-tool-mode-entry" href="{{link_base}}/view-list#!/threads/search/*/0/desc">
+				<li><a class="list-tool-mode-entry" href="{{link_base}}/view-list/#!/threads/search/*/0/desc">
 					<span class="hidden-sm hidden-xs">tous les </span>sujets
 				</a></li>
-				<li><a class="list-tool-mode-entry" href="{{link_base}}/view-list#!/messages/search/*/0/desc">
+				<li><a class="list-tool-mode-entry" href="{{link_base}}/view-list/#!/messages/search/*/0/desc">
 					<span class="hidden-sm hidden-xs">tous les </span>messages
 				</a></li>
 			</ul>
@@ -65,7 +65,7 @@
 									<td class="list-calendar-year">{{year}}</td>
 									{{#months}}
 									<td>
-										<a href="{{link_base}}/view-list#!/messages/date/{{yearAndMonth}}/0/desc"
+										<a href="{{link_base}}/view-list/#!/messages/date/{{yearAndMonth}}/0/desc"
 										   title="voir tous les messages de {{month}}/{{year}}">
 											{{count}}
 										</a>

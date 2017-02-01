@@ -11,14 +11,14 @@
 			<th class="col-lg-1 col-md-2 col-sm-2 col-xs-1">
 				{{#sortAsc}}
 					<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
-					<a href="{{link_base}}/view-list#!/threads/{{searchMode}}/{{searchTerm}}/0/desc" title="{{sortTitle}}" class="tool" id="list-tool-sort-date">
+					<a href="{{link_base}}/view-list/#!/threads/{{searchMode}}/{{searchTerm}}/0/desc" title="{{sortTitle}}" class="tool" id="list-tool-sort-date">
 						<span class="hidden-xs">Activité</span>
 						<span class="hidden-sm hidden-md hidden-lg">Act</span>
 					</a>
 				{{/sortAsc}}
 				{{^sortAsc}}
 					<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-					<a href="{{link_base}}/view-list#!/threads/{{searchMode}}/{{searchTerm}}/0/asc" title="{{sortTitle}}" class="tool" id="list-tool-sort-date">
+					<a href="{{link_base}}/view-list/#!/threads/{{searchMode}}/{{searchTerm}}/0/asc" title="{{sortTitle}}" class="tool" id="list-tool-sort-date">
 						<span class="hidden-xs">Activité</span>
 						<span class="hidden-sm hidden-md hidden-lg">Act</span>
 					</a>
@@ -64,10 +64,10 @@
 		<span class="list-pager-navigation">
 			<a {{^hasPreviousPages}}disabled {{/hasPreviousPages}} title="Page précédente" id="list-pager-previous-page"
 				class="btn btn-primary glyphicon glyphicon-chevron-left"
-				href="{{link_base}}/view-list#!/threads/{{searchMode}}/{{searchTerm}}/{{previousOffset}}/{{sortDirection}}"></a>
+				href="{{link_base}}/view-list/#!/threads/{{searchMode}}/{{searchTerm}}/{{previousOffset}}/{{sortDirection}}"></a>
 			<a {{^hasNextPages}}disabled {{/hasNextPages}} title="Page suivante" id="list-pager-next-page"
 				class="btn btn-primary glyphicon glyphicon-chevron-right"
-				href="{{link_base}}/view-list#!/threads/{{searchMode}}/{{searchTerm}}/{{nextOffset}}/{{sortDirection}}"></a>
+				href="{{link_base}}/view-list/#!/threads/{{searchMode}}/{{searchTerm}}/{{nextOffset}}/{{sortDirection}}"></a>
 		</span>
 	</div>
 	{{/pager}}

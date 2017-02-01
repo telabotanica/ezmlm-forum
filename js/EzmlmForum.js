@@ -58,8 +58,8 @@ EzmlmForum.prototype.init = function() {
 	});
 };
 
-// set defult values for attributes before binding URL to app state
-// - to be overrided
+// set default values for attributes before binding URL to app state
+// - to be overriden
 EzmlmForum.prototype.initDefaults = function() {
 	//console.log('EzmlmForum.initDefaults()');
 };

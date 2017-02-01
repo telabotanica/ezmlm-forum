@@ -4,7 +4,7 @@
 	{{/list}}
 	{{#list}}
 		{{#display_title}}
-			<h2 id="list-name"><a href="{{link_base}}/view-list#!/threads/search/*/0/desc">{{list.list_name}}</a></h2>
+			<h2 id="list-name"><a href="{{link_base}}/view-list/#!/threads/search/*/0/desc">{{list.list_name}}</a></h2>
 		{{/display_title}}
 		<span class="list-address" title="Vous pouvez écrire directement à cette adresse">{{list.list_address}}</span> -
 		<a href="#" class="tool list-tool-info-details">détails</a>

@@ -429,6 +429,10 @@ ViewList.prototype.search = function() {
  * supposed to push a history state (since URL fragment has changed)
  */
 ViewList.prototype.pushAppState = function(mode, searchMode, searchTerm, offset, sortDirection) {
+	// @TODO get rid of this as soon as the app is merged into one page
+	if (! window.location.pathname.endsWith('/')) {
+		window.location.pathname += '/';
+	}
 	if (searchTerm == '') {
 		searchTerm = '*';
 	}
