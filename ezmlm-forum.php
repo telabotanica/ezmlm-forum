@@ -168,7 +168,7 @@ class EzmlmForum {
 	/**
 	 * Loads $this->page with the page asked : tries the 1st URI part after
 	 * $this->rootUri; if it doesn't exist tries the "page" GET parameter;
-	 * then tries $this->config['defaultPage']; finally returns "threads" page
+	 * then tries $this->config['defaultPage']; finally returns "view-list" page
 	 */
 	protected function getAskedPage() {
 		if (count($this->resources) > 0) {
@@ -178,7 +178,7 @@ class EzmlmForum {
 		} elseif (! empty($this->config['defaultPage'])) {
 			$this->page = $this->config['defaultPage'];
 		} else {
-			$this->page = "threads";
+			$this->page = "view-list";
 		}
 	}
 
