@@ -27,29 +27,29 @@ function EzmlmForum() {
 
 // loads the stringified JSON configuration given by PHP through the HTML view template
 EzmlmForum.prototype.setConfig = function(configString) {
-	console.log('EzmlmForum.setConfig()');
+	//console.log('EzmlmForum.setConfig()');
 	this.config = JSON.parse(configString);
 	this.linkBase = this.config.domainRoot + this.config.baseUri;
-	console.log('Link base: ' + this.linkBase);
+	//console.log('Link base: ' + this.linkBase);
 	this.listRoot = this.config['ezmlm-php'].rootUri + '/lists/' + this.config['ezmlm-php'].list;
 };
 
 // starts the job
 EzmlmForum.prototype.init = function() {
-	console.log('EzmlmForum.init()');
+	//console.log('EzmlmForum.init()');
 	this.initDefaults();
 	var lthis = this;
 	// bind URL (fragment) to app state
 	$jq(window).on('hashchange', function() {
-		console.log('hash changed : [' + window.location.hash + ']');
+		//console.log('hash changed : [' + window.location.hash + ']');
 		lthis.loadAppStateFromUrl();
 	});
 	// load auth and user info
 	this.auth = new AuthAdapter(this.config);
 	this.auth.load(function() {
-		console.log('Auth chargée');
+		//console.log('Auth chargée');
 		lthis.loadUserInfo(function() {
-			console.log(lthis.auth.user);
+			//console.log(lthis.auth.user);
 			// first time load
 			// @WARNING it's said that Safari triggers hashchange on first time load !
 			lthis.loadAppStateFromUrl();
@@ -61,7 +61,7 @@ EzmlmForum.prototype.init = function() {
 // set defult values for attributes before binding URL to app state
 // - to be overrided
 EzmlmForum.prototype.initDefaults = function() {
-	console.log('EzmlmForum.initDefaults()');
+	//console.log('EzmlmForum.initDefaults()');
 };
 
 /**

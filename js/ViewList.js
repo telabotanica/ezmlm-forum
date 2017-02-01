@@ -19,7 +19,7 @@ function ViewList() {
 ViewList.prototype = new EzmlmForum();
 
 ViewList.prototype.initDefaults = function() {
-	console.log('ViewList.initDefaults()');
+	//console.log('ViewList.initDefaults()');
 	this.mode = this.defaultMode;
 	this.searchMode = "search";
 	this.sortDirection = this.defaultSortDirection;
@@ -38,7 +38,7 @@ ViewList.prototype.readCalendar = function(cb) {
 		lthis.calendarData = data;
 	})
 	.fail(function() {
-		console.log('calendrier foirax');
+		console.log('failed to fetch calendar data');
 	})
 	.always(function() {
 		//console.log('ALWAYS COCA CALLBACK');
@@ -78,7 +78,7 @@ ViewList.prototype.readDetails = function() {
 		// bye
 	})
 	.fail(function() {
-		console.log('details foirax');
+		console.log('failed to fetch list details');
 		lthis.renderTemplate('list-info-box', infoBoxData);
 	});
 }
@@ -88,7 +88,7 @@ ViewList.prototype.readDetails = function() {
  * only once...
  */
 ViewList.prototype.loadTools = function() {
-	console.log('load tools and calendar !');
+	//console.log('load tools and calendar !');
 	var lthis = this;
 	this.readCalendar(function() {
 		// format calendar data for Mustache
@@ -229,7 +229,7 @@ ViewList.prototype.readThreads = function(cb) {
 	})
 	.fail(function() {
 		lthis.threadsData = { results: [] };
-		console.log('threads foirax');
+		console.log('failed to fetch threads');
 	})
 	.always(displayThreads);
 };
@@ -310,7 +310,7 @@ ViewList.prototype.readMessages = function(cb) {
 	})
 	.fail(function() {
 		lthis.messagesData = { results: [] };
-		console.log('messages foirax');
+		console.log('failed to fetch messages');
 	})
 	.always(displayMessages);
 };
@@ -321,7 +321,7 @@ ViewList.prototype.readMessages = function(cb) {
  */
 ViewList.prototype.reloadEventListeners = function() {
 	var lthis = this;
-	console.log('reload list event listeners !');
+	//console.log('reload list event listeners !');
 
 	// show thread details
 	$jq('.list-tool-info-details').unbind().click(function(e) {
@@ -387,7 +387,7 @@ ViewList.prototype.reloadEventListeners = function() {
 		}
 
 		if (doSend) {
-			console.log('POST new thread !!!!');
+			//console.log('POST new thread !!!!');
 			var messageContentsRawText = threadBody.val();
 			var message = {
 				body: lthis.rawMessageToHtml(messageContentsRawText),
@@ -396,10 +396,10 @@ ViewList.prototype.reloadEventListeners = function() {
 				html: true
 				// @TODO support attachments
 			};
-			console.log(message);
+			//console.log(message);
 			$jq.post(lthis.listRoot + '/messages', JSON.stringify(message))
 			.done(function() {
-				console.log('post new thread OK');
+				//console.log('post new thread OK');
 				threadTitle.val("");
 				threadBody.val("");
 				newThreadArea.hide();
@@ -408,7 +408,7 @@ ViewList.prototype.reloadEventListeners = function() {
 				lthis.waitAndReload(3);
 			})
 			.fail(function() {
-				console.log('post new thread FOIRAX');
+				console.log('failed to post new thread');
 				alert("Erreur lors de l'envoi du nouveau sujet");
 			});
 
@@ -479,23 +479,23 @@ ViewList.prototype.loadAppStateFromUrl = function() {
 
 	// from URL
 	this.readAppState();
-	console.log('ViewList.intelligentReload()');
+	//console.log('ViewList.intelligentReload()');
 	// intelligent reload
-	console.log('searchTerm: [' + this.searchTerm + '], pst: [' + previousSearchTerm + ']');
-	console.log('searchMode: [' + this.searchMode + '], psm: [' + previousSearchMode + ']');
+	//console.log('searchTerm: [' + this.searchTerm + '], pst: [' + previousSearchTerm + ']');
+	//console.log('searchMode: [' + this.searchMode + '], psm: [' + previousSearchMode + ']');
 	var needsDetails = ! this.appLoadedOnce,
 		needsTools = (needsDetails || this.mode != previousMode || this.searchTerm != previousSearchTerm || this.searchMode != previousSearchMode),
 		needsContents = (needsTools || this.offset != previousOffset || this.sortDirection != previousSortDirection);
 	if (needsDetails) {
-		console.log('-- reload details');
+		//console.log('-- reload details');
 		this.readDetails();
 	}
 	if (needsTools) {
-		console.log('-- reload tools');
+		//console.log('-- reload tools');
 		this.loadTools();
 	}
 	if (needsContents) {
-		console.log('-- reload contents');
+		//console.log('-- reload contents');
 		this.showThreadsOrMessages();
 	}
 };
@@ -516,12 +516,12 @@ ViewList.prototype.waitAndReload = function(seconds) {
 	this.startWorking();
 	setTimeout(function() {
 		if (lthis.mode == "messages") {
-			console.log('reload messages after timeout');
+			//console.log('reload messages after timeout');
 			lthis.readMessages(function() {
 				lthis.stopWorking();
 			});
 		} else {
-			console.log('reload threads after timeout');
+			//console.log('reload threads after timeout');
 			lthis.readThreads(function() {
 				lthis.stopWorking();
 			});

@@ -8,7 +8,7 @@
  * is responsible for this
  */
 function AuthAdapter(config) {
-	console.log('AuthAdapter construct()');
+	//console.log('AuthAdapter construct()');
 	this.config = config;
 	// default user has all rights
 	// @WARNING doesn't read list's public/private status

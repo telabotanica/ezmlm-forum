@@ -20,7 +20,7 @@ ViewThread.prototype = new EzmlmForum();
  * single-page app instead of a 2-pages app
  */
 ViewThread.prototype.init = function() {
-	console.log('ViewThread.init()');
+	//console.log('ViewThread.init()');
 	var lthis = this;
 	//console.log(this.config);
 	//console.log('Thread: ' + this.threadHash);
@@ -172,7 +172,7 @@ ViewThread.prototype.readThread = function() {
  */
 ViewThread.prototype.reloadEventListeners = function() {
 	var lthis = this;
-	console.log('reload thread event listeners !');
+	//console.log('reload thread event listeners !');
 
 	// sort messages by date
 	$jq('#thread-tool-sort-date').unbind().click(function(e) {
@@ -271,7 +271,7 @@ ViewThread.prototype.reloadEventListeners = function() {
 			$jq.post(lthis.listRoot + '/threads/' + lthis.threadHash + '/messages', JSON.stringify(message))
 			//console.log(message);
 			.done(function() {
-				console.log('post message OK');
+				//console.log('post message OK');
 				// hide reply area
 				replyArea.val('');
 				replyArea.hide();
