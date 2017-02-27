@@ -1,6 +1,6 @@
 <script type="text/html" id="tpl-list-info-box" >
 	{{^list}}
-		erreur: la liste [{{list_name}}] n'existe pas sur ce serveur
+		liste [{{list_name}}] inexistante ou droits insuffisants !
 	{{/list}}
 	{{#list}}
 		{{#display_title}}
