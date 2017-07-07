@@ -77,11 +77,18 @@ EzmlmForum.prototype.renderTemplate = function(id, data) {
 /**
  * Detects if a text is an address email, and if so censors the domain - intended
  * for author "names" that might be bare email addresses
+ * 
+ * If allOccurrences is true, will censor all occurrences ("g" modifier)
  */
-EzmlmForum.prototype.censorEmail = function(text) {
+EzmlmForum.prototype.censorEmail = function(text, allOccurrences) {
+	if (allOccurrences == undefined) allOccurrences = false;
+	var replacePattern = /(.+@).+\..+/i;
+	if (allOccurrences) {
+		replacePattern = /(.+@).+\..+/ig;
+	}
 	if (text && text.match(/.+@.+\..+/i)) {
 		// would it be quicker to try replacing without matching ?
-		text = text.replace(/(.+@).+\..+/i, "$1...");
+		text = text.replace(replacePattern, "$1...");
 	}
 	return text;
 };
@@ -238,6 +245,7 @@ EzmlmForum.prototype.addNativeMedia = function(text) {
 /**
  * Detects popular online video players URLs and replaces them with a video
  * embedding
+ * @TODO manage more video hosts, not only Youtube
  */
 EzmlmForum.prototype.addOnlineMediaEmbedding = function(text) {
 	if (text) {

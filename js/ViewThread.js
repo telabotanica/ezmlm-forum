@@ -112,6 +112,9 @@ ViewThread.prototype.readThread = function() {
 			if (messages[i].message_contents) {
 				messages[i].quoted_message_id = lthis.detectQuotedMessageId(messages[i].message_contents.text); // do this before cleaning
 				messages[i].message_contents.text = lthis.cleanText(messages[i].message_contents.text);
+				// censor all email adresses in the message
+				// @TODO maybe apply to quoted messages headers only ?
+				messages[i].message_contents.text = lthis.censorEmail(messages[i].message_contents.text, true);
 				messages[i].message_contents.text = lthis.enrichText(messages[i].message_contents.text);
 			}
 			// format dates
@@ -139,7 +142,7 @@ ViewThread.prototype.readThread = function() {
 			totalMessages: lthis.messagesData.total,
 			moreMessages: (lthis.messagesData.total - lthis.messagesData.count > 0),
 			noPostRights: (! lthis.auth.user.rights.post)
-		}
+		};
 		lthis.renderTemplate('thread-messages', templateData);
 
 		// other
