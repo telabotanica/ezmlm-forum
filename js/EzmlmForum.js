@@ -108,7 +108,7 @@ EzmlmForum.prototype.cleanText = function(text, remove) {
 		" _____ ", // ?
 		"&gt; Message du", // ? @WARNING sometimes used for Fwd messages, which means relevant contents
 		"------------------------------------------------------------------------", // AVAST
-		"(le|on) ([0-9]{2}(/|-)[0-9]{2}(/|-)[0-9]{4}|[0-9]{4}(/|-)[0-9]{2}(/|-)[0-9]{2}) [0-9]{2}:[0-9]{2}", // Thunderbird
+		"(le|on) ([0-9]{2}(/|-)[0-9]{2}(/|-)[0-9]{4}|[0-9]{4}(/|-)[0-9]{2}(/|-)[0-9]{2}) (à )?[0-9]{2}:[0-9]{2}", // Thunderbird
 		"le [0-9]{1,2} [a-zA-Z]+\.? [0-9]{4} (à )?[0-9]{2}:[0-9]{2}", // ?
 		//"-------- (Message transféré|Forwarded message) --------", // ? @WARNING forwarded message might be considered as "contents"
 		".*From: .+[\n\r].*(Sent|To): .+", // ?
