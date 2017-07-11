@@ -408,10 +408,10 @@ ViewThread.prototype.fetchAvatars = function() {
  * his/her name, and associate a (deterministic) background color
  */
 ViewThread.prototype.generateInitialsAvatar = function(element, msgId) {
-	var authorImage = element.find('.author-image');
 	var initials = this.computeInitials(msgId);
 
 	if (initials) {
+		var authorImage = element.find('.author-image');
 		authorImage.find('img').attr('src', null);
 		authorImage.html(initials);
 		var color = this.computeColor(initials);
