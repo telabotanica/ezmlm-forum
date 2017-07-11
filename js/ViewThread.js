@@ -361,7 +361,8 @@ ViewThread.prototype.fetchAvatars = function() {
 	var lthis = this;
 	$jq('.thread-message').each(function() {
 		var avatar = null;
-		var messageId = $jq(this).attr('id').substr(4);
+		var currentElement = $jq(this);
+		var messageId = currentElement.attr('id').substr(4);
 		// get author email
 		var authorEmail = lthis.getAuthorEmailFromMsgId(messageId);
 		if (authorEmail != null) {
@@ -371,42 +372,109 @@ ViewThread.prototype.fetchAvatars = function() {
 				avatar = lthis.avatarCache[authorEmail];
 				if (avatar != null) {
 					// display it !
-					$jq(this).find('.author-image > img').attr('src', avatar);
+					currentElement.find('.author-image > img').attr('src', avatar);
 				}
 			} else {
-				// fetch it using the service
-				var url = lthis.config.avatarService.replace('{email}', authorEmail);
-				var currentThreadMessage = this;
-				$jq.getJSON(url)
-				.done(function(avatar) {
-					//console.log("je l'ai : " + avatar);
-					// cache it even if null, to avoid more useless requests
-					lthis.avatarCache[authorEmail] = avatar;
-					if (avatar != null) {
-						// display it !
-						$jq(currentThreadMessage).find('.author-image > img').attr('src', avatar);
-					}
-				})
-				.fail(function() {
-					console.log('failed to fetch avatar');
-				});
+				// fetch it using the service, if configured
+				if (('avatarService' in lthis.config) && (lthis.config.avatarService != '')) {
+					var url = lthis.config.avatarService.replace('{email}', authorEmail);
+					var currentThreadMessage = this;
+					$jq.getJSON(url)
+					.done(function(avatar) {
+						//console.log("je l'ai : " + avatar);
+						// cache it even if null, to avoid more useless requests
+						lthis.avatarCache[authorEmail] = avatar;
+						if (avatar != null) {
+							// display it !
+							$jq(currentThreadMessage).find('.author-image > img').attr('src', avatar);
+						}
+					})
+					.fail(function() {
+						console.log('failed to fetch avatar');
+						// fallback
+						lthis.generateInitialsAvatar(currentElement, messageId);
+					});
+				} else {
+					// fallback
+					lthis.generateInitialsAvatar(currentElement, messageId);
+				}
 			}
 		}
 	});
 };
 
 /**
- * Retrieves the author email address given a message id;
- * needs to have called readThread() at least once (messagesData must be loaded)
+ * If no avatar was found for this author, tries to generate 2 initials based on
+ * his/her name, and associate a (deterministic) background color
+ */
+ViewThread.prototype.generateInitialsAvatar = function(element, msgId) {
+	var initials = this.computeInitials(msgId);
+
+	if (initials) {
+		var authorImage = element.find('.author-image');
+		authorImage.find('img').attr('src', null);
+		authorImage.html(initials);
+		var color = this.computeColor(initials);
+		authorImage.css('background-color', color);
+		authorImage.addClass('author-initials');
+	} // else keep the default image
+};
+
+/**
+ * Generates a 2-letter string of initiales based on an author's name
+ * 
+ * @param {int} msgId id of the message to retrieve the author from
+ * @returns false if it failed, a 2-letter string otherwise
+ */
+ViewThread.prototype.computeInitials = function(msgId) {
+	var authorName = this.getAuthorNameFromMsgId(msgId);
+	if (authorName) {
+		var pieces = authorName.split(' ');
+		//console.log(pieces);
+		if (pieces.length >= 2) {
+			return pieces[0].substring(0,1) + pieces[1].substring(0,1);
+		}
+	}
+	return false;
+};
+
+/**
+ * Picks a color among a predefined list, based on a given string (2-letter
+ * initials)
+ * @TODO choose better colors
+ */
+ViewThread.prototype.computeColor = function(initials) {
+	var colors = ['#F1D133', '#F4754F', '#EAF44F', '#8DE56E', '#6EE5C7', '#89DCEF', '#D7DDFE', '#DABBED', '#FB81E6', '#CECECE'];
+	var hash = initials.hashCode();
+	var color = colors[hash % colors.length];
+	return color;
+};
+
+/**
+ * Retrieves the author email address given a message id; see getFieldFromMsgId
  */
 ViewThread.prototype.getAuthorEmailFromMsgId = function(messageId) {
+	return this.getFieldFromMsgId(messageId, 'author_email');
+};
+
+/**
+ * Retrieves the author name given a message id; see getFieldFromMsgId
+ */
+ViewThread.prototype.getAuthorNameFromMsgId = function(messageId) {
+	return this.getFieldFromMsgId(messageId, 'author_name');
+};
+
+/**
+ * Retrieves a message field given a message id and the field name;
+ * needs to have called readThread() at least once (messagesData must be loaded)
+ */
+ViewThread.prototype.getFieldFromMsgId = function(messageId, fieldName) {
 	var authorEmail = null,
 		msgs = this.messagesData.results,
 		i = 0;
 	while (authorEmail == null && i < msgs.length) {
 		if (msgs[i].message_id == messageId) {
-			//console.log('auteur trouvé : ' + msgs[i].author_email);
-			authorEmail = msgs[i].author_email;
+			authorEmail = msgs[i][fieldName];
 		}
 		i++;
 	}

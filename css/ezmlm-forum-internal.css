@@ -277,6 +277,15 @@ a.back-to-list-link:hover {
 .author-image > img {
 	width: 50px;
 }
+.author-initials {
+	/* for initials */
+	font-size: 24px;
+	text-align: center;
+	font-weight: bold;
+	color: #505050;
+	padding-top: 7px;
+	text-transform: uppercase;
+}
 .author-name {
 	font-weight: bold;
 	color: #606060;
