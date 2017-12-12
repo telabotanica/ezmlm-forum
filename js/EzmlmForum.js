@@ -48,24 +48,17 @@ EzmlmForum.prototype.init = function() {
 	this.auth = new AuthAdapter(this.config);
   this.initialLoadAuth();
 
-        //Initialize the task to run every 450000 milliseconds
-	      // i.e. 7.5 minutes (halfthe 15 minute token expiration.
-				/*
-        this.authTokenRefreshTask = $interval(
-		this.prototype.refreshAuthToken,
-		450000);
-		   */
-			 setInterval(function() {
-			 	console.log("refreshing token");
-
-			 	lthis.auth.load(function() {console.log("JWToken refreshed!")});
-			}, 600000);
+  //Initialize the task to run every 450000 milliseconds
+	 // i.e. 10 minutes to avoid JWT token expiration after 15 minutes.
+	 setInterval(function() {
+	 	console.log("refreshing token");
+	 	lthis.auth.load(function() {console.log("JWToken refreshed!")});
+	}, 600000);
 
 };
 
 EzmlmForum.prototype.initialLoadAuth = function() {
-        var lthis = this;
-
+  var lthis = this;
 	this.auth.load(function() {
 		//console.log('Auth chargée');
 		lthis.loadUserInfo(function() {
