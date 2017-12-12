@@ -46,6 +46,21 @@ EzmlmForum.prototype.init = function() {
 	});
 	// load auth and user info
 	this.auth = new AuthAdapter(this.config);
+	this.initialLoadAuth();
+
+	//Initialize the task to run every 450000 milliseconds
+	// i.e. 10 minutes to avoid JWT token expiration after 15 minutes.
+	// using angular $interval would have been better but we are ouside
+	// angular's reach here.
+	setInterval(function() {
+		console.log("refreshing token");
+		lthis.auth.load(function() {console.log("JWToken refreshed!")});
+	}, 600000);
+
+};
+
+EzmlmForum.prototype.initialLoadAuth = function() {
+	var lthis = this;
 	this.auth.load(function() {
 		//console.log('Auth chargée');
 		lthis.loadUserInfo(function() {
@@ -77,7 +92,7 @@ EzmlmForum.prototype.renderTemplate = function(id, data) {
 /**
  * Detects if a text is an address email, and if so censors the domain - intended
  * for author "names" that might be bare email addresses
- * 
+ *
  * If allOccurrences is true, will censor all occurrences ("g" modifier)
  */
 EzmlmForum.prototype.censorEmail = function(text, allOccurrences) {
