@@ -60,7 +60,7 @@ EzmlmForum.prototype.init = function() {
 };
 
 EzmlmForum.prototype.initialLoadAuth = function() {
-  var lthis = this;
+	var lthis = this;
 	this.auth.load(function() {
 		//console.log('Auth chargée');
 		lthis.loadUserInfo(function() {
