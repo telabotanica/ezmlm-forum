@@ -48,12 +48,14 @@ EzmlmForum.prototype.init = function() {
 	this.auth = new AuthAdapter(this.config);
   this.initialLoadAuth();
 
-  //Initialize the task to run every 450000 milliseconds
+   //Initialize the task to run every 450000 milliseconds
 	 // i.e. 10 minutes to avoid JWT token expiration after 15 minutes.
+	 // using angular $interval would have been better but we are ouside
+	 // angular's reach here.
 	 setInterval(function() {
-	 	console.log("refreshing token");
-	 	lthis.auth.load(function() {console.log("JWToken refreshed!")});
-	}, 600000);
+		 console.log("refreshing token");
+		 lthis.auth.load(function() {console.log("JWToken refreshed!")});
+	 }, 600000);
 
 };
 
