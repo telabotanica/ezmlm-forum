@@ -46,7 +46,7 @@ EzmlmForum.prototype.init = function() {
 	});
 	// load auth and user info
 	this.auth = new AuthAdapter(this.config);
-  this.initialLoadAuth();
+	this.initialLoadAuth();
 
 	//Initialize the task to run every 450000 milliseconds
 	// i.e. 10 minutes to avoid JWT token expiration after 15 minutes.
