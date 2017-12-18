@@ -29,7 +29,7 @@ AuthAdapter.prototype.load = function(cb) {
 			lthis.user.email = decodedToken.sub;
 			var now = new Date();
 			lthis.tokenExpirationTime = new Date(
-				now.getTime() + (data.duration - 10) * 1000);			
+				now.getTime() + (data.duration * 0.8 - 10) * 1000);			
 		}
 		// always add Authorization header; not recommanded by jQuery doc (?!)
 		var customHeaders = {},
