@@ -1,3 +1,6 @@
 /nbproject
 /config/config.json
 /bower_components
+/node_modules
+css/bootstrap-iso.css
+
