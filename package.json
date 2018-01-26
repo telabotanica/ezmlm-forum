@@ -1,0 +1,24 @@
+{
+  "name": "ezmlm-forum",
+  "version": "1.0.0",
+  "description": "A forum-oriented Web interface for ezmlm mailing lists",
+  "main": "index.php",
+  "scripts": {
+    "postinstall": "bower install",
+    "build": "lessc css/prefix.less css/bootstrap-iso.css && sed -i \"s/.bootstrap-iso body/.bootstrap-iso/\" css/bootstrap-iso.css && sed -i \"s/.bootstrap-iso html/.bootstrap-iso/\" css/bootstrap-iso.css && sed -i \"s|..\/fonts\/glyphicons|..\/bower_components\/bootstrap\/dist\/fonts\/glyphicons|g\" css/bootstrap-iso.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/telabotanica/ezmlm-forum.git"
+  },
+  "author": "",
+  "license": "CeCILL v2.1 + GPL v3",
+  "bugs": {
+    "url": "https://github.com/telabotanica/ezmlm-forum/issues"
+  },
+  "homepage": "https://github.com/telabotanica/ezmlm-forum#readme",
+  "dependencies": {
+    "bower": "^1.8.2",
+    "less": "^2.7.3"
+  }
+}
