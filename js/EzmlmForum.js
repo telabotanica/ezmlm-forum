@@ -102,11 +102,11 @@ EzmlmForum.prototype.renderTemplate = function(id, data) {
  */
 EzmlmForum.prototype.censorEmail = function(text, allOccurrences) {
 	if (allOccurrences == undefined) allOccurrences = false;
-	var replacePattern = /(.+@).+\..+/i;
+	var replacePattern = /((([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@)((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{1,64}))/i;
 	if (allOccurrences) {
-		replacePattern = /(.+@).+\..+/ig;
+		replacePattern = /((([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@)((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{1,64}))/ig;
 	}
-	if (text && text.match(/.+@.+\..+/i)) {
+	if (text && text.match(/(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{1,64}))/i)) {
 		// would it be quicker to try replacing without matching ?
 		text = text.replace(replacePattern, "$1...");
 	}
