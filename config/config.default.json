@@ -2,6 +2,7 @@
 	"domainRoot": "http://localhost",
 	"baseUri": "/ezmlm-forum",
 	"title": "TB_forum",
+	"rewritePageTitle": true,
 	"hrefBuildMode": "REST",
 	"displayListTitle": true,
 	"defaultPage": "view-list",

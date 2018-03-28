@@ -69,9 +69,14 @@ ViewList.prototype.readDetails = function() {
 		lthis.detailsData.last_message.author_name = lthis.censorEmail(lthis.detailsData.last_message.author_name);
 
 		infoBoxData.list = lthis.detailsData;
+
 		// page title
-		if (lthis.config.title != "") {
-			document.title = lthis.config['ezmlm-php'].list + ' (' + lthis.mode + ') - ' + lthis.config.title;
+		if (lthis.config.rewritePageTitle) {
+			document.title = lthis.config['ezmlm-php'].list + ' (' + lthis.mode + ')';
+
+			if (lthis.config.title && lthis.config.title != "") {
+				document.title += ' - ' + lthis.config.title;
+			}
 		}
 
 		lthis.renderTemplate('list-info-box', infoBoxData);
