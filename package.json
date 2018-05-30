@@ -5,7 +5,7 @@
   "main": "index.php",
   "scripts": {
     "postinstall": "bower install",
-    "build": "lessc css/prefix.less css/bootstrap-iso.css && sed -i \"s/.bootstrap-iso body/.bootstrap-iso/\" css/bootstrap-iso.css && sed -i \"s/.bootstrap-iso html/.bootstrap-iso/\" css/bootstrap-iso.css && sed -i \"s|..\/fonts\/glyphicons|..\/bower_components\/bootstrap\/dist\/fonts\/glyphicons|g\" css/bootstrap-iso.css"
+    "build": "lessc css/prefix.less css/bootstrap-iso.css && sed -i \"s/.bootstrap-iso body/.bootstrap-iso/\" css/bootstrap-iso.css && sed -i \"s/.bootstrap-iso html/.bootstrap-iso/\" css/bootstrap-iso.css && sed -i \"s|../fonts/glyphicons|../bower_components/bootstrap/dist/fonts/glyphicons|g\" css/bootstrap-iso.css"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,6 @@
   "homepage": "https://github.com/telabotanica/ezmlm-forum#readme",
   "dependencies": {
     "bower": "^1.8.2",
-    "less": "^2.7.3"
+    "less": "^3.0.4"
   }
 }
