@@ -59,9 +59,9 @@
 					<div class="btn-group">
 						<a class="btn btn-default reply-to-message glyphicon glyphicon-share-alt" {{#noPostRights}}disabled {{/noPostRights}}title="Répondre">
 						</a>
-						<a class="btn btn-default cancel-reply glyphicon glyphicon-remove" title="Annuler la réponse">
+						<a class="btn btn-default cancel-reply glyphicon glyphicon-remove" style="display: none;" title="Annuler la réponse">
 						</a>
-						<a class="btn btn-default send-reply glyphicon glyphicon-envelope" title="Envoyer votre réponse">
+						<a class="btn btn-default send-reply glyphicon glyphicon-envelope" style="display: none;" title="Envoyer votre réponse">
 						</a>
 					</div>
 				</div>
