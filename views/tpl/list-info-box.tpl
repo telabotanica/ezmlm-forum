@@ -1,6 +1,6 @@
 <script type="text/html" id="tpl-list-info-box" >
 	{{^list}}
-		liste [{{list_name}}] inexistante ou droits insuffisants !
+		<span id="no-list-message">liste [{{list_name}}] inexistante ou droits insuffisants !</span>
 	{{/list}}
 	{{#list}}
 		{{#display_title}}

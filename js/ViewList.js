@@ -420,6 +420,10 @@ ViewList.prototype.reloadEventListeners = function() {
 		}
 		return false;
 	});
+
+	$jq().ready(function() {
+		document.dispatchEvent(new Event('forum-rendered'));
+	});
 };
 
 ViewList.prototype.search = function() {
