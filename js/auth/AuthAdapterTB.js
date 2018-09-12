@@ -60,6 +60,7 @@ AuthAdapter.prototype.load = function(cb) {
 AuthAdapter.prototype.decodeToken = function(token) {
 	parts = token.split('.');
 	payload = parts[1];
+	payload = payload.replace('-', '+').replace('_', '/');
 	payload = atob(payload);
 	payload = JSON.parse(payload, true);
 	return payload;
