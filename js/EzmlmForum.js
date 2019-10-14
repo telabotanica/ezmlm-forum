@@ -226,9 +226,24 @@ EzmlmForum.prototype.lf2br = function(text) {
 EzmlmForum.prototype.addLinks = function(text) {
 	if (text) {
 		// [^"] excludes links in markup attributes
-		text = text.replace(/([^"])(https?:\/\/[^\ ,\n\t]+)([^"])/gi, '$1<a href="$2" target="_blank">$2</a>$3');
+		//text = text.replace(/([^"])(https?:\/\/[^\ ,\n\t]+)([^"])/gi, '$1<a href="$2" target="_blank">$2</a>$3');
 		// why doesn't this work ??? (exclude ending ">")
 		//text = text.replace(/([^"])(https?:\/\/[^\ ,\n\t>]+)([^"])/gi, '$1<a href="$2" target="_blank">$2</a>$3');
+		// because ">" are "&gt;"
+
+		// problem with < and > in form of html entities &lt; and &gt; :
+		// thunderbird generates links in mail text part like <http://lol.fr>
+		// then php lib transform < > in html entities who polutes generated links
+		// example :
+		// text = " le compte-rendu &lt;https://docs.google.com/document/d/1uxvGHY1QKKD9Tm0LGTKvWfiU83INbpR_ZGWe-emFQ3U/edit?usp=sharing&gt; envoyé la semaine <a href=\"http://lol.fr\">dernière</a> et là &lt;https://perdu.com&gt; ici &lt;https://api.tela-botanica.org/service:cumulus:doc/f2821e813c601e15a4e57d7fbb2f44aae3ece7ed&gt;.Nous "
+		// so we need to sanitize those html entities with more replace
+		text = text
+			.replace(/([^"])(https?:\/\/[^\ ,\n\t]+)/gi, '$1<a href="$2" target="_blank">$2</a>')
+			.replace(/(&lt;http)/gi, 'http')
+			.replace(/(&lt;<a)/gi, '<a')
+			.replace(/(&gt;([^"<]*)")/gi, '"')
+			.replace(/(&gt;([^"<]*)<\/a>)/gi, '</a>$2')
+		;
 	}
 	return text;
 };
