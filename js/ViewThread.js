@@ -111,7 +111,6 @@ ViewThread.prototype.readThread = function() {
 		var messages = lthis.messagesData.results;
 		for (var i=0; i < messages.length; ++i) {
 			// format text
-			console.log(messages[i].message_contents.html);
 			if (messages[i].message_contents) {
 				if (messages[i].message_contents.text) {
 					messages[i].quoted_message_id = lthis.detectQuotedMessageId(messages[i].message_contents.text); // do this before cleaning
