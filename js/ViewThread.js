@@ -112,12 +112,21 @@ ViewThread.prototype.readThread = function() {
 		for (var i=0; i < messages.length; ++i) {
 			// format text
 			if (messages[i].message_contents) {
-				messages[i].quoted_message_id = lthis.detectQuotedMessageId(messages[i].message_contents.text); // do this before cleaning
-				messages[i].message_contents.text = lthis.cleanText(messages[i].message_contents.text);
-				// censor all email adresses in the message
-				// @TODO maybe apply to quoted messages headers only ?
-				messages[i].message_contents.text = lthis.censorEmail(messages[i].message_contents.text, true);
-				messages[i].message_contents.text = lthis.enrichText(messages[i].message_contents.text);
+				if (messages[i].message_contents.text) {
+					messages[i].quoted_message_id = lthis.detectQuotedMessageId(messages[i].message_contents.text); // do this before cleaning
+					messages[i].message_contents.text = lthis.cleanText(messages[i].message_contents.text);
+					// censor all email adresses in the message
+					// @TODO maybe apply to quoted messages headers only ?
+					messages[i].message_contents.text = lthis.censorEmail(messages[i].message_contents.text, true);
+					messages[i].message_contents.text = lthis.enrichText(messages[i].message_contents.text);
+				} else if (messages[i].message_contents.html){
+					messages[i].quoted_message_id = lthis.detectQuotedMessageId(messages[i].message_contents.html); // do this before cleaning
+					messages[i].message_contents.html = lthis.cleanText(messages[i].message_contents.html);
+					// censor all email adresses in the message
+					// @TODO maybe apply to quoted messages headers only ?
+					messages[i].message_contents.html = lthis.censorEmail(messages[i].message_contents.html, true);
+					messages[i].message_contents.html = lthis.enrichText(messages[i].message_contents.html);
+				}
 			}
 			// format dates
 			messages[i].message_date_moment = lthis.momentize(messages[i].message_date);
