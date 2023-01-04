@@ -49,10 +49,14 @@
 					{{/needs_quotation}}
 				</div>
 			</div>
+				<!-- Messages -->
 			<div class="message-contents">
 				{{#message_contents.text}}
 					{{{message_contents.text}}}
 				{{/message_contents.text}}
+				{{#message_contents.html}}
+					{{{message_contents.html}}}
+				{{/message_contents.html}}
 			</div>
 			<div class="message-bottom-container">
 				<div class="message-reply-tools" data-id="{{message_id}}">
